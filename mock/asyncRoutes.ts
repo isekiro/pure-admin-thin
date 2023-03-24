@@ -49,8 +49,8 @@ const systemRouter = {
       name: "User",
       meta: {
         icon: "flUser",
-        title: "用户管理",
-        roles: ["admin"]
+        title: "用户管理"
+        // roles: ["admin"]
       }
     },
     {

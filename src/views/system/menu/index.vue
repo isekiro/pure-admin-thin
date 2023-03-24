@@ -18,7 +18,9 @@ const formRef = ref();
 const tableRef = ref();
 const {
   form,
+  menuForm,
   loading,
+  dialogVisible,
   columns,
   dataList,
   onSearch,
@@ -37,10 +39,10 @@ const {
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="部门名称：" prop="user">
+      <el-form-item label="菜单名称：" prop="name">
         <el-input
-          v-model="form.user"
-          placeholder="请输入部门名称"
+          v-model="form.name"
+          placeholder="请输入菜单名称"
           clearable
           class="!w-[200px]"
         />
@@ -71,13 +73,13 @@ const {
       </el-form-item>
     </el-form>
     <PureTableBar
-      title="部门列表"
+      title="菜单列表"
       :tableRef="tableRef?.getTableRef()"
       @refresh="onSearch"
     >
       <template #buttons>
         <el-button type="primary" :icon="useRenderIcon(AddFill)">
-          新增部门
+          新增菜单
         </el-button>
       </template>
       <template v-slot="{ size, checkList }">
@@ -129,5 +131,18 @@ const {
         </pure-table>
       </template>
     </PureTableBar>
+    <el-dialog v-model="dialogVisible" title="Tips" width="30%" draggable>
+      <span> title {{ menuForm.meta.title }} </span>
+      <span> name {{ menuForm.name }} </span>
+      <span> path {{ menuForm.path }} </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="dialogVisible = false">
+            Confirm
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
