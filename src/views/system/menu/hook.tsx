@@ -9,16 +9,35 @@ export function useMenu() {
     status: ""
   });
   const menuForm = reactive({
+    id: "",
+    createdAt: "",
+    updatedAt: "",
+    deletedAt: "",
     name: "",
+    path: "",
+    redirect: "",
     meta: {
-      title: ""
+      title: "",
+      icon: "",
+      rank: "",
+      roles: "",
+      showLink: "",
+      keepAlive: "",
+      showParent: "",
+      hiddenTag: ""
     },
     status: "",
-    path: ""
+    parentId: "",
+    creator: "",
+    type: ""
   });
   const dataList = ref([]);
   const loading = ref(true);
   const dialogVisible = ref(false);
+  const isEdit = ref(true);
+  function dialogTitle() {
+    return isEdit.value ? "编辑菜单" : "新建菜单";
+  }
 
   const columns: TableColumnList = [
     {
@@ -59,16 +78,18 @@ export function useMenu() {
       )
     },
     {
-      label: "创建时间",
+      label: "更新时间",
       minWidth: 200,
-      prop: "createTime",
-      formatter: ({ createTime }) =>
-        dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+      prop: "updatedAt",
+      formatter: ({ updatedAt }) =>
+        dayjs(updatedAt).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       label: "路径",
       prop: "path",
-      minWidth: 200
+      minWidth: 200,
+      align: "left",
+      headerAlign: "center"
     },
     {
       label: "操作",
@@ -78,11 +99,18 @@ export function useMenu() {
     }
   ];
 
+  function handleCreate() {
+    isEdit.value = false;
+    dialogVisible.value = true;
+  }
+
   function handleUpdate(row) {
-    this.menuForm.name = row.name;
-    this.menuForm.meta = row.meta;
-    this.menuForm.status = row.status;
-    this.menuForm.path = row.path;
+    isEdit.value = true;
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(row));
+    // 给proxy对象赋值
+    Object.assign(menuForm, obj);
+    // 打开对话框
     dialogVisible.value = true;
   }
 
@@ -117,11 +145,14 @@ export function useMenu() {
     form,
     menuForm,
     loading,
+    isEdit,
     dialogVisible,
     columns,
     dataList,
+    dialogTitle,
     onSearch,
     resetForm,
+    handleCreate,
     handleUpdate,
     handleDelete,
     handleSelectionChange

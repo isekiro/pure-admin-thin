@@ -23,8 +23,10 @@ const {
   dialogVisible,
   columns,
   dataList,
+  dialogTitle,
   onSearch,
   resetForm,
+  handleCreate,
   handleUpdate,
   handleDelete,
   handleSelectionChange
@@ -78,7 +80,11 @@ const {
       @refresh="onSearch"
     >
       <template #buttons>
-        <el-button type="primary" :icon="useRenderIcon(AddFill)">
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="handleCreate()"
+        >
           新增菜单
         </el-button>
       </template>
@@ -131,15 +137,71 @@ const {
         </pure-table>
       </template>
     </PureTableBar>
-    <el-dialog v-model="dialogVisible" title="Tips" width="30%" draggable>
-      <span> title {{ menuForm.meta.title }} </span>
-      <span> name {{ menuForm.name }} </span>
-      <span> path {{ menuForm.path }} </span>
+
+    <!-- 编辑对话框 -->
+    <el-dialog v-model="dialogVisible" :title="dialogTitle()" draggable>
+      <el-form :inline="true" :model="menuForm" label-width="120px">
+        <el-row :gutter="5">
+          <el-form-item label="菜单ID">
+            <el-input v-model="menuForm.id" disabled />
+          </el-form-item>
+          <el-form-item label="菜单名称">
+            <el-input v-model="menuForm.meta.title" />
+          </el-form-item>
+        </el-row>
+        <el-row :gutter="5">
+          <el-form-item label="路由名称">
+            <el-input v-model="menuForm.name" />
+          </el-form-item>
+          <el-form-item label="组件路径">
+            <el-input v-model="menuForm.path" />
+          </el-form-item>
+          <el-form-item label="重定向">
+            <el-input v-model="menuForm.redirect" />
+          </el-form-item>
+          <el-form-item label="菜单图标">
+            <el-input v-model="menuForm.meta.icon" />
+          </el-form-item>
+          <el-form-item label="排序">
+            <el-input v-model="menuForm.meta.rank" />
+          </el-form-item>
+        </el-row>
+        <el-row :gutter="5">
+          <el-form-item label="授权角色">
+            <el-input v-model="menuForm.meta.roles" />
+          </el-form-item>
+          <el-form-item label="启用">
+            <el-switch v-model.Number="menuForm.status" :active-value="1" />
+          </el-form-item>
+        </el-row>
+        <el-row :gutter="5">
+          <el-form-item label="菜单类型">
+            <el-input v-model="menuForm.type" />
+          </el-form-item>
+          <el-form-item label="上级菜单">
+            <el-input v-model="menuForm.parentId" />
+          </el-form-item>
+        </el-row>
+        <el-row :gutter="5">
+          <el-form-item label="显示菜单">
+            <el-input v-model="menuForm.meta.showLink" />
+          </el-form-item>
+          <el-form-item label="缓存">
+            <el-input v-model="menuForm.meta.keepAlive" />
+          </el-form-item>
+          <el-form-item label="显示父级">
+            <el-input v-model="menuForm.meta.showParent" />
+          </el-form-item>
+          <el-form-item label="固定标签">
+            <el-input v-model="menuForm.meta.hiddenTag" />
+          </el-form-item>
+        </el-row>
+      </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">Cancel</el-button>
+          <el-button @click="dialogVisible = false">取消</el-button>
           <el-button type="primary" @click="dialogVisible = false">
-            Confirm
+            确定
           </el-button>
         </span>
       </template>
