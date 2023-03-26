@@ -17,9 +17,12 @@ defineOptions({
 const formRef = ref();
 const tableRef = ref();
 const {
+  defaultProps,
+  menuData,
   form,
   menuForm,
   loading,
+  options,
   dialogVisible,
   columns,
   dataList,
@@ -138,63 +141,91 @@ const {
       </template>
     </PureTableBar>
 
-    <!-- 编辑对话框 -->
+    <!-- 新建/编辑对话框 -->
     <el-dialog v-model="dialogVisible" :title="dialogTitle()" draggable>
       <el-form :inline="true" :model="menuForm" label-width="120px">
         <el-row :gutter="5">
-          <el-form-item label="菜单ID">
-            <el-input v-model="menuForm.id" disabled />
-          </el-form-item>
-          <el-form-item label="菜单名称">
-            <el-input v-model="menuForm.meta.title" />
-          </el-form-item>
+          <el-col :span="20">
+            <el-form-item label="菜单ID">
+              <el-input v-model="menuForm.id" disabled />
+            </el-form-item>
+            <el-form-item label="菜单名称">
+              <el-input v-model="menuForm.meta.title" />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="5">
-          <el-form-item label="路由名称">
-            <el-input v-model="menuForm.name" />
-          </el-form-item>
-          <el-form-item label="组件路径">
-            <el-input v-model="menuForm.path" />
-          </el-form-item>
-          <el-form-item label="重定向">
-            <el-input v-model="menuForm.redirect" />
-          </el-form-item>
-          <el-form-item label="菜单图标">
-            <el-input v-model="menuForm.meta.icon" />
-          </el-form-item>
-          <el-form-item label="排序">
-            <el-input v-model="menuForm.meta.rank" />
-          </el-form-item>
+          <el-col :span="20">
+            <el-form-item label="路由名称">
+              <el-input v-model="menuForm.name" />
+            </el-form-item>
+            <el-form-item label="组件路径">
+              <el-input v-model="menuForm.path" />
+            </el-form-item>
+            <el-form-item label="重定向">
+              <el-input v-model="menuForm.redirect" />
+            </el-form-item>
+            <el-form-item label="菜单图标">
+              <el-input v-model="menuForm.meta.icon" />
+            </el-form-item>
+            <el-form-item label="排序">
+              <el-input v-model="menuForm.meta.rank" />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="5">
-          <el-form-item label="授权角色">
-            <el-input v-model="menuForm.meta.roles" />
-          </el-form-item>
-          <el-form-item label="启用">
-            <el-switch v-model.Number="menuForm.status" :active-value="1" />
-          </el-form-item>
+          <el-col :span="20">
+            <el-form-item label="授权角色">
+              <el-input v-model="menuForm.meta.roles" />
+            </el-form-item>
+            <el-form-item label="启用">
+              <el-switch v-model.Number="menuForm.status" :active-value="1" />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="5">
-          <el-form-item label="菜单类型">
-            <el-input v-model="menuForm.type" />
-          </el-form-item>
-          <el-form-item label="上级菜单">
-            <el-input v-model="menuForm.parentId" />
-          </el-form-item>
+          <el-col :span="20">
+            <el-form-item label="菜单类型" label-width="120px">
+              <el-select v-model="menuForm.type" clearable placeholder="Select">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="上级菜单">
+              <el-tree-select
+                v-model="menuForm.parentId"
+                :data="menuData"
+                :props="defaultProps"
+                check-strictly
+              >
+                <template #default="{ data }">
+                  <el-option :label="data.meta.title" :value="data.id">{{
+                    data.meta.title
+                  }}</el-option>
+                </template>
+              </el-tree-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row :gutter="5">
-          <el-form-item label="显示菜单">
-            <el-input v-model="menuForm.meta.showLink" />
-          </el-form-item>
-          <el-form-item label="缓存">
-            <el-input v-model="menuForm.meta.keepAlive" />
-          </el-form-item>
-          <el-form-item label="显示父级">
-            <el-input v-model="menuForm.meta.showParent" />
-          </el-form-item>
-          <el-form-item label="固定标签">
-            <el-input v-model="menuForm.meta.hiddenTag" />
-          </el-form-item>
+          <el-col :span="20">
+            <el-form-item label="显示菜单">
+              <el-input v-model="menuForm.meta.showLink" />
+            </el-form-item>
+            <el-form-item label="缓存">
+              <el-input v-model="menuForm.meta.keepAlive" />
+            </el-form-item>
+            <el-form-item label="显示父级">
+              <el-input v-model="menuForm.meta.showParent" />
+            </el-form-item>
+            <el-form-item label="固定标签">
+              <el-input v-model="menuForm.meta.hiddenTag" />
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <template #footer>

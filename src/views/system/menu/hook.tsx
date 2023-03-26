@@ -1,43 +1,73 @@
 import dayjs from "dayjs";
 import { handleTree } from "@/utils/tree";
-import { getMenuList } from "@/api/system";
+import { getMenuList, getMenuTree } from "@/api/system";
 import { reactive, ref, onMounted } from "vue";
-
 export function useMenu() {
+  const defaultProps = {
+    children: "children",
+    value: "id"
+  };
+  const menuData = ref([]);
+  async function getMenusData() {
+    loading.value = true;
+    const { data } = await getMenuTree();
+    const topMenu = { id: 0, meta: { title: "顶级类目" } };
+    data.unshift(topMenu);
+    menuData.value = data;
+    loading.value = false;
+  }
+
   const form = reactive({
     name: "",
     status: ""
   });
-  const menuForm = reactive({
-    id: "",
-    createdAt: "",
-    updatedAt: "",
-    deletedAt: "",
-    name: "",
-    path: "",
-    redirect: "",
-    meta: {
-      title: "",
-      icon: "",
-      rank: "",
-      roles: "",
-      showLink: "",
-      keepAlive: "",
-      showParent: "",
-      hiddenTag: ""
-    },
-    status: "",
-    parentId: "",
-    creator: "",
-    type: ""
-  });
+  // 菜单表单
+  function getMenuForm() {
+    return reactive({
+      id: "",
+      createdAt: "",
+      updatedAt: "",
+      deletedAt: "",
+      name: "",
+      path: "",
+      redirect: "",
+      meta: {
+        title: "",
+        icon: "",
+        rank: "",
+        roles: "",
+        showLink: "",
+        keepAlive: "",
+        showParent: "",
+        hiddenTag: ""
+      },
+      status: "",
+      parentId: "",
+      creator: "",
+      type: ""
+    });
+  }
+  const menuForm = getMenuForm();
   const dataList = ref([]);
   const loading = ref(true);
   const dialogVisible = ref(false);
+  // 是否编辑状态
   const isEdit = ref(true);
-  function dialogTitle() {
-    return isEdit.value ? "编辑菜单" : "新建菜单";
-  }
+
+  const options = [
+    {
+      value: 1,
+      label: "一级菜单"
+    },
+    {
+      value: 2,
+      label: "二级菜单"
+    },
+    {
+      value: 3,
+      label: "三级菜单"
+    }
+  ];
 
   const columns: TableColumnList = [
     {
@@ -99,8 +129,13 @@ export function useMenu() {
     }
   ];
 
+  function dialogTitle() {
+    return isEdit.value ? "编辑菜单" : "新建菜单";
+  }
+
   function handleCreate() {
     isEdit.value = false;
+    Object.assign(menuForm, getMenuForm());
     dialogVisible.value = true;
   }
 
@@ -132,20 +167,22 @@ export function useMenu() {
     loading.value = true;
     const { data } = await getMenuList();
     dataList.value = handleTree(data);
-    setTimeout(() => {
-      loading.value = false;
-    }, 500);
+    loading.value = false;
   }
 
   onMounted(() => {
     onSearch();
+    getMenusData();
   });
 
   return {
+    defaultProps,
+    menuData,
     form,
     menuForm,
     loading,
     isEdit,
+    options,
     dialogVisible,
     columns,
     dataList,

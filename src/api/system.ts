@@ -35,3 +35,8 @@ export const getDeptList = (data?: object) => {
 export const getMenuList = (data?: object) => {
   return http.request<ResultDept>("get", menuUrlApi("/list"), { data });
 };
+
+/** 获取菜单那管理树 */
+export const getMenuTree = (data?: object) => {
+  return http.request<ResultDept>("get", menuUrlApi("/tree"), { data });
+};
