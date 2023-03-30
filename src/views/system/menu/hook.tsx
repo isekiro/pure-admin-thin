@@ -8,6 +8,12 @@ export function useMenu() {
     value: "id"
   };
   const menuData = ref([]);
+  // 查询表单
+  const form = reactive({
+    name: "",
+    status: ""
+  });
+  // 获取菜单树结构数据
   async function getMenusData() {
     loading.value = true;
     const { data } = await getMenuTree();
@@ -17,11 +23,7 @@ export function useMenu() {
     loading.value = false;
   }
 
-  const form = reactive({
-    name: "",
-    status: ""
-  });
-  // 菜单表单
+  // 返回空菜单表单
   function getMenuForm() {
     return reactive({
       id: "",
@@ -48,6 +50,7 @@ export function useMenu() {
     });
   }
   const menuForm = getMenuForm();
+  const menuFormRef = ref();
   const dataList = ref([]);
   const loading = ref(true);
   const dialogVisible = ref(false);
@@ -136,6 +139,7 @@ export function useMenu() {
   function handleCreate() {
     isEdit.value = false;
     Object.assign(menuForm, getMenuForm());
+    // nextTick(menuFormRef.resetFields());
     dialogVisible.value = true;
   }
 
@@ -180,6 +184,7 @@ export function useMenu() {
     menuData,
     form,
     menuForm,
+    menuFormRef,
     loading,
     isEdit,
     options,
