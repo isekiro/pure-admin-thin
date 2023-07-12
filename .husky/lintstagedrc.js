@@ -1,4 +1,5 @@
 module.exports = {
+  "subject-full-stop": [RuleConfigSeverity.Error, "never", "."],
   "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
   "{!(package)*.json}": ["prettier --write--parser json"],
   "package.json": ["prettier --write"],
