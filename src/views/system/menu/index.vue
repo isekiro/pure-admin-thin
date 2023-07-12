@@ -12,7 +12,7 @@ import Refresh from "@iconify-icons/ep/refresh";
 import AddFill from "@iconify-icons/ri/add-circle-line";
 
 defineOptions({
-  name: "Menu"
+  name: "Menus"
 });
 
 const formRef = ref();
@@ -76,6 +76,7 @@ const {
     </el-form>
     <PureTableBar
       title="菜单列表"
+      :columns="columns"
       :tableRef="tableRef?.getTableRef()"
       @refresh="onSearch"
     >
@@ -88,10 +89,11 @@ const {
           新增菜单
         </el-button>
       </template>
-      <template v-slot="{ size, checkList }">
+      <template v-slot="{ size, dynamicColumns }">
         <pure-table
           ref="tableRef"
           border
+          adaptive
           align-whole="center"
           row-key="id"
           showOverflowTooltip
@@ -100,8 +102,7 @@ const {
           :loading="loading"
           :size="size"
           :data="dataList"
-          :columns="columns"
-          :checkList="checkList"
+          :columns="dynamicColumns"
           :header-cell-style="{
             background: 'var(--el-table-row-hover-bg-color)',
             color: 'var(--el-text-color-primary)'
