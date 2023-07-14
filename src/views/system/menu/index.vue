@@ -24,10 +24,11 @@ const {
   form,
   menuForm,
   loading,
-  options,
+  menusOptions,
   dialogVisible,
   columns,
   dataList,
+  rolesOptions,
   dialogTitle,
   onSearch,
   resetForm,
@@ -186,7 +187,19 @@ const {
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="授权角色">
-                <el-input v-model="menuForm.meta.roles" />
+                <el-select
+                  v-model="menuForm.meta.roles"
+                  multiple
+                  placeholder="Select"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in rolesOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
@@ -198,7 +211,7 @@ const {
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="item in options"
+                    v-for="item in menusOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -227,32 +240,32 @@ const {
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="显示菜单">
                 <el-radio-group v-model="menuForm.meta.showLink">
-                  <el-radio label="1">是</el-radio>
-                  <el-radio label="2">否</el-radio>
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="2">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="开启缓存">
                 <el-radio-group v-model="menuForm.meta.keepAlive">
-                  <el-radio label="1">是</el-radio>
-                  <el-radio label="2">否</el-radio>
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="2">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="显示父级">
                 <el-radio-group v-model="menuForm.meta.showParent">
-                  <el-radio label="1">是</el-radio>
-                  <el-radio label="2">否</el-radio>
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="2">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="固定标签">
                 <el-radio-group v-model="menuForm.meta.hiddenTag">
-                  <el-radio label="1">是</el-radio>
-                  <el-radio label="2">否</el-radio>
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="2">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>

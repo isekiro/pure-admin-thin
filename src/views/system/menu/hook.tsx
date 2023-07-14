@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { handleTree } from "@/utils/tree";
-import { getMenuList, getMenuTree } from "@/api/system";
+import { getMenuList, getMenuTree, getRolesOptions } from "@/api/system";
 import { reactive, ref, onMounted } from "vue";
 export function useMenu() {
   const defaultProps = {
@@ -52,12 +52,13 @@ export function useMenu() {
   const menuForm = getMenuForm();
   const menuFormRef = ref();
   const dataList = ref([]);
+  const rolesOptions = ref([]);
   const loading = ref(true);
   const dialogVisible = ref(false);
   // 是否编辑状态
   const isEdit = ref(true);
 
-  const options = [
+  const menusOptions = [
     {
       value: 1,
       label: "一级菜单"
@@ -168,8 +169,14 @@ export function useMenu() {
     loading.value = false;
   }
 
+  async function getRolesOptionsData() {
+    const { data } = await getRolesOptions();
+    rolesOptions.value = data;
+  }
+
   onMounted(() => {
     onSearch();
+    getRolesOptionsData();
     getMenusData();
   });
 
@@ -181,10 +188,11 @@ export function useMenu() {
     menuFormRef,
     loading,
     isEdit,
-    options,
+    menusOptions,
     dialogVisible,
     columns,
     dataList,
+    rolesOptions,
     dialogTitle,
     onSearch,
     resetForm,

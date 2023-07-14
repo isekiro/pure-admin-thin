@@ -1,5 +1,5 @@
 import { http } from "@/utils/http";
-import { menuUrlApi } from "./utils";
+import { menuUrlApi, roleUrlApi } from "./utils";
 
 type Result = {
   success: boolean;
@@ -24,6 +24,11 @@ export const getUserList = (data?: object) => {
 /** 获取角色管理列表 */
 export const getRoleList = (data?: object) => {
   return http.request<Result>("post", "/role", { data });
+};
+
+/** 获取角色下拉列表选项 */
+export const getRolesOptions = (data?: object) => {
+  return http.request<Result>("get", roleUrlApi("/options"), { data });
 };
 
 /** 获取部门管理列表 */
