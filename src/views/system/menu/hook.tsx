@@ -52,7 +52,7 @@ export function useMenu() {
   const menuForm = getMenuForm();
   const menuFormRef = ref();
   const dataList = ref([]);
-  const rolesOptions = ref([]);
+  const rolesOptions = ref();
   const loading = ref(true);
   const dialogVisible = ref(false);
   // 是否编辑状态
