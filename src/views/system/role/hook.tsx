@@ -22,16 +22,10 @@ export function useRole() {
   });
   const columns: TableColumnList = [
     {
-      type: "selection",
-      width: 55,
-      align: "left",
-      hide: ({ checkList }) => !checkList.includes("勾选列")
-    },
-    {
       label: "序号",
       type: "index",
       width: 70,
-      hide: ({ checkList }) => !checkList.includes("序号列")
+      fixed: "left"
     },
     {
       label: "角色编号",

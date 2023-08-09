@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import tree from "./tree.vue";
+// import tree from "./tree.vue";
 import { useUser } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
@@ -38,8 +38,8 @@ const {
 
 <template>
   <div class="main">
-    <tree class="w-[17%] float-left" />
-    <div class="float-right w-[81%]">
+    <!-- <tree class="w-[17%] float-left" /> -->
+    <div class="float-right w-[100%]">
       <el-form
         ref="formRef"
         :inline="true"

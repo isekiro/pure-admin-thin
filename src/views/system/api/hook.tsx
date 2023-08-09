@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { getRoleList } from "@/api/system";
+import { getApiList } from "@/api/system";
 import { ElMessageBox } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, computed, onMounted } from "vue";
 
-export function useRole() {
+export function useApi() {
   const form = reactive({
     name: "",
     code: "",
@@ -22,16 +22,10 @@ export function useRole() {
   });
   const columns: TableColumnList = [
     {
-      type: "selection",
-      width: 55,
-      align: "left",
-      hide: ({ checkList }) => !checkList.includes("勾选列")
-    },
-    {
       label: "序号",
       type: "index",
       width: 70,
-      hide: ({ checkList }) => !checkList.includes("序号列")
+      fixed: "left"
     },
     {
       label: "角色编号",
@@ -172,7 +166,7 @@ export function useRole() {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getRoleList();
+    const { data } = await getApiList();
     dataList.value = data.list;
     pagination.total = data.total;
     setTimeout(() => {

@@ -31,6 +31,11 @@ export const getRolesOptions = (data?: object) => {
   return http.request<Result>("get", roleUrlApi("/options"), { data });
 };
 
+/** 获取接口管理列表 */
+export const getApiList = (data?: object) => {
+  return http.request<Result>("post", "/api", { data });
+};
+
 /** 获取部门管理列表 */
 export const getDeptList = (data?: object) => {
   return http.request<ResultDept>("post", "/dept", { data });
