@@ -4,13 +4,10 @@ import { useApi } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import Database from "@iconify-icons/ri/database-2-line";
-import More from "@iconify-icons/ep/more-filled";
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
 import Search from "@iconify-icons/ep/search";
 import Refresh from "@iconify-icons/ep/refresh";
-import Menu from "@iconify-icons/ep/menu";
 import AddFill from "@iconify-icons/ri/add-circle-line";
 
 defineOptions({
@@ -24,7 +21,6 @@ const {
   columns,
   dataList,
   pagination,
-  buttonClass,
   onSearch,
   resetForm,
   handleUpdate,
@@ -88,7 +84,7 @@ const {
     <PureTableBar title="接口列表" :columns="columns" @refresh="onSearch">
       <template #buttons>
         <el-button type="primary" :icon="useRenderIcon(AddFill)">
-          新增角色
+          新增接口
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
@@ -136,42 +132,6 @@ const {
                 </el-button>
               </template>
             </el-popconfirm>
-            <el-dropdown>
-              <el-button
-                class="ml-3 mt-[2px]"
-                link
-                type="primary"
-                :size="size"
-                :icon="useRenderIcon(More)"
-                @click="handleUpdate(row)"
-              />
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>
-                    <el-button
-                      :class="buttonClass"
-                      link
-                      type="primary"
-                      :size="size"
-                      :icon="useRenderIcon(Menu)"
-                    >
-                      菜单权限
-                    </el-button>
-                  </el-dropdown-item>
-                  <el-dropdown-item>
-                    <el-button
-                      :class="buttonClass"
-                      link
-                      type="primary"
-                      :size="size"
-                      :icon="useRenderIcon(Database)"
-                    >
-                      数据权限
-                    </el-button>
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
           </template>
         </pure-table>
       </template>
