@@ -137,10 +137,21 @@ class PureHttp {
       },
       (error: PureHttpError) => {
         const $error = error;
+        const status = error.response.status;
         $error.isCancelRequest = Axios.isCancel($error);
-        if (error.response.status === 401) {
-          useUserStoreHook().logOut();
-          message("token 过期", { type: "error" });
+        if (status) {
+          if (status === 401) {
+            // 请求 401 返回的提示
+            useUserStoreHook().logOut();
+            message("token 认证失败", { type: "error" });
+          }
+          if (status >= 500) {
+            // 请求大于 500 返回的提示
+            setTimeout(() => {
+              useUserStoreHook().logOut();
+            }, 500);
+            message("服务器请求失败", { type: "error" });
+          }
         }
         // 关闭进度条动画
         NProgress.done();

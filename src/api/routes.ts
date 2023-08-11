@@ -10,6 +10,6 @@ type Result = {
 //   return http.request<Result>("get", "/getAsyncRoutes");
 // };
 
-export const getAsyncRoutes = () => {
-  return http.request<Result>("get", menuUrlApi("/getAsyncRoutes"));
+export const getAsyncRoutes = (params?: object) => {
+  return http.request<Result>("get", menuUrlApi("/getAsyncRoutes"), { params });
 };
