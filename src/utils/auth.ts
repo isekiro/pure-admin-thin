@@ -11,6 +11,8 @@ export interface DataInfo<T> {
   refreshToken: string;
   /** 用户名 */
   username?: string;
+  /** 用户ID */
+  userId?: string;
   /** 当前登陆用户的角色 */
   roles?: Array<string>;
 }
@@ -44,26 +46,33 @@ export function setToken(data: DataInfo<Date>) {
       })
     : Cookies.set(TokenKey, cookieString);
 
-  function setSessionKey(username: string, roles: Array<string>) {
+  function setSessionKey(
+    username: string,
+    userId: string,
+    roles: Array<string>
+  ) {
     useUserStoreHook().SET_USERNAME(username);
     useUserStoreHook().SET_ROLES(roles);
     storageSession().setItem(sessionKey, {
       refreshToken,
       expires,
       username,
+      userId,
       roles
     });
   }
 
-  if (data.username && data.roles) {
-    const { username, roles } = data;
-    setSessionKey(username, roles);
+  if (data.username && data.userId && data.roles) {
+    const { username, userId, roles } = data;
+    setSessionKey(username, userId, roles);
   } else {
     const username =
       storageSession().getItem<DataInfo<number>>(sessionKey)?.username ?? "";
+    const userId =
+      storageSession().getItem<DataInfo<number>>(sessionKey)?.userId ?? "";
     const roles =
       storageSession().getItem<DataInfo<number>>(sessionKey)?.roles ?? [];
-    setSessionKey(username, roles);
+    setSessionKey(username, userId, roles);
   }
 }
 

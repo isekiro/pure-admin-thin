@@ -147,9 +147,6 @@ class PureHttp {
           }
           if (status >= 500) {
             // 请求大于 500 返回的提示
-            setTimeout(() => {
-              useUserStoreHook().logOut();
-            }, 500);
             message("服务器请求失败", { type: "error" });
           }
         }

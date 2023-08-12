@@ -22,7 +22,7 @@ import { buildHierarchyTree } from "@/utils/tree";
 import { sessionKey, type DataInfo } from "@/utils/auth";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
-import { useUserStoreHook } from "@/store/modules/user";
+
 const IFrame = () => import("@/layout/frameView.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
 const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
@@ -184,7 +184,8 @@ function handleAsyncRoutes(routeList) {
 
 /** 初始化路由（`new Promise` 写法防止在异步请求中造成无限循环）*/
 function initRouter() {
-  const user = useUserStoreHook().username;
+  const userId =
+    storageSession().getItem<DataInfo<number>>(sessionKey)?.userId ?? "";
   if (getConfig()?.CachingAsyncRoutes) {
     // 开启动态路由缓存本地sessionStorage
     const key = "async-routes";
@@ -196,7 +197,7 @@ function initRouter() {
       });
     } else {
       return new Promise(resolve => {
-        getAsyncRoutes({ user }).then(({ data }) => {
+        getAsyncRoutes({ userId }).then(({ data }) => {
           handleAsyncRoutes(cloneDeep(data));
           storageSession().setItem(key, data);
           resolve(router);
@@ -205,7 +206,7 @@ function initRouter() {
     }
   } else {
     return new Promise(resolve => {
-      getAsyncRoutes({ user }).then(({ data }) => {
+      getAsyncRoutes({ userId }).then(({ data }) => {
         handleAsyncRoutes(cloneDeep(data));
         resolve(router);
       });
