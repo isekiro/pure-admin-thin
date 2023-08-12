@@ -5,6 +5,23 @@ import { ElMessageBox } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 
+type RoleFormType = {
+  createTime: number;
+  updateTime: number;
+  creator: string;
+  updater: string;
+  deletedTime: number;
+  tenantId: number;
+  id: number;
+  name: string;
+  code: string;
+  sort: number;
+  status: number;
+  type: number;
+  remark: string;
+  dataScope: number;
+};
+
 export function useRole() {
   const form = reactive({
     name: "",
@@ -20,10 +37,32 @@ export function useRole() {
     currentPage: 1,
     background: true
   });
+
+  const roleForm = reactive<RoleFormType>({
+    createTime: 0,
+    updateTime: 0,
+    creator: "",
+    updater: "",
+    deletedTime: 0,
+    tenantId: 0,
+    id: 0,
+    name: "",
+    code: "",
+    sort: 0,
+    status: 0,
+    type: 0,
+    remark: "",
+    dataScope: 0
+  });
+
+  const dialogVisible = ref(false);
+  // 是否编辑状态
+  const isEdit = ref(true);
+
   const columns: TableColumnList = [
     {
-      label: "角色编号",
-      prop: "id",
+      label: "角色排序",
+      prop: "sort",
       minWidth: 100
     },
     {
@@ -115,8 +154,44 @@ export function useRole() {
       });
   }
 
+  function dialogTitle() {
+    return isEdit.value ? "编辑菜单" : "新建菜单";
+  }
+
+  function getRoleForm() {
+    return reactive({
+      createTime: 0,
+      updateTime: 0,
+      creator: "",
+      updater: "",
+      deletedTime: 0,
+      tenantId: 0,
+      id: 0,
+      name: "",
+      code: "",
+      sort: 0,
+      status: 0,
+      type: 0,
+      remark: "",
+      dataScope: 0
+    });
+  }
+
+  function handleCreate() {
+    isEdit.value = false;
+    Object.assign(roleForm, getRoleForm());
+    // nextTick(menuFormRef.resetFields());
+    dialogVisible.value = true;
+  }
+
   function handleUpdate(row) {
-    console.log(row);
+    isEdit.value = true;
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(row));
+    // 给proxy对象赋值
+    Object.assign(roleForm, obj);
+    // 打开对话框
+    dialogVisible.value = true;
   }
 
   function handleDelete(row) {
@@ -161,8 +236,12 @@ export function useRole() {
     columns,
     dataList,
     pagination,
+    dialogVisible,
+    roleForm,
     onSearch,
     resetForm,
+    dialogTitle,
+    handleCreate,
     handleUpdate,
     handleDelete,
     handleSizeChange,

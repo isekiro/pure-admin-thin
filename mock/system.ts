@@ -53,7 +53,7 @@ export default [
               id: 101,
               name: "测试账号",
               code: "test",
-              sort: 0,
+              sort: 10,
               status: 1,
               type: 2,
               remark: "132",

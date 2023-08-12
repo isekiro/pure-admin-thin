@@ -39,18 +39,18 @@ const {
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="角色名称：" prop="name">
+      <el-form-item label="接口名称：" prop="name">
         <el-input
           v-model="form.name"
-          placeholder="请输入角色名称"
+          placeholder="请输入接口名称"
           clearable
           class="!w-[200px]"
         />
       </el-form-item>
-      <el-form-item label="角色标识：" prop="code">
+      <el-form-item label="接口标识：" prop="code">
         <el-input
           v-model="form.code"
-          placeholder="请输入角色标识"
+          placeholder="请输入接口标识"
           clearable
           class="!w-[180px]"
         />
@@ -104,8 +104,8 @@ const {
             color: 'var(--el-text-color-primary)'
           }"
           @selection-change="handleSelectionChange"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
+          @page-size-change="handleSizeChange"
+          @page-current-change="handleCurrentChange"
         >
           <template #operation="{ row }">
             <el-button

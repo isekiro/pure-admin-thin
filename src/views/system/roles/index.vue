@@ -24,8 +24,12 @@ const {
   columns,
   dataList,
   pagination,
+  dialogVisible,
+  roleForm,
   onSearch,
   resetForm,
+  dialogTitle,
+  handleCreate,
   handleUpdate,
   handleDelete,
   handleSizeChange,
@@ -86,7 +90,11 @@ const {
 
     <PureTableBar title="角色列表" :columns="columns" @refresh="onSearch">
       <template #buttons>
-        <el-button type="primary" :icon="useRenderIcon(AddFill)">
+        <el-button
+          type="primary"
+          :icon="useRenderIcon(AddFill)"
+          @click="handleCreate()"
+        >
           新增角色
         </el-button>
       </template>
@@ -108,8 +116,8 @@ const {
             color: 'var(--el-text-color-primary)'
           }"
           @selection-change="handleSelectionChange"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
+          @page-size-change="handleSizeChange"
+          @page-current-change="handleCurrentChange"
         >
           <template #operation="{ row }">
             <el-button
@@ -149,6 +157,59 @@ const {
         </pure-table>
       </template>
     </PureTableBar>
+
+    <!-- 新建/编辑对话框 -->
+    <div class="system-menu-dialog-container">
+      <el-dialog
+        v-model="dialogVisible"
+        :title="dialogTitle()"
+        draggable
+        width="769px"
+      >
+        <el-form size="default" :model="roleForm" label-width="80px">
+          <el-row :gutter="35">
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="角色名称">
+                <el-input v-model="roleForm.name" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="角色排序">
+                <el-input v-model="roleForm.sort" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="角色标识">
+                <el-input v-model="roleForm.code" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="角色类型">
+                <el-input v-model="roleForm.type" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="角色备注">
+                <el-input type="textarea" v-model="roleForm.remark" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="启用状态">
+                <el-switch v-model.Number="roleForm.status" :active-value="1" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="dialogVisible = false">
+              确定
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
