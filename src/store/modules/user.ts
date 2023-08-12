@@ -60,6 +60,10 @@ export const useUserStore = defineStore({
       // location.href = "/";
       router.push("/login");
     },
+    /** 前端登出（不调用接口） */
+    internalError() {
+      router.push("/error/500");
+    },
     /** 刷新`token` */
     async handRefreshToken(data) {
       return new Promise<RefreshTokenResult>((resolve, reject) => {
