@@ -11,9 +11,11 @@ type Result = {
   };
 };
 
-type ResultDept = {
+type ResultTree = {
   success: boolean;
-  data?: Array<any>;
+  data?: {
+    tree: Array<any>;
+  };
 };
 
 /** 获取用户管理列表 */
@@ -36,20 +38,12 @@ export const getApiList = (data?: object) => {
   return http.request<Result>("post", apiUrlApi("/list"), { data });
 };
 
-/** 获取部门管理列表 */
-export const getDeptList = (data?: object) => {
-  return http.request<ResultDept>("post", "/dept", { data });
-};
-
-/** 获取菜单管理列表 */
+/** 获取所有菜单列表（树形数据表格） */
 export const getMenuList = (data?: object) => {
-  return http.request<Result>("get", menuUrlApi("/list"), { data });
+  return http.request<ResultTree>("get", menuUrlApi("/list"), { data });
 };
 
-/** 获取左侧菜单栏 */
+/** 获取菜单树结构数据（编辑表单里面显示） */
 export const getMenuTree = (data?: object) => {
-  return http.request<Result>("get", menuUrlApi("/tree"), { data });
+  return http.request<ResultTree>("get", menuUrlApi("/tree"), { data });
 };
-// export const getMenuTree = (data?: object) => {
-//   return http.request<ResultDept>("get", "/tree", { data });
-// };

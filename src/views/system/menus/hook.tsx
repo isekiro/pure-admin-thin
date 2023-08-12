@@ -13,13 +13,14 @@ export function useMenu() {
     name: "",
     status: ""
   });
+
   // 获取菜单树结构数据
   async function getMenusData() {
     loading.value = true;
     const { data } = await getMenuTree();
     const topMenu = { id: 0, meta: { title: "顶级类目" } };
-    data.unshift(topMenu);
-    menuData.value = data;
+    data.tree.unshift(topMenu);
+    menuData.value = data.tree;
     loading.value = false;
   }
 
@@ -165,7 +166,7 @@ export function useMenu() {
   async function onSearch() {
     loading.value = true;
     const { data } = await getMenuList();
-    dataList.value = handleTree(data);
+    dataList.value = handleTree(data.tree);
     loading.value = false;
   }
 

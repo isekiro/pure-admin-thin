@@ -197,7 +197,7 @@ function initRouter() {
       });
     } else {
       return new Promise(resolve => {
-        getAsyncRoutes({ userId }).then(({ data }) => {
+        getAsyncRoutes(userId).then(({ data }) => {
           handleAsyncRoutes(cloneDeep(data));
           storageSession().setItem(key, data);
           resolve(router);
@@ -206,7 +206,7 @@ function initRouter() {
     }
   } else {
     return new Promise(resolve => {
-      getAsyncRoutes({ userId }).then(({ data }) => {
+      getAsyncRoutes(userId).then(({ data }) => {
         handleAsyncRoutes(cloneDeep(data));
         resolve(router);
       });

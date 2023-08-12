@@ -6,10 +6,7 @@ type Result = {
   data: Array<any>;
 };
 
-// export const getAsyncRoutes = () => {
-//   return http.request<Result>("get", "/getAsyncRoutes");
-// };
-
-export const getAsyncRoutes = (params?: object) => {
-  return http.request<Result>("get", menuUrlApi("/getAsyncRoutes"), { params });
+/** 获取左侧菜单栏 */
+export const getAsyncRoutes = (params?: string) => {
+  return http.request<Result>("get", menuUrlApi("/access/tree/" + params));
 };
