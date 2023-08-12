@@ -3,7 +3,7 @@ import { message } from "@/utils/message";
 import { getRoleList } from "@/api/system";
 import { ElMessageBox } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
-import { reactive, ref, computed, onMounted } from "vue";
+import { reactive, ref, onMounted } from "vue";
 
 export function useRole() {
   const form = reactive({
@@ -22,12 +22,6 @@ export function useRole() {
   });
   const columns: TableColumnList = [
     {
-      label: "序号",
-      type: "index",
-      width: 70,
-      fixed: "left"
-    },
-    {
       label: "角色编号",
       prop: "id",
       minWidth: 100
@@ -41,25 +35,6 @@ export function useRole() {
       label: "角色标识",
       prop: "code",
       minWidth: 150
-    },
-    {
-      label: "角色类型",
-      prop: "type",
-      minWidth: 150,
-      cellRenderer: ({ row, props }) => (
-        <el-tag
-          size={props.size}
-          type={row.type === 1 ? "danger" : ""}
-          effect="plain"
-        >
-          {row.type === 1 ? "内置" : "自定义"}
-        </el-tag>
-      )
-    },
-    {
-      label: "显示顺序",
-      prop: "sort",
-      minWidth: 100
     },
     {
       label: "状态",
@@ -79,6 +54,11 @@ export function useRole() {
       )
     },
     {
+      label: "备注",
+      prop: "remark",
+      minWidth: 150
+    },
+    {
       label: "创建时间",
       minWidth: 180,
       prop: "createTime",
@@ -88,19 +68,10 @@ export function useRole() {
     {
       label: "操作",
       fixed: "right",
-      width: 180,
+      width: 240,
       slot: "operation"
     }
   ];
-  const buttonClass = computed(() => {
-    return [
-      "!h-[20px]",
-      "reset-margin",
-      "!text-gray-500",
-      "dark:!text-white",
-      "dark:hover:!text-primary"
-    ];
-  });
 
   function onChange({ row, index }) {
     ElMessageBox.confirm(
@@ -190,7 +161,6 @@ export function useRole() {
     columns,
     dataList,
     pagination,
-    buttonClass,
     onSearch,
     resetForm,
     handleUpdate,

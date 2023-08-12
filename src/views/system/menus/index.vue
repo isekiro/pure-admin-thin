@@ -28,7 +28,6 @@ const {
   dialogVisible,
   columns,
   dataList,
-  rolesOptions,
   dialogTitle,
   onSearch,
   resetForm,
@@ -151,11 +150,6 @@ const {
         <el-form size="default" :model="menuForm" label-width="80px">
           <el-row :gutter="35">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="菜单ID">
-                <el-input v-model="menuForm.id" disabled />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="菜单名称">
                 <el-input v-model="menuForm.meta.title" />
               </el-form-item>
@@ -183,23 +177,6 @@ const {
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="排序">
                 <el-input v-model="menuForm.meta.rank" />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="授权角色">
-                <el-select
-                  v-model="menuForm.meta.roles"
-                  multiple
-                  placeholder="Select"
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="item in rolesOptions"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">

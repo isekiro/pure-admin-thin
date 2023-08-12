@@ -18,9 +18,9 @@ export default [
               tenantId: 1,
               id: 1,
               name: "超级管理员",
-              code: "super_admin",
+              code: "admin",
               sort: 1,
-              status: 0,
+              status: 1,
               type: 1,
               remark: "超级管理员",
               dataScope: 1,
@@ -37,7 +37,7 @@ export default [
               name: "普通角色",
               code: "common",
               sort: 2,
-              status: 0,
+              status: 1,
               type: 1,
               remark: "普通角色",
               dataScope: 2,
@@ -54,7 +54,7 @@ export default [
               name: "测试账号",
               code: "test",
               sort: 0,
-              status: 0,
+              status: 1,
               type: 2,
               remark: "132",
               dataScope: 1,
@@ -63,187 +63,6 @@ export default [
           ],
           total: 3
         }
-      };
-    }
-  },
-  {
-    url: "/api",
-    method: "post",
-    response: () => {
-      return {
-        success: true,
-        data: {
-          list: [
-            {
-              createTime: 1609837428000,
-              updateTime: 1645477701000,
-              creator: "admin",
-              updater: "",
-              deleted: false,
-              tenantId: 1,
-              id: 1,
-              method: "POST",
-              path: "/base/login",
-              category: "base",
-              desc: "用户登录"
-            },
-            {
-              createTime: 1609837428000,
-              updateTime: 1645477701000,
-              creator: "admin",
-              updater: "",
-              deleted: false,
-              tenantId: 1,
-              id: 2,
-              method: "POST",
-              path: "/base/logout",
-              category: "base",
-              desc: "用户退出"
-            }
-          ],
-          total: 2
-        }
-      };
-    }
-  },
-  {
-    url: "/dept",
-    method: "post",
-    response: () => {
-      return {
-        success: true,
-        data: [
-          {
-            name: "杭州总公司",
-            type: 1, // 1 公司 2 分公司 3 部门
-            parentId: 0,
-            sort: 0,
-            leaderUserId: 1,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 0,
-            id: 100,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "郑州分公司",
-            type: 2,
-            parentId: 100,
-            sort: 1,
-            leaderUserId: 104,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 0,
-            id: 101,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "研发部门",
-            type: 3,
-            parentId: 101,
-            sort: 1,
-            leaderUserId: 104,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 0,
-            id: 103,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "市场部门",
-            type: 3,
-            parentId: 102,
-            sort: 1,
-            leaderUserId: null,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 0,
-            id: 108,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "深圳分公司",
-            type: 2,
-            parentId: 100,
-            sort: 2,
-            leaderUserId: null,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 0,
-            id: 102,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "市场部门",
-            type: 3,
-            parentId: 101,
-            sort: 2,
-            leaderUserId: null,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 1,
-            id: 104,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "财务部门",
-            type: 3,
-            parentId: 102,
-            sort: 2,
-            leaderUserId: null,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 0,
-            id: 109,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "测试部门",
-            type: 3,
-            parentId: 101,
-            sort: 3,
-            leaderUserId: null,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 0,
-            id: 105,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "财务部门",
-            type: 3,
-            parentId: 101,
-            sort: 4,
-            leaderUserId: 103,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 1,
-            id: 106,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          },
-          {
-            name: "运维部门",
-            type: 3,
-            parentId: 101,
-            sort: 5,
-            leaderUserId: null,
-            phone: "15888888888",
-            email: "ry@qq.com",
-            status: 0,
-            id: 107,
-            createTime: 1609837427000,
-            remark: "备注、备注、备注、备注、备注、备注、备注"
-          }
-        ]
       };
     }
   },
@@ -264,7 +83,7 @@ export default [
               mobile: "15888888888",
               sex: 0,
               id: 1,
-              status: 0,
+              status: 1,
               createTime: 1609837427000,
               dept: {
                 id: 103,
