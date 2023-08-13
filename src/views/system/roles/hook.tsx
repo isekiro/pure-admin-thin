@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { getRoleList } from "@/api/system";
-import { ElMessageBox } from "element-plus";
+import { getRoleList, getMenuTree } from "@/api/system";
+import { ElMessageBox, ElTree } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 
@@ -55,9 +55,22 @@ export function useRole() {
     dataScope: 0
   });
 
+  // 新建/编辑对话框
   const dialogVisible = ref(false);
+  // 角色授权对话框
+  const permsDialogVisible = ref(false);
   // 是否编辑状态
   const isEdit = ref(true);
+  // 角色授权title
+  const permsTitle = ref("");
+  const menuTreeRef = ref<InstanceType<typeof ElTree>>();
+  const menuTreeData = ref([]);
+  const defaultProps = {
+    label: "name"
+  };
+
+  // 标签页默认选择
+  const activeName = ref("menuTag");
 
   const columns: TableColumnList = [
     {
@@ -158,6 +171,14 @@ export function useRole() {
     return isEdit.value ? "编辑菜单" : "新建菜单";
   }
 
+  function permsDialogTitle() {
+    return permsTitle.value;
+  }
+
+  function getCheckedKeys() {
+    console.log(menuTreeRef.value!.getCheckedKeys(false));
+  }
+
   function getRoleForm() {
     return reactive({
       createTime: 0,
@@ -177,6 +198,17 @@ export function useRole() {
     });
   }
 
+  // 获取菜单树结构数据
+  async function getMenusData() {
+    loading.value = true;
+    const { data } = await getMenuTree();
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(data));
+    // 给proxy对象赋值
+    Object.assign(menuTreeData.value, obj.tree);
+    loading.value = false;
+  }
+
   function handleCreate() {
     isEdit.value = false;
     Object.assign(roleForm, getRoleForm());
@@ -192,6 +224,15 @@ export function useRole() {
     Object.assign(roleForm, obj);
     // 打开对话框
     dialogVisible.value = true;
+  }
+
+  function handlePermission(row) {
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(row));
+    // 给proxy对象赋值
+    permsTitle.value = obj.name;
+    // 打开对话框
+    permsDialogVisible.value = true;
   }
 
   function handleDelete(row) {
@@ -228,6 +269,7 @@ export function useRole() {
 
   onMounted(() => {
     onSearch();
+    getMenusData();
   });
 
   return {
@@ -237,15 +279,23 @@ export function useRole() {
     dataList,
     pagination,
     dialogVisible,
+    permsDialogVisible,
     roleForm,
+    activeName,
+    menuTreeRef,
+    menuTreeData,
+    defaultProps,
     onSearch,
     resetForm,
     dialogTitle,
+    permsDialogTitle,
     handleCreate,
     handleUpdate,
+    handlePermission,
     handleDelete,
     handleSizeChange,
     handleCurrentChange,
-    handleSelectionChange
+    handleSelectionChange,
+    getCheckedKeys
   };
 }

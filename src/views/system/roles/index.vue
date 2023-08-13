@@ -25,16 +25,24 @@ const {
   dataList,
   pagination,
   dialogVisible,
+  permsDialogVisible,
   roleForm,
+  activeName,
+  menuTreeRef,
+  menuTreeData,
+  defaultProps,
   onSearch,
   resetForm,
   dialogTitle,
+  permsDialogTitle,
   handleCreate,
   handleUpdate,
+  handlePermission,
   handleDelete,
   handleSizeChange,
   handleCurrentChange,
-  handleSelectionChange
+  handleSelectionChange,
+  getCheckedKeys
 } = useRole();
 </script>
 
@@ -136,6 +144,7 @@ const {
               type="primary"
               :size="size"
               :icon="useRenderIcon(Menu)"
+              @click="handlePermission(row)"
             >
               菜单权限
             </el-button>
@@ -184,18 +193,13 @@ const {
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="角色类型">
-                <el-input v-model="roleForm.type" />
+              <el-form-item label="是否启用">
+                <el-switch v-model.Number="roleForm.status" :active-value="1" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="角色备注">
                 <el-input type="textarea" v-model="roleForm.remark" />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="启用状态">
-                <el-switch v-model.Number="roleForm.status" :active-value="1" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -210,11 +214,43 @@ const {
         </template>
       </el-dialog>
     </div>
+
+    <!-- 角色授权对话框 -->
+    <div class="system-menu-dialog-container">
+      <el-dialog
+        v-model="permsDialogVisible"
+        :title="permsDialogTitle()"
+        draggable
+        width="25%"
+      >
+        <el-tabs v-model="activeName" tabPosition="left">
+          <el-tab-pane label="菜单权限" name="menuTag">
+            <el-tree
+              ref="menuTreeRef"
+              :data="menuTreeData"
+              show-checkbox
+              default-expand-all
+              :default-checked-keys="[15]"
+              node-key="id"
+              highlight-current
+              :props="defaultProps"
+            >
+              <template #default="{ data }">
+                <span v-html="data.meta.title" />
+              </template>
+            </el-tree>
+          </el-tab-pane>
+          <el-tab-pane label="接口权限" name="apiTag">接口权限</el-tab-pane>
+        </el-tabs>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="permsDialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="getCheckedKeys()">
+              确定
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-:deep(.el-dropdown-menu__item i) {
-  margin: 0;
-}
-</style>
