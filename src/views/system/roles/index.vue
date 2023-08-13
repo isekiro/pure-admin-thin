@@ -30,7 +30,9 @@ const {
   activeName,
   menuTreeRef,
   menuTreeData,
-  defaultProps,
+  defaultMenuTreeProps,
+  defaultRoleApisTreeProps,
+  apisTreeData,
   onSearch,
   resetForm,
   dialogTitle,
@@ -233,14 +235,28 @@ const {
               :default-checked-keys="[15]"
               node-key="id"
               highlight-current
-              :props="defaultProps"
+              :props="defaultMenuTreeProps"
             >
               <template #default="{ data }">
                 <span v-html="data.meta.title" />
               </template>
             </el-tree>
           </el-tab-pane>
-          <el-tab-pane label="接口权限" name="apiTag">接口权限</el-tab-pane>
+          <el-tab-pane label="接口权限" name="apiTag">
+            <el-tree
+              ref="menuTreeRef"
+              :data="apisTreeData"
+              show-checkbox
+              :default-checked-keys="[]"
+              node-key="id"
+              highlight-current
+              :props="defaultRoleApisTreeProps"
+            >
+              <template #default="{ data }">
+                <span v-html="data.desc" />
+              </template>
+            </el-tree>
+          </el-tab-pane>
         </el-tabs>
         <template #footer>
           <span class="dialog-footer">

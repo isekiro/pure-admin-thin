@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { getRoleList, getMenuTree } from "@/api/system";
+import { getRoleList, getMenuTree, getApisTree } from "@/api/system";
 import { ElMessageBox, ElTree } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
@@ -65,8 +65,12 @@ export function useRole() {
   const permsTitle = ref("");
   const menuTreeRef = ref<InstanceType<typeof ElTree>>();
   const menuTreeData = ref([]);
-  const defaultProps = {
+  const apisTreeData = ref([]);
+  const defaultMenuTreeProps = {
     label: "name"
+  };
+  const defaultRoleApisTreeProps = {
+    label: "category"
   };
 
   // 标签页默认选择
@@ -209,6 +213,17 @@ export function useRole() {
     loading.value = false;
   }
 
+  // 获取接口树结构数据
+  async function getApisData() {
+    loading.value = true;
+    const { data } = await getApisTree();
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(data));
+    // 给proxy对象赋值
+    Object.assign(apisTreeData.value, obj.tree);
+    loading.value = false;
+  }
+
   function handleCreate() {
     isEdit.value = false;
     Object.assign(roleForm, getRoleForm());
@@ -270,6 +285,7 @@ export function useRole() {
   onMounted(() => {
     onSearch();
     getMenusData();
+    getApisData();
   });
 
   return {
@@ -284,7 +300,9 @@ export function useRole() {
     activeName,
     menuTreeRef,
     menuTreeData,
-    defaultProps,
+    defaultMenuTreeProps,
+    defaultRoleApisTreeProps,
+    apisTreeData,
     onSearch,
     resetForm,
     dialogTitle,
