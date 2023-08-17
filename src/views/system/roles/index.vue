@@ -29,12 +29,17 @@ const {
   roleForm,
   activeName,
   menuTreeRef,
+  apisTreeRef,
   menuTreeData,
   defaultMenuTreeProps,
   defaultRoleApisTreeProps,
   apisTreeData,
+  defaultMenuTreeCheckKeys,
+  defaultApisTreeCheckKeys,
+  permsDialogLoading,
   onSearch,
   resetForm,
+  resetPerms,
   dialogTitle,
   permsDialogTitle,
   handleCreate,
@@ -43,8 +48,7 @@ const {
   handleDelete,
   handleSizeChange,
   handleCurrentChange,
-  handleSelectionChange,
-  getCheckedKeys
+  handleSelectionChange
 } = useRole();
 </script>
 
@@ -223,7 +227,8 @@ const {
         v-model="permsDialogVisible"
         :title="permsDialogTitle()"
         draggable
-        width="25%"
+        width="35%"
+        @close="resetPerms()"
       >
         <el-tabs v-model="activeName" tabPosition="left">
           <el-tab-pane label="菜单权限" name="menuTag">
@@ -232,8 +237,8 @@ const {
               :data="menuTreeData"
               show-checkbox
               default-expand-all
-              :default-checked-keys="[15]"
-              node-key="id"
+              :default-checked-keys="defaultMenuTreeCheckKeys"
+              node-key="ID"
               highlight-current
               :props="defaultMenuTreeProps"
             >
@@ -244,11 +249,11 @@ const {
           </el-tab-pane>
           <el-tab-pane label="接口权限" name="apiTag">
             <el-tree
-              ref="menuTreeRef"
+              ref="apisTreeRef"
               :data="apisTreeData"
               show-checkbox
-              :default-checked-keys="[]"
-              node-key="id"
+              :default-checked-keys="defaultApisTreeCheckKeys"
+              node-key="ID"
               highlight-current
               :props="defaultRoleApisTreeProps"
             >
@@ -260,10 +265,12 @@ const {
         </el-tabs>
         <template #footer>
           <span class="dialog-footer">
-            <el-button @click="permsDialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="getCheckedKeys()">
-              确定
-            </el-button>
+            <el-button
+              :loading="permsDialogLoading"
+              @click="permsDialogVisible = false"
+              >取消</el-button
+            >
+            <el-button type="primary"> 确定 </el-button>
           </span>
         </template>
       </el-dialog>

@@ -33,6 +33,16 @@ export const getRolesOptions = (data?: object) => {
   return http.request<Result>("get", roleUrlApi("/options"), { data });
 };
 
+/** 获取角色的权限菜单 */
+export const getMenuDefaultCheckedId = (data?: string) => {
+  return http.request<Result>("get", roleUrlApi("/menus/get/" + data));
+};
+
+/** 获取角色的权限接口 */
+export const getApisDefaultCheckedId = (data?: string) => {
+  return http.request<Result>("get", roleUrlApi("/apis/get/" + data));
+};
+
 /** 获取接口管理列表 */
 export const getApiList = (data?: object) => {
   return http.request<Result>("post", apiUrlApi("/list"), { data });

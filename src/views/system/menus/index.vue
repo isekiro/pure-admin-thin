@@ -207,7 +207,7 @@ const {
                   :default-expanded-keys="[]"
                 >
                   <template #default="{ data }">
-                    <el-option :label="data.meta.title" :value="data.id">{{
+                    <el-option :label="data.meta.title" :value="data.ID">{{
                       data.meta.title
                     }}</el-option>
                   </template>

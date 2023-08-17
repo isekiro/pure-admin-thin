@@ -5,7 +5,7 @@ import { reactive, ref, onMounted } from "vue";
 export function useMenu() {
   const defaultProps = {
     children: "children",
-    value: "id"
+    value: "ID"
   };
   const menuData = ref([]);
   // 查询表单
@@ -18,7 +18,7 @@ export function useMenu() {
   async function getMenusData() {
     loading.value = true;
     const { data } = await getMenuTree();
-    const topMenu = { id: 0, meta: { title: "顶级类目" } };
+    const topMenu = { ID: 0, meta: { title: "顶级类目" } };
     data.tree.unshift(topMenu);
     menuData.value = data.tree;
     loading.value = false;
@@ -27,7 +27,7 @@ export function useMenu() {
   // 返回空菜单表单
   function getMenuForm() {
     return reactive({
-      id: "",
+      ID: "",
       createdAt: "",
       updatedAt: "",
       deletedAt: "",

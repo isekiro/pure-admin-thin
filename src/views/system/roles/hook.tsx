@@ -1,6 +1,12 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { getRoleList, getMenuTree, getApisTree } from "@/api/system";
+import {
+  getRoleList,
+  getMenuTree,
+  getMenuDefaultCheckedId,
+  getApisTree,
+  getApisDefaultCheckedId
+} from "@/api/system";
 import { ElMessageBox, ElTree } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
@@ -64,14 +70,16 @@ export function useRole() {
   // 角色授权title
   const permsTitle = ref("");
   const menuTreeRef = ref<InstanceType<typeof ElTree>>();
+  const apisTreeRef = ref<InstanceType<typeof ElTree>>();
   const menuTreeData = ref([]);
   const apisTreeData = ref([]);
-  const defaultMenuTreeProps = {
-    label: "name"
-  };
+  const defaultMenuTreeProps = {};
   const defaultRoleApisTreeProps = {
     label: "category"
   };
+  const defaultMenuTreeCheckKeys = ref([]);
+  const defaultApisTreeCheckKeys = ref([]);
+  const permsDialogLoading = ref(false);
 
   // 标签页默认选择
   const activeName = ref("menuTag");
@@ -179,9 +187,9 @@ export function useRole() {
     return permsTitle.value;
   }
 
-  function getCheckedKeys() {
-    console.log(menuTreeRef.value!.getCheckedKeys(false));
-  }
+  // function getCheckedKeys() {
+  //   console.log(menuTreeRef.value!.getCheckedKeys(false));
+  // }
 
   function getRoleForm() {
     return reactive({
@@ -213,6 +221,38 @@ export function useRole() {
     loading.value = false;
   }
 
+  // 获取角色的权限菜单
+  async function getMenuDefaultCheckedData(id: string) {
+    // 打开对话框
+    permsDialogLoading.value = true;
+    try {
+      const { data } = await getMenuDefaultCheckedId(id);
+      // 深拷贝
+      const obj = JSON.parse(JSON.stringify(data));
+      // 给proxy对象赋值
+      defaultMenuTreeCheckKeys.value = obj.list;
+      menuTreeRef.value!.setCheckedKeys(defaultMenuTreeCheckKeys.value, false);
+    } finally {
+      permsDialogLoading.value = false;
+    }
+  }
+
+  // 获取角色的权限接口
+  async function getApisDefaultCheckedData(id: string) {
+    // 打开对话框
+    permsDialogLoading.value = true;
+    try {
+      const { data } = await getApisDefaultCheckedId(id);
+      // 深拷贝
+      const obj = JSON.parse(JSON.stringify(data));
+      // 给proxy对象赋值
+      defaultApisTreeCheckKeys.value = obj.list;
+      apisTreeRef.value!.setCheckedKeys(defaultApisTreeCheckKeys.value, false);
+    } finally {
+      permsDialogLoading.value = false;
+    }
+  }
+
   // 获取接口树结构数据
   async function getApisData() {
     loading.value = true;
@@ -242,12 +282,15 @@ export function useRole() {
   }
 
   function handlePermission(row) {
+    // 打开对话框
+    permsDialogVisible.value = true;
     // 深拷贝
     const obj = JSON.parse(JSON.stringify(row));
     // 给proxy对象赋值
     permsTitle.value = obj.name;
-    // 打开对话框
-    permsDialogVisible.value = true;
+    // 获取权限菜单和接口
+    getMenuDefaultCheckedData(row.id);
+    getApisDefaultCheckedData(row.id);
   }
 
   function handleDelete(row) {
@@ -282,6 +325,11 @@ export function useRole() {
     onSearch();
   };
 
+  const resetPerms = () => {
+    menuTreeRef.value!.setCheckedKeys([], false);
+    apisTreeRef.value!.setCheckedKeys([], false);
+  };
+
   onMounted(() => {
     onSearch();
     getMenusData();
@@ -299,12 +347,17 @@ export function useRole() {
     roleForm,
     activeName,
     menuTreeRef,
+    apisTreeRef,
     menuTreeData,
     defaultMenuTreeProps,
     defaultRoleApisTreeProps,
     apisTreeData,
+    defaultMenuTreeCheckKeys,
+    defaultApisTreeCheckKeys,
+    permsDialogLoading,
     onSearch,
     resetForm,
+    resetPerms,
     dialogTitle,
     permsDialogTitle,
     handleCreate,
@@ -313,7 +366,6 @@ export function useRole() {
     handleDelete,
     handleSizeChange,
     handleCurrentChange,
-    handleSelectionChange,
-    getCheckedKeys
+    handleSelectionChange
   };
 }
