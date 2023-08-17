@@ -2,6 +2,31 @@ import dayjs from "dayjs";
 import { handleTree } from "@/utils/tree";
 import { getMenuList, getMenuTree } from "@/api/system";
 import { reactive, ref, onMounted } from "vue";
+
+type MenusDataType = {
+  ID: number;
+  createdAt: number;
+  updatedAt: number;
+  deletedAt: number;
+  name: string;
+  path: string;
+  redirect: string;
+  meta: {
+    title: string;
+    icon: string;
+    rank: number;
+    roles: string[];
+    showLink: number;
+    keepAlive: number;
+    showParent: number;
+    hiddenTag: number;
+  };
+  status: number;
+  parentId: number;
+  creator: string;
+  type: number;
+};
+
 export function useMenu() {
   const defaultProps = {
     children: "children",
@@ -26,28 +51,28 @@ export function useMenu() {
 
   // 返回空菜单表单
   function getMenuForm() {
-    return reactive({
-      ID: "",
-      createdAt: "",
-      updatedAt: "",
-      deletedAt: "",
+    return reactive<MenusDataType>({
+      ID: 0,
+      createdAt: 0,
+      updatedAt: 0,
+      deletedAt: 0,
       name: "",
       path: "",
       redirect: "",
       meta: {
         title: "",
         icon: "",
-        rank: "",
-        roles: "",
-        showLink: "",
-        keepAlive: "",
-        showParent: "",
-        hiddenTag: ""
+        rank: 0,
+        roles: [],
+        showLink: 0,
+        keepAlive: 0,
+        showParent: 0,
+        hiddenTag: 0
       },
-      status: "",
-      parentId: "",
+      status: 0,
+      parentId: 0,
       creator: "",
-      type: ""
+      type: 0
     });
   }
   const menuForm = getMenuForm();

@@ -314,9 +314,9 @@ export function useRole() {
     const { data } = await getRoleList();
     dataList.value = data.list;
     pagination.total = data.total;
-    setTimeout(() => {
-      loading.value = false;
-    }, 500);
+    getMenusData();
+    getApisData();
+    loading.value = false;
   }
 
   const resetForm = formEl => {
@@ -332,8 +332,6 @@ export function useRole() {
 
   onMounted(() => {
     onSearch();
-    getMenusData();
-    getApisData();
   });
 
   return {
