@@ -127,9 +127,9 @@ export function useMenu() {
     {
       label: "更新时间",
       minWidth: 200,
-      prop: "updatedAt",
-      formatter: ({ updatedAt }) =>
-        dayjs(updatedAt).format("YYYY-MM-DD HH:mm:ss")
+      prop: "UpdatedAt",
+      formatter: ({ UpdatedAt }) =>
+        dayjs(UpdatedAt).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       label: "路径",

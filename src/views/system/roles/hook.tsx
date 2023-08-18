@@ -86,6 +86,10 @@ export function useRole() {
 
   const columns: TableColumnList = [
     {
+      type: "selection",
+      align: "left"
+    },
+    {
       label: "角色排序",
       prop: "sort",
       minWidth: 100
@@ -125,9 +129,9 @@ export function useRole() {
     {
       label: "创建时间",
       minWidth: 180,
-      prop: "createTime",
-      formatter: ({ createTime }) =>
-        dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+      prop: "CreatedAt",
+      formatter: ({ CreatedAt }) =>
+        dayjs(CreatedAt).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       label: "操作",
@@ -298,11 +302,13 @@ export function useRole() {
   }
 
   function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+    pagination.pageSize = val;
+    onSearch();
   }
 
   function handleCurrentChange(val: number) {
-    console.log(`current page: ${val}`);
+    pagination.currentPage = val;
+    onSearch();
   }
 
   function handleSelectionChange(val) {

@@ -22,6 +22,10 @@ export function useUser() {
   });
   const columns: TableColumnList = [
     {
+      type: "selection",
+      align: "left"
+    },
+    {
       label: "序号",
       type: "index",
       width: 70,
@@ -88,9 +92,9 @@ export function useUser() {
     {
       label: "创建时间",
       minWidth: 90,
-      prop: "createTime",
-      formatter: ({ createTime }) =>
-        dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
+      prop: "CreatedAt",
+      formatter: ({ CreatedAt }) =>
+        dayjs(CreatedAt).format("YYYY-MM-DD HH:mm:ss")
     },
     {
       label: "操作",

@@ -4,7 +4,7 @@ import { roleUrlApi } from "../utils";
 
 /** 获取角色管理列表 */
 export const getRoleList = (data?: object) => {
-  return http.request<Result>("post", "/role", { data });
+  return http.request<Result>("post", roleUrlApi("/list"), { data });
 };
 
 /** 获取角色下拉列表选项 */

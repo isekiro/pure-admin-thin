@@ -21,6 +21,10 @@ export function useApi() {
   });
   const columns: TableColumnList = [
     {
+      type: "selection",
+      align: "left"
+    },
+    {
       label: "序号",
       type: "index",
       width: 70,
