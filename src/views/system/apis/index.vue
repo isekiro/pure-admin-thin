@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useApi } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
@@ -14,9 +13,9 @@ defineOptions({
   name: "Apis"
 });
 
-const formRef = ref();
 const {
   form,
+  formRef,
   loading,
   columns,
   dataList,
@@ -39,32 +38,37 @@ const {
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="接口名称：" prop="name">
+      <el-form-item label="接口方法：" prop="name">
         <el-input
-          v-model="form.name"
-          placeholder="请输入接口名称"
+          v-model="form.method"
+          placeholder="请输入接口方法"
           clearable
           class="!w-[200px]"
         />
       </el-form-item>
-      <el-form-item label="接口标识：" prop="code">
+      <el-form-item label="接口路径：" prop="code">
         <el-input
-          v-model="form.code"
-          placeholder="请输入接口标识"
+          v-model="form.path"
+          placeholder="请输入接口路径"
           clearable
           class="!w-[180px]"
         />
       </el-form-item>
-      <el-form-item label="状态：" prop="status">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择状态"
+      <el-form-item label="接口分类：" prop="code">
+        <el-input
+          v-model="form.category"
+          placeholder="请输入接口分类"
           clearable
           class="!w-[180px]"
-        >
-          <el-option label="已开启" value="1" />
-          <el-option label="已关闭" value="0" />
-        </el-select>
+        />
+      </el-form-item>
+      <el-form-item label="创建者：" prop="code">
+        <el-input
+          v-model="form.creator"
+          placeholder="请输入创建者"
+          clearable
+          class="!w-[180px]"
+        />
       </el-form-item>
       <el-form-item>
         <el-button

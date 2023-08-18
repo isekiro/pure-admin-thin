@@ -83,8 +83,8 @@ const {
           clearable
           class="!w-[180px]"
         >
-          <el-option label="已开启" value="1" />
-          <el-option label="已关闭" value="0" />
+          <el-option label="已开启" :value="1" />
+          <el-option label="已关闭" :value="2" />
         </el-select>
       </el-form-item>
       <el-form-item>

@@ -1,16 +1,38 @@
 import dayjs from "dayjs";
+import { ElTree } from "element-plus";
 import { getApiList } from "@/api/system/api";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, computed, onMounted } from "vue";
 
 export function useApi() {
-  const form = reactive({
-    name: "",
-    code: "",
-    status: ""
-  });
+  // 表单数据类型
+  type FormType = {
+    method: string;
+    path: string;
+    category: string;
+    creator: string;
+  };
+
+  const initFormData: FormType = {
+    method: "",
+    path: "",
+    category: "",
+    creator: ""
+  };
+
+  // 生成空的表单
+  function getForm() {
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(initFormData));
+    return reactive<FormType>(obj);
+  }
+  // 表单数据初始化
+  const form = getForm();
+
+  const formRef = ref<InstanceType<typeof ElTree>>();
   const dataList = ref([]);
   const loading = ref(true);
+
   /** 分页配置 */
   const pagination = reactive<PaginationProps>({
     total: 0,
@@ -19,6 +41,8 @@ export function useApi() {
     currentPage: 1,
     background: true
   });
+
+  // 表格表头
   const columns: TableColumnList = [
     {
       type: "selection",
@@ -69,6 +93,7 @@ export function useApi() {
       slot: "operation"
     }
   ];
+
   const buttonClass = computed(() => {
     return [
       "!h-[20px]",
@@ -103,7 +128,8 @@ export function useApi() {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getApiList(pagination);
+    const formData = Object.assign(form, pagination);
+    const { data } = await getApiList(formData);
     dataList.value = data.list;
     pagination.total = data.total;
     loading.value = false;
@@ -111,6 +137,7 @@ export function useApi() {
 
   const resetForm = formEl => {
     if (!formEl) return;
+    Object.assign(form, getForm());
     formEl.resetFields();
     onSearch();
   };
@@ -121,6 +148,7 @@ export function useApi() {
 
   return {
     form,
+    formRef,
     loading,
     columns,
     dataList,

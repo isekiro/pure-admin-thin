@@ -28,11 +28,17 @@ type RoleFormType = {
   dataScope: number;
 };
 
+type FormType = {
+  name: string;
+  code: string;
+  status: number;
+};
+
 export function useRole() {
-  const form = reactive({
+  const form = reactive<FormType>({
     name: "",
     code: "",
-    status: ""
+    status: 1
   });
   const dataList = ref([]);
   const loading = ref(true);
@@ -317,7 +323,8 @@ export function useRole() {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getRoleList();
+    Object.assign(form, pagination);
+    const { data } = await getRoleList(form);
     dataList.value = data.list;
     pagination.total = data.total;
     getMenusData();
