@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { getApiList } from "@/api/system";
+import { getApiList } from "@/api/system/api";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, computed, onMounted } from "vue";
 

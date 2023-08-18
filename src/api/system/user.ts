@@ -1,5 +1,6 @@
+import { type Result } from "./type";
 import { http } from "@/utils/http";
-import { baseUrlApi } from "./utils";
+import { baseUrlApi } from "../utils";
 
 export type UserResult = {
   success: boolean;
@@ -39,4 +40,9 @@ export const refreshTokenApi = (data?: object) => {
   return http.request<RefreshTokenResult>("post", baseUrlApi("/refreshToken"), {
     data
   });
+};
+
+/** 获取用户管理列表 */
+export const getUserList = (data?: object) => {
+  return http.request<Result>("post", "/user", { data });
 };

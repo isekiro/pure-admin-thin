@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { handleTree } from "@/utils/tree";
-import { getMenuList, getMenuTree } from "@/api/system";
+import { getMenuList, getMenuTree } from "@/api/system/menu";
 import { reactive, ref, onMounted } from "vue";
 
 type MenusDataType = {

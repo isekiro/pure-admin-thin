@@ -2,11 +2,11 @@ import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import {
   getRoleList,
-  getMenuTree,
   getMenuDefaultCheckedId,
-  getApisTree,
   getApisDefaultCheckedId
-} from "@/api/system";
+} from "@/api/system/role";
+import { getMenuTree } from "@/api/system/menu";
+import { getApisTree } from "@/api/system/api";
 import { ElMessageBox, ElTree } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
