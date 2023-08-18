@@ -6,6 +6,7 @@ type Result = {
     /** 总数 */
     total?: number;
   };
+  message?: string;
 };
 
 type ResultTree = {

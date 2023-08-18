@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import {
+  createRole,
   getRoleList,
   getMenuDefaultCheckedId,
   getApisDefaultCheckedId
@@ -11,14 +12,14 @@ import { ElMessageBox, ElTree } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 
-type RoleFormType = {
+type editRoleFormType = {
   createTime: number;
   updateTime: number;
   creator: string;
   updater: string;
   deletedTime: number;
   tenantId: number;
-  id: number;
+  ID: number;
   name: string;
   code: string;
   sort: number;
@@ -50,14 +51,14 @@ export function useRole() {
     background: true
   });
 
-  const initRoleForm = reactive<RoleFormType>({
+  const initeditRoleForm = reactive<editRoleFormType>({
     createTime: 0,
     updateTime: 0,
     creator: "",
     updater: "",
     deletedTime: 0,
     tenantId: 0,
-    id: 0,
+    ID: 0,
     name: "",
     code: "",
     sort: 0,
@@ -67,13 +68,14 @@ export function useRole() {
     dataScope: 0
   });
 
-  function getRoleForm() {
+  function getEditRoleForm() {
     // 深拷贝
-    const obj = JSON.parse(JSON.stringify(initRoleForm));
+    const obj: editRoleFormType = JSON.parse(JSON.stringify(initeditRoleForm));
     return reactive(obj);
   }
 
-  const roleForm = getRoleForm();
+  const editRoleForm = getEditRoleForm();
+  const editRoleFormRef = ref<InstanceType<typeof ElTree>>();
 
   // 新建/编辑对话框
   const dialogVisible = ref(false);
@@ -263,11 +265,26 @@ export function useRole() {
     loading.value = false;
   }
 
-  function handleCreate() {
+  function onCreate() {
     isEdit.value = false;
-    Object.assign(roleForm, getRoleForm());
+    Object.assign(editRoleForm, getEditRoleForm());
     // nextTick(menuFormRef.resetFields());
     dialogVisible.value = true;
+  }
+
+  function handleCreate() {
+    createRole(editRoleForm)
+      .then(res => {
+        if (res.success) {
+          message(res.message, { customClass: "el", type: "success" });
+        } else {
+          message(res.message, { customClass: "el", type: "error" });
+        }
+      })
+      .finally(() => {
+        dialogVisible.value = false;
+      });
+    // nextTick(menuFormRef.resetFields());
   }
 
   function handleUpdate(row) {
@@ -275,7 +292,7 @@ export function useRole() {
     // 深拷贝
     const obj = JSON.parse(JSON.stringify(row));
     // 给proxy对象赋值
-    Object.assign(roleForm, obj);
+    Object.assign(editRoleForm, obj);
     // 打开对话框
     dialogVisible.value = true;
   }
@@ -288,8 +305,8 @@ export function useRole() {
     // 给proxy对象赋值
     permsTitle.value = obj.name;
     // 获取权限菜单和接口
-    getMenuDefaultCheckedData(row.id);
-    getApisDefaultCheckedData(row.id);
+    getMenuDefaultCheckedData(row.ID);
+    getApisDefaultCheckedData(row.ID);
   }
 
   function handleDelete(row) {
@@ -323,7 +340,7 @@ export function useRole() {
 
   const resetForm = formEl => {
     if (!formEl) return;
-    Object.assign(form, getRoleForm());
+    Object.assign(form, getEditRoleForm());
     formEl.resetFields();
     onSearch();
   };
@@ -339,13 +356,14 @@ export function useRole() {
 
   return {
     form,
+    editRoleFormRef,
     loading,
     columns,
     dataList,
     pagination,
     dialogVisible,
     permsDialogVisible,
-    roleForm,
+    editRoleForm,
     activeName,
     menuTreeRef,
     apisTreeRef,
@@ -361,6 +379,7 @@ export function useRole() {
     resetPerms,
     dialogTitle,
     permsDialogTitle,
+    onCreate,
     handleCreate,
     handleUpdate,
     handlePermission,

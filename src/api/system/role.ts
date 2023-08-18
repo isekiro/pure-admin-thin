@@ -7,6 +7,11 @@ export const getRoleList = (data?: object) => {
   return http.request<Result>("post", roleUrlApi("/list"), { data });
 };
 
+/** 创建角色 */
+export const createRole = (data?: object) => {
+  return http.request<Result>("post", roleUrlApi("/create"), { data });
+};
+
 /** 获取角色下拉列表选项 */
 export const getRolesOptions = (data?: object) => {
   return http.request<Result>("get", roleUrlApi("/options"), { data });

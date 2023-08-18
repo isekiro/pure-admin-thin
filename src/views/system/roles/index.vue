@@ -20,13 +20,14 @@ defineOptions({
 const formRef = ref();
 const {
   form,
+  editRoleFormRef,
   loading,
   columns,
   dataList,
   pagination,
   dialogVisible,
   permsDialogVisible,
-  roleForm,
+  editRoleForm,
   activeName,
   menuTreeRef,
   apisTreeRef,
@@ -42,6 +43,7 @@ const {
   resetPerms,
   dialogTitle,
   permsDialogTitle,
+  onCreate,
   handleCreate,
   handleUpdate,
   handlePermission,
@@ -107,7 +109,7 @@ const {
         <el-button
           type="primary"
           :icon="useRenderIcon(AddFill)"
-          @click="handleCreate()"
+          @click="onCreate()"
         >
           新增角色
         </el-button>
@@ -176,36 +178,40 @@ const {
     <!-- 新建/编辑对话框 -->
     <div class="system-menu-dialog-container">
       <el-dialog
+        ref="editRoleFormRef"
         v-model="dialogVisible"
         :title="dialogTitle()"
         draggable
         width="769px"
       >
-        <el-form size="default" :model="roleForm" label-width="80px">
+        <el-form size="default" :model="editRoleForm" label-width="80px">
           <el-row :gutter="35">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="角色名称">
-                <el-input v-model="roleForm.name" />
+                <el-input v-model="editRoleForm.name" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="角色排序">
-                <el-input v-model="roleForm.sort" />
+                <el-input v-model.number="editRoleForm.sort" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="角色标识">
-                <el-input v-model="roleForm.code" />
+                <el-input v-model="editRoleForm.code" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="是否启用">
-                <el-switch v-model.Number="roleForm.status" :active-value="1" />
+                <el-switch
+                  v-model.Number="editRoleForm.status"
+                  :active-value="1"
+                />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="角色备注">
-                <el-input type="textarea" v-model="roleForm.remark" />
+                <el-input type="textarea" v-model="editRoleForm.remark" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -213,9 +219,7 @@ const {
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">
-              确定
-            </el-button>
+            <el-button type="primary" @click="handleCreate()"> 确定 </el-button>
           </span>
         </template>
       </el-dialog>
