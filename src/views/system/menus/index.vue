@@ -95,7 +95,7 @@ const {
           border
           adaptive
           align-whole="center"
-          row-key="id"
+          row-key="ID"
           showOverflowTooltip
           table-layout="auto"
           default-expand-all

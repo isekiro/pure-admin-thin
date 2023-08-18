@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
-import { handleTree } from "@/utils/tree";
-import { getMenuList, getMenuTree } from "@/api/system/menu";
+import { getMenuTree } from "@/api/system/menu";
 import { reactive, ref, onMounted } from "vue";
 
 type MenusDataType = {
@@ -43,6 +42,7 @@ export function useMenu() {
   async function getMenusData() {
     loading.value = true;
     const { data } = await getMenuTree();
+    Object.assign(dataList.value, data.tree);
     const topMenu = { ID: 0, meta: { title: "顶级类目" } };
     data.tree.unshift(topMenu);
     menuData.value = data.tree;
@@ -99,12 +99,6 @@ export function useMenu() {
   ];
 
   const columns: TableColumnList = [
-    {
-      label: "序号",
-      type: "index",
-      width: 70,
-      fixed: "left"
-    },
     {
       label: "菜单名称",
       prop: "meta.title",
@@ -189,14 +183,12 @@ export function useMenu() {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getMenuList();
-    dataList.value = handleTree(data.tree);
+    getMenusData();
     loading.value = false;
   }
 
   onMounted(() => {
     onSearch();
-    getMenusData();
   });
 
   return {
