@@ -50,7 +50,7 @@ export function useRole() {
     background: true
   });
 
-  const roleForm = reactive<RoleFormType>({
+  const initRoleForm = reactive<RoleFormType>({
     createTime: 0,
     updateTime: 0,
     creator: "",
@@ -66,6 +66,14 @@ export function useRole() {
     remark: "",
     dataScope: 0
   });
+
+  function getRoleForm() {
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(initRoleForm));
+    return reactive(obj);
+  }
+
+  const roleForm = getRoleForm();
 
   // 新建/编辑对话框
   const dialogVisible = ref(false);
@@ -201,25 +209,6 @@ export function useRole() {
   //   console.log(menuTreeRef.value!.getCheckedKeys(false));
   // }
 
-  function getRoleForm() {
-    return reactive({
-      createTime: 0,
-      updateTime: 0,
-      creator: "",
-      updater: "",
-      deletedTime: 0,
-      tenantId: 0,
-      id: 0,
-      name: "",
-      code: "",
-      sort: 0,
-      status: 0,
-      type: 0,
-      remark: "",
-      dataScope: 0
-    });
-  }
-
   // 获取菜单树结构数据
   async function getMenusData() {
     loading.value = true;
@@ -323,8 +312,8 @@ export function useRole() {
 
   async function onSearch() {
     loading.value = true;
-    Object.assign(form, pagination);
-    const { data } = await getRoleList(form);
+    const formData = Object.assign(form, pagination);
+    const { data } = await getRoleList(formData);
     dataList.value = data.list;
     pagination.total = data.total;
     getMenusData();
@@ -334,6 +323,7 @@ export function useRole() {
 
   const resetForm = formEl => {
     if (!formEl) return;
+    Object.assign(form, getRoleForm());
     formEl.resetFields();
     onSearch();
   };
