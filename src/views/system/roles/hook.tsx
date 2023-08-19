@@ -191,7 +191,7 @@ export function useRole() {
     }
   ];
 
-  function onChange({ row, index }) {
+  function onChange({ row }) {
     ElMessageBox.confirm(
       `确认要<strong>${
         row.status === 2 ? "停用" : "启用"
@@ -208,25 +208,7 @@ export function useRole() {
       }
     )
       .then(() => {
-        switchLoadMap.value[index] = Object.assign(
-          {},
-          switchLoadMap.value[index],
-          {
-            loading: true
-          }
-        );
-        setTimeout(() => {
-          switchLoadMap.value[index] = Object.assign(
-            {},
-            switchLoadMap.value[index],
-            {
-              loading: false
-            }
-          );
-          message("已成功修改角色状态", {
-            type: "success"
-          });
-        }, 300);
+        handleUpdate(row.ID, row);
       })
       .catch(() => {
         row.status === 2 ? (row.status = 1) : (row.status = 2);
@@ -330,7 +312,7 @@ export function useRole() {
   }
 
   function handleSubmit() {
-    isEdit.value ? handleUpdate() : handleCreate();
+    isEdit.value ? handleUpdate(editRoleForm.ID, editRoleForm) : handleCreate();
   }
 
   function onCreate() {
@@ -344,10 +326,14 @@ export function useRole() {
     createRole(editRoleForm)
       .then(res => {
         if (res.success) {
-          message(res.message, { customClass: "el", type: "success" });
+          message(res.message, {
+            type: "success"
+          });
           onSearch();
         } else {
-          message(res.message, { customClass: "el", type: "error" });
+          message(res.message, {
+            type: "error"
+          });
         }
       })
       .finally(() => {
@@ -366,18 +352,24 @@ export function useRole() {
   }
 
   // 更新角色
-  function handleUpdate() {
-    updateRole(editRoleForm.ID, editRoleForm)
+  function handleUpdate(id: number, form: editRoleFormType) {
+    updateRole(id, form)
       .then(res => {
         if (res.success) {
-          message(res.message, { customClass: "el", type: "success" });
+          message(res.message, {
+            type: "success"
+          });
           onSearch();
         } else {
-          message(res.message, { customClass: "el", type: "error" });
+          message(res.message, {
+            type: "error"
+          });
         }
       })
       .catch(res => {
-        message(res.message, { customClass: "el", type: "error" });
+        message(res.message, {
+          type: "error"
+        });
       })
       .finally(() => {
         dialogVisible.value = false;
@@ -426,10 +418,14 @@ export function useRole() {
     deleteRole(roleIdsObj)
       .then(res => {
         if (res.success) {
-          message(res.message, { customClass: "el", type: "success" });
+          message(res.message, {
+            type: "success"
+          });
           onSearch();
         } else {
-          message(res.message, { customClass: "el", type: "error" });
+          message(res.message, {
+            type: "error"
+          });
         }
       })
       .finally(() => {
@@ -438,14 +434,6 @@ export function useRole() {
   }
 
   async function onSearch() {
-    // loading.value = true;
-    // const formData = Object.assign({}, form, pagination);
-    // const { data } = await getRoleList(formData);
-    // dataList.value = data.list;
-    // pagination.total = data.total;
-    // getMenusData();
-    // getApisData();
-    // loading.value = false;
     loading.value = true;
     const formData = Object.assign({}, form, pagination);
     await getRoleList(formData)
