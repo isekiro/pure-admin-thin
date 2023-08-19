@@ -10,10 +10,11 @@ import {
 import { getMenuTree } from "@/api/system/menu";
 import { getApisTree } from "@/api/system/api";
 import { ElMessageBox, ElTree, ElForm } from "element-plus";
+import type { FormRules } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 
-type editRoleFormType = {
+interface editRoleFormType {
   createTime: number;
   updateTime: number;
   creator: string;
@@ -28,13 +29,13 @@ type editRoleFormType = {
   type: number;
   remark: string;
   dataScope: number;
-};
+}
 
-type FormType = {
+interface FormType {
   name: string;
   code: string;
   status: number;
-};
+}
 
 export function useRole() {
   const form = reactive<FormType>({
@@ -63,7 +64,7 @@ export function useRole() {
     name: "",
     code: "",
     sort: 0,
-    status: 0,
+    status: 1,
     type: 0,
     remark: "",
     dataScope: 0
@@ -77,6 +78,32 @@ export function useRole() {
 
   const editRoleForm = getEditRoleForm();
   const editRoleFormRef = ref<InstanceType<typeof ElForm>>();
+
+  const roleFormRules = reactive<FormRules>({
+    name: [
+      {
+        required: true,
+        message: "请输入角色名",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+    ],
+    sort: [
+      {
+        type: "number",
+        required: true,
+        message: "请输入角色序号",
+        trigger: "blur"
+      }
+    ],
+    code: [
+      {
+        required: true,
+        message: "请输入角色标识符",
+        trigger: "blur"
+      }
+    ]
+  });
 
   // 新建/编辑对话框
   const dialogVisible = ref(false);
@@ -289,9 +316,6 @@ export function useRole() {
       .finally(() => {
         dialogVisible.value = false;
       });
-    // nextTick(() => {
-    //   editRoleFormRef.value?.resetFields();
-    // });
   }
 
   function onUpdate(row) {
@@ -317,9 +341,6 @@ export function useRole() {
       .finally(() => {
         dialogVisible.value = false;
       });
-    // nextTick(() => {
-    //   editRoleFormRef.value?.resetFields();
-    // });
   }
 
   function handlePermission(row) {
@@ -365,9 +386,7 @@ export function useRole() {
 
   const resetForm = formEl => {
     if (!formEl) return;
-    Object.assign(form, getEditRoleForm());
     formEl.resetFields();
-    onSearch();
   };
 
   const resetPerms = () => {
@@ -381,6 +400,7 @@ export function useRole() {
 
   return {
     form,
+    roleFormRules,
     editRoleFormRef,
     loading,
     columns,

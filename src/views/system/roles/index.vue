@@ -20,6 +20,7 @@ defineOptions({
 const formRef = ref();
 const {
   form,
+  roleFormRules,
   editRoleFormRef,
   loading,
   columns,
@@ -178,26 +179,32 @@ const {
     <!-- 新建/编辑对话框 -->
     <div class="system-menu-dialog-container">
       <el-dialog
-        ref="editRoleFormRef"
         v-model="dialogVisible"
         :title="dialogTitle()"
         draggable
         width="769px"
+        @close="resetForm(editRoleFormRef)"
       >
-        <el-form size="default" :model="editRoleForm" label-width="80px">
+        <el-form
+          ref="editRoleFormRef"
+          size="default"
+          :model="editRoleForm"
+          :rules="roleFormRules"
+          label-width="80px"
+        >
           <el-row :gutter="35">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="角色名称">
+              <el-form-item label="角色名称" prop="name">
                 <el-input v-model="editRoleForm.name" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="角色排序">
+              <el-form-item label="角色排序" prop="sort">
                 <el-input v-model.number="editRoleForm.sort" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="角色标识">
+              <el-form-item label="角色标识" prop="code">
                 <el-input v-model="editRoleForm.code" />
               </el-form-item>
             </el-col>

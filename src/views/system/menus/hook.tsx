@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { getMenuTree } from "@/api/system/menu";
 import { reactive, ref, onMounted } from "vue";
 
-type MenusDataType = {
+interface MenusDataType {
   ID: number;
   createdAt: number;
   updatedAt: number;
@@ -24,7 +24,7 @@ type MenusDataType = {
   parentId: number;
   creator: string;
   type: number;
-};
+}
 
 export function useMenu() {
   const defaultProps = {

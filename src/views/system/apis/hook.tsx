@@ -6,12 +6,12 @@ import { reactive, ref, computed, onMounted } from "vue";
 
 export function useApi() {
   // 表单数据类型
-  type FormType = {
+  interface FormType {
     method: string;
     path: string;
     category: string;
     creator: string;
-  };
+  }
 
   const initFormData: FormType = {
     method: "",
