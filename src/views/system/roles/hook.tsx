@@ -46,7 +46,7 @@ export function useRole() {
   const form = reactive<FormType>({
     name: "",
     code: "",
-    status: 1
+    status: 3
   });
   const dataList = ref([]);
   const loading = ref(true);
@@ -163,7 +163,7 @@ export function useRole() {
           loading={switchLoadMap.value[scope.index]?.loading}
           v-model={scope.row.status}
           active-value={1}
-          inactive-value={0}
+          inactive-value={2}
           active-text="已开启"
           inactive-text="已关闭"
           inline-prompt
@@ -261,12 +261,21 @@ export function useRole() {
   // 获取菜单树结构数据
   async function getMenusData() {
     loading.value = true;
-    const { data } = await getMenuTree();
-    // 深拷贝
-    const obj = JSON.parse(JSON.stringify(data));
-    // 给proxy对象赋值
-    Object.assign(menuTreeData.value, obj.tree);
-    loading.value = false;
+    await getMenuTree()
+      .then(res => {
+        // 深拷贝
+        const obj = JSON.parse(JSON.stringify(res.data));
+        // 给proxy对象赋值
+        Object.assign(menuTreeData.value, obj.tree);
+      })
+      .catch(res => {
+        message(res.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   // 获取角色的权限菜单
@@ -288,17 +297,25 @@ export function useRole() {
   // 获取角色的权限接口
   async function getApisDefaultCheckedData(id: string) {
     // 打开对话框
-    permsDialogLoading.value = true;
-    try {
-      const { data } = await getApisDefaultCheckedId(id);
-      // 深拷贝
-      const obj = JSON.parse(JSON.stringify(data));
-      // 给proxy对象赋值
-      defaultApisTreeCheckKeys.value = obj.list;
-      apisTreeRef.value!.setCheckedKeys(defaultApisTreeCheckKeys.value, false);
-    } finally {
-      permsDialogLoading.value = false;
-    }
+    loading.value = true;
+    await getApisDefaultCheckedId(id)
+      .then(res => {
+        // 深拷贝
+        const obj = JSON.parse(JSON.stringify(res.data));
+        defaultApisTreeCheckKeys.value = obj.list;
+        apisTreeRef.value!.setCheckedKeys(
+          defaultApisTreeCheckKeys.value,
+          false
+        );
+      })
+      .catch(res => {
+        message(res.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   // 获取接口树结构数据
@@ -418,14 +435,33 @@ export function useRole() {
   }
 
   async function onSearch() {
+    // loading.value = true;
+    // const formData = Object.assign({}, form, pagination);
+    // const { data } = await getRoleList(formData);
+    // dataList.value = data.list;
+    // pagination.total = data.total;
+    // getMenusData();
+    // getApisData();
+    // loading.value = false;
     loading.value = true;
     const formData = Object.assign({}, form, pagination);
-    const { data } = await getRoleList(formData);
-    dataList.value = data.list;
-    pagination.total = data.total;
-    getMenusData();
-    getApisData();
-    loading.value = false;
+    await getRoleList(formData)
+      .then(res => {
+        // 深拷贝
+        const obj = JSON.parse(JSON.stringify(res.data));
+        dataList.value = obj.list;
+        pagination.total = obj.total;
+      })
+      .catch(res => {
+        message(res.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        getMenusData();
+        getApisData();
+        loading.value = false;
+      });
   }
 
   const resetForm = formEl => {
