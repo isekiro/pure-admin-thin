@@ -208,6 +208,7 @@ const {
                 <el-switch
                   v-model.Number="editRoleForm.status"
                   :active-value="1"
+                  :inactive-value="2"
                 />
               </el-form-item>
             </el-col>

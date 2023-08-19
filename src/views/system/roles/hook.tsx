@@ -194,7 +194,7 @@ export function useRole() {
   function onChange({ row, index }) {
     ElMessageBox.confirm(
       `确认要<strong>${
-        row.status === 0 ? "停用" : "启用"
+        row.status === 2 ? "停用" : "启用"
       }</strong><strong style='color:var(--el-color-primary)'>${
         row.name
       }</strong>角色吗?`,
@@ -229,7 +229,7 @@ export function useRole() {
         }, 300);
       })
       .catch(() => {
-        row.status === 0 ? (row.status = 1) : (row.status = 0);
+        row.status === 2 ? (row.status = 1) : (row.status = 2);
       });
   }
 
@@ -375,6 +375,9 @@ export function useRole() {
         } else {
           message(res.message, { customClass: "el", type: "error" });
         }
+      })
+      .catch(res => {
+        message(res.message, { customClass: "el", type: "error" });
       })
       .finally(() => {
         dialogVisible.value = false;
