@@ -12,6 +12,11 @@ export const createRole = (data?: object) => {
   return http.request<Result>("post", roleUrlApi("/create"), { data });
 };
 
+/** 更新角色 */
+export const updateRole = (id?: number, data?: object) => {
+  return http.request<Result>("put", roleUrlApi("/update/" + id), { data });
+};
+
 /** 获取角色下拉列表选项 */
 export const getRolesOptions = (data?: object) => {
   return http.request<Result>("get", roleUrlApi("/options"), { data });

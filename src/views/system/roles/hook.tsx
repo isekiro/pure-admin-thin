@@ -2,13 +2,14 @@ import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import {
   createRole,
+  updateRole,
   getRoleList,
   getMenuDefaultCheckedId,
   getApisDefaultCheckedId
 } from "@/api/system/role";
 import { getMenuTree } from "@/api/system/menu";
 import { getApisTree } from "@/api/system/api";
-import { ElMessageBox, ElTree } from "element-plus";
+import { ElMessageBox, ElTree, ElForm } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 
@@ -75,7 +76,7 @@ export function useRole() {
   }
 
   const editRoleForm = getEditRoleForm();
-  const editRoleFormRef = ref<InstanceType<typeof ElTree>>();
+  const editRoleFormRef = ref<InstanceType<typeof ElForm>>();
 
   // 新建/编辑对话框
   const dialogVisible = ref(false);
@@ -265,10 +266,13 @@ export function useRole() {
     loading.value = false;
   }
 
+  function handleSubmit() {
+    isEdit.value ? handleUpdate() : handleCreate();
+  }
+
   function onCreate() {
     isEdit.value = false;
     Object.assign(editRoleForm, getEditRoleForm());
-    // nextTick(menuFormRef.resetFields());
     dialogVisible.value = true;
   }
 
@@ -277,6 +281,7 @@ export function useRole() {
       .then(res => {
         if (res.success) {
           message(res.message, { customClass: "el", type: "success" });
+          onSearch();
         } else {
           message(res.message, { customClass: "el", type: "error" });
         }
@@ -284,10 +289,12 @@ export function useRole() {
       .finally(() => {
         dialogVisible.value = false;
       });
-    // nextTick(menuFormRef.resetFields());
+    // nextTick(() => {
+    //   editRoleFormRef.value?.resetFields();
+    // });
   }
 
-  function handleUpdate(row) {
+  function onUpdate(row) {
     isEdit.value = true;
     // 深拷贝
     const obj = JSON.parse(JSON.stringify(row));
@@ -295,6 +302,24 @@ export function useRole() {
     Object.assign(editRoleForm, obj);
     // 打开对话框
     dialogVisible.value = true;
+  }
+
+  function handleUpdate() {
+    updateRole(editRoleForm.ID, editRoleForm)
+      .then(res => {
+        if (res.success) {
+          message(res.message, { customClass: "el", type: "success" });
+          onSearch();
+        } else {
+          message(res.message, { customClass: "el", type: "error" });
+        }
+      })
+      .finally(() => {
+        dialogVisible.value = false;
+      });
+    // nextTick(() => {
+    //   editRoleFormRef.value?.resetFields();
+    // });
   }
 
   function handlePermission(row) {
@@ -329,7 +354,7 @@ export function useRole() {
 
   async function onSearch() {
     loading.value = true;
-    const formData = Object.assign(form, pagination);
+    const formData = Object.assign({}, form, pagination);
     const { data } = await getRoleList(formData);
     dataList.value = data.list;
     pagination.total = data.total;
@@ -379,9 +404,9 @@ export function useRole() {
     resetPerms,
     dialogTitle,
     permsDialogTitle,
+    handleSubmit,
     onCreate,
-    handleCreate,
-    handleUpdate,
+    onUpdate,
     handlePermission,
     handleDelete,
     handleSizeChange,

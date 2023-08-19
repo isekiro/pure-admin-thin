@@ -43,9 +43,9 @@ const {
   resetPerms,
   dialogTitle,
   permsDialogTitle,
+  handleSubmit,
   onCreate,
-  handleCreate,
-  handleUpdate,
+  onUpdate,
   handlePermission,
   handleDelete,
   handleSizeChange,
@@ -142,7 +142,7 @@ const {
               type="primary"
               :size="size"
               :icon="useRenderIcon(EditPen)"
-              @click="handleUpdate(row)"
+              @click="onUpdate(row)"
             >
               修改
             </el-button>
@@ -219,7 +219,7 @@ const {
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="handleCreate()"> 确定 </el-button>
+            <el-button type="primary" @click="handleSubmit()"> 确定 </el-button>
           </span>
         </template>
       </el-dialog>
