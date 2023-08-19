@@ -399,7 +399,6 @@ export function useRole() {
     // 深拷贝，将id临时存放在一个数组
     const ids = ref([]);
     checkedRoleIds.value.forEach(element => {
-      console.log(element);
       ids.value.push(element.ID);
     });
     // 组装数据格式，给后端识别
