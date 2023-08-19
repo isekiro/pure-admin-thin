@@ -3,6 +3,7 @@ import { message } from "@/utils/message";
 import {
   createRole,
   updateRole,
+  deleteRole,
   getRoleList,
   getMenuDefaultCheckedId,
   getApisDefaultCheckedId
@@ -35,6 +36,10 @@ interface FormType {
   name: string;
   code: string;
   status: number;
+}
+
+interface RoleIdsType {
+  roleIds: number[];
 }
 
 export function useRole() {
@@ -124,6 +129,7 @@ export function useRole() {
   const defaultMenuTreeCheckKeys = ref([]);
   const defaultApisTreeCheckKeys = ref([]);
   const permsDialogLoading = ref(false);
+  const checkedRoleIds = ref([]);
 
   // 标签页默认选择
   const activeName = ref("menuTag");
@@ -235,9 +241,22 @@ export function useRole() {
     return permsTitle.value;
   }
 
-  // function getCheckedKeys() {
-  //   console.log(menuTreeRef.value!.getCheckedKeys(false));
-  // }
+  // 批量删除弹窗提醒
+  const openDeleteConfirm = () => {
+    ElMessageBox.confirm("是否要批量删除角色？", "警告", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+      type: "warning"
+    })
+      .then(() => {
+        batchDeleteRoleByIds();
+      })
+      .catch(() => {
+        message("取消批量删除角色", {
+          type: "info"
+        });
+      });
+  };
 
   // 获取菜单树结构数据
   async function getMenusData() {
@@ -303,6 +322,7 @@ export function useRole() {
     dialogVisible.value = true;
   }
 
+  // 创建角色
   function handleCreate() {
     createRole(editRoleForm)
       .then(res => {
@@ -328,6 +348,7 @@ export function useRole() {
     dialogVisible.value = true;
   }
 
+  // 更新角色
   function handleUpdate() {
     updateRole(editRoleForm.ID, editRoleForm)
       .then(res => {
@@ -370,7 +391,35 @@ export function useRole() {
   }
 
   function handleSelectionChange(val) {
-    console.log("handleSelectionChange", val);
+    checkedRoleIds.value = val;
+  }
+
+  // 批量删除角色
+  function batchDeleteRoleByIds() {
+    // 深拷贝，将id临时存放在一个数组
+    const ids = ref([]);
+    checkedRoleIds.value.forEach(element => {
+      console.log(element);
+      ids.value.push(element.ID);
+    });
+    // 组装数据格式，给后端识别
+    const roleIdsObj: RoleIdsType = {
+      roleIds: ids.value
+    };
+    // 开始调用后端删除接口
+    loading.value = true;
+    deleteRole(roleIdsObj)
+      .then(res => {
+        if (res.success) {
+          message(res.message, { customClass: "el", type: "success" });
+          onSearch();
+        } else {
+          message(res.message, { customClass: "el", type: "error" });
+        }
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   async function onSearch() {
@@ -419,6 +468,7 @@ export function useRole() {
     defaultMenuTreeCheckKeys,
     defaultApisTreeCheckKeys,
     permsDialogLoading,
+    checkedRoleIds,
     onSearch,
     resetForm,
     resetPerms,
@@ -431,6 +481,8 @@ export function useRole() {
     handleDelete,
     handleSizeChange,
     handleCurrentChange,
-    handleSelectionChange
+    handleSelectionChange,
+    batchDeleteRoleByIds,
+    openDeleteConfirm
   };
 }

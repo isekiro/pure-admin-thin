@@ -17,6 +17,11 @@ export const updateRole = (id?: number, data?: object) => {
   return http.request<Result>("put", roleUrlApi("/update/" + id), { data });
 };
 
+/** 删除角色 */
+export const deleteRole = (data?: object) => {
+  return http.request<Result>("delete", roleUrlApi("/delete/batch"), { data });
+};
+
 /** 获取角色下拉列表选项 */
 export const getRolesOptions = (data?: object) => {
   return http.request<Result>("get", roleUrlApi("/options"), { data });

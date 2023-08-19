@@ -39,6 +39,7 @@ const {
   defaultMenuTreeCheckKeys,
   defaultApisTreeCheckKeys,
   permsDialogLoading,
+  checkedRoleIds,
   onSearch,
   resetForm,
   resetPerms,
@@ -51,7 +52,8 @@ const {
   handleDelete,
   handleSizeChange,
   handleCurrentChange,
-  handleSelectionChange
+  handleSelectionChange,
+  openDeleteConfirm
 } = useRole();
 </script>
 
@@ -101,6 +103,14 @@ const {
         </el-button>
         <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
           重置
+        </el-button>
+        <el-button
+          :disabled="checkedRoleIds.length == 0"
+          type="danger"
+          :icon="useRenderIcon(Delete)"
+          @click="openDeleteConfirm()"
+        >
+          批量删除
         </el-button>
       </el-form-item>
     </el-form>
