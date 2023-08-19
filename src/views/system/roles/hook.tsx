@@ -376,10 +376,6 @@ export function useRole() {
     getApisDefaultCheckedData(row.ID);
   }
 
-  function handleDelete(row) {
-    console.log(row);
-  }
-
   function handleSizeChange(val: number) {
     pagination.pageSize = val;
     onSearch();
@@ -477,7 +473,6 @@ export function useRole() {
     onCreate,
     onUpdate,
     handlePermission,
-    handleDelete,
     handleSizeChange,
     handleCurrentChange,
     handleSelectionChange,

@@ -49,7 +49,6 @@ const {
   onCreate,
   onUpdate,
   handlePermission,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange,
   handleSelectionChange,
@@ -110,7 +109,7 @@ const {
           :icon="useRenderIcon(Delete)"
           @click="openDeleteConfirm()"
         >
-          批量删除
+          删除
         </el-button>
       </el-form-item>
     </el-form>
@@ -167,20 +166,6 @@ const {
             >
               菜单权限
             </el-button>
-            <el-popconfirm title="是否确认删除?">
-              <template #reference>
-                <el-button
-                  class="reset-margin"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(Delete)"
-                  @click="handleDelete(row)"
-                >
-                  删除
-                </el-button>
-              </template>
-            </el-popconfirm>
           </template>
         </pure-table>
       </template>
