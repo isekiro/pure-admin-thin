@@ -155,7 +155,7 @@ export function useUser() {
     {
       label: "操作",
       fixed: "right",
-      width: 180,
+      width: 260,
       slot: "operation"
     }
   ];

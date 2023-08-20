@@ -6,7 +6,6 @@ import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
 import Role from "@iconify-icons/ri/admin-line";
 import Password from "@iconify-icons/ri/lock-password-line";
-import More from "@iconify-icons/ep/more-filled";
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
 import Search from "@iconify-icons/ep/search";
@@ -25,7 +24,6 @@ const {
   columns,
   dataList,
   pagination,
-  buttonClass,
   dialogVisible,
   editUserForm,
   editUserFormRef,
@@ -33,9 +31,9 @@ const {
   onSearch,
   resetForm,
   resetDialogForm,
-  onUpdate,
-  handleUpdate,
-  handleDelete,
+  // onUpdate,
+  // handleUpdate,
+  // handleDelete,
   handleSizeChange,
   handleCurrentChange,
   handleSelectionChange,
@@ -94,6 +92,9 @@ const {
           <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
             重置
           </el-button>
+          <el-button type="danger" :icon="useRenderIcon(Delete)">
+            删除
+          </el-button>
         </el-form-item>
       </el-form>
 
@@ -138,56 +139,24 @@ const {
               >
                 修改
               </el-button>
-              <el-popconfirm title="是否确认删除?">
-                <template #reference>
-                  <el-button
-                    class="reset-margin"
-                    link
-                    type="primary"
-                    :size="size"
-                    :icon="useRenderIcon(Delete)"
-                    @click="handleDelete(row)"
-                  >
-                    删除
-                  </el-button>
-                </template>
-              </el-popconfirm>
-              <el-dropdown>
-                <el-button
-                  class="ml-3 mt-[2px]"
-                  link
-                  type="primary"
-                  :size="size"
-                  @click="handleUpdate(row)"
-                  :icon="useRenderIcon(More)"
-                />
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Password)"
-                      >
-                        重置密码
-                      </el-button>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Role)"
-                      >
-                        分配角色
-                      </el-button>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                :size="size"
+                :icon="useRenderIcon(Password)"
+              >
+                重置密码
+              </el-button>
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                :size="size"
+                :icon="useRenderIcon(Role)"
+              >
+                分配角色
+              </el-button>
             </template>
           </pure-table>
         </template>
