@@ -212,7 +212,7 @@ export function useUser() {
   }
 
   function dialogTitle() {
-    return isEdit.value ? "编辑菜单" : "新建菜单";
+    return isEdit.value ? "编辑用户" : "新建用户";
   }
 
   function handleEditSubmit() {}

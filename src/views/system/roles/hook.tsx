@@ -230,7 +230,7 @@ export function useRole() {
   }
 
   function dialogTitle() {
-    return isEdit.value ? "编辑菜单" : "新建菜单";
+    return isEdit.value ? "编辑角色" : "新建角色";
   }
 
   function permsDialogTitle() {
