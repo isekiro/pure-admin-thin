@@ -360,7 +360,7 @@ export function useRole() {
   // 获取接口树结构数据
   async function getApisData() {
     // 启用加载特效
-    loading.value = true;
+    permsDialogLoading.value = true;
     await await getApisTree()
       .then(res => {
         // 深拷贝
@@ -373,7 +373,7 @@ export function useRole() {
         });
       })
       .finally(() => {
-        loading.value = false;
+        permsDialogLoading.value = false;
       });
   }
 
