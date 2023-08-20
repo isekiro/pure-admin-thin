@@ -31,7 +31,7 @@ const {
   onSearch,
   resetForm,
   resetDialogForm,
-  // onUpdate,
+  onUpdate,
   // handleUpdate,
   // handleDelete,
   handleSizeChange,
