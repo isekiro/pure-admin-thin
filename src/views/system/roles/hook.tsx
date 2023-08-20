@@ -7,7 +7,8 @@ import {
   getRoleList,
   getMenuDefaultCheckedId,
   updateRoleMenuByRoleId,
-  getApisDefaultCheckedId
+  getApisDefaultCheckedId,
+  updateRoleApisByRoleId
 } from "@/api/system/role";
 import { getMenuTree } from "@/api/system/menu";
 import { getApisTree } from "@/api/system/api";
@@ -45,6 +46,10 @@ interface RoleIdsType {
 
 interface MenuIdsType {
   menuIds: number[];
+}
+
+interface ApisIdsType {
+  apisIds: number[];
 }
 
 export function useRole() {
@@ -138,7 +143,7 @@ export function useRole() {
   const checkedRoleIds = ref([]);
 
   // 权限对话框选中的角色
-  const permsSelectedMenu = ref(0);
+  const permsSelectedRole = ref(0);
 
   // 标签页默认选择
   const activeName = ref("menuTag");
@@ -294,20 +299,22 @@ export function useRole() {
 
   // 更新角色的权限菜单
   async function handleRoleMenuSubmit() {
-    // 深拷贝，将id临时存放在一个数组
-    const ids = ref<number[]>();
+    // 深拷贝，将菜单树id临时存放在一个数组
+    const menuTreeIds = ref([]);
     // 获取选中的权限菜单
-    const defaultCheckKeys = menuTreeRef.value!.getCheckedKeys(false);
-    const defaultHalfCheckKeys = menuTreeRef.value!.getHalfCheckedKeys();
+    const defaultMenuCheckKeys = menuTreeRef.value!.getCheckedKeys(false);
+    const defaultMenuHalfCheckKeys = menuTreeRef.value!.getHalfCheckedKeys();
     // 赋值给ids
-    ids.value = defaultCheckKeys.concat(defaultHalfCheckKeys) as any;
+    menuTreeIds.value = defaultMenuCheckKeys.concat(
+      defaultMenuHalfCheckKeys
+    ) as any;
 
     // 组装数据格式，给后端识别
     const menuIdsObj: MenuIdsType = {
-      menuIds: ids.value
+      menuIds: menuTreeIds.value
     };
-    // 开始调用后端删除接口
-    await updateRoleMenuByRoleId(permsSelectedMenu.value, menuIdsObj)
+    // 开始调用后端更新角色权限菜单
+    await updateRoleMenuByRoleId(permsSelectedRole.value, menuIdsObj)
       .then(res => {
         if (res.success) {
           message(res.message, {
@@ -321,14 +328,49 @@ export function useRole() {
         }
       })
       .catch(res => {
-        console.log(res);
         message(res.response.data.message, {
           type: "error"
         });
-      })
-      .finally(() => {
         permsDialogVisible.value = false;
       });
+
+    // --------------------------------------------------------------------
+    // 深拷贝，将接口树id临时存放在一个数组
+    const apisTreeIds = ref([]);
+    // 获取选中的权限菜单
+    const defaultApisCheckKeys = apisTreeRef.value!.getCheckedKeys(false);
+    // 赋值给ids
+    (defaultApisCheckKeys as any).forEach(elm => {
+      if (elm > 0) {
+        apisTreeIds.value.push(elm);
+      }
+    });
+
+    // 组装数据格式，给后端识别
+    const apisIdsObj: ApisIdsType = {
+      apisIds: apisTreeIds.value
+    };
+    // 开始调用后端更新角色权限接口
+    await updateRoleApisByRoleId(permsSelectedRole.value, apisIdsObj)
+      .then(res => {
+        if (res.success) {
+          message(res.message, {
+            type: "success"
+          });
+          onSearch();
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+        permsDialogVisible.value = false;
+      });
+    permsDialogVisible.value = false;
   }
 
   // 获取接口树结构数据
@@ -450,7 +492,7 @@ export function useRole() {
     // 深拷贝
     const obj = JSON.parse(JSON.stringify(row));
     permsTitle.value = obj.name;
-    permsSelectedMenu.value = obj.ID;
+    permsSelectedRole.value = obj.ID;
     // 获取权限菜单和接口
     getMenuDefaultCheckedData(row.ID);
     getApisDefaultCheckedData(row.ID);

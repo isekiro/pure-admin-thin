@@ -40,6 +40,13 @@ export const updateRoleMenuByRoleId = (id: number, data: object) => {
 };
 
 /** 获取角色的权限接口 */
-export const getApisDefaultCheckedId = (id?: string) => {
+export const getApisDefaultCheckedId = (id: string) => {
   return http.request<Result>("get", roleUrlApi("/apis/get/" + id));
+};
+
+/** 获取角色的权限接口 */
+export const updateRoleApisByRoleId = (id: number, data: object) => {
+  return http.request<Result>("put", roleUrlApi("/apis/update/" + id), {
+    data
+  });
 };
