@@ -333,6 +333,26 @@ export function useRole() {
       });
   }
 
+  // 获取接口树结构数据
+  async function getApisData() {
+    // 启用加载特效
+    permsDialogLoading.value = true;
+    await await getApisTree()
+      .then(res => {
+        // 深拷贝
+        const obj = JSON.parse(JSON.stringify(res.data));
+        Object.assign(apisTreeData.value, obj.tree);
+      })
+      .catch(res => {
+        message(res.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        permsDialogLoading.value = false;
+      });
+  }
+
   // 获取角色的权限接口
   async function getApisDefaultCheckedData(id: string) {
     // 打开对话框
@@ -346,26 +366,6 @@ export function useRole() {
           defaultApisTreeCheckKeys.value,
           false
         );
-      })
-      .catch(res => {
-        message(res.message, {
-          type: "warning"
-        });
-      })
-      .finally(() => {
-        permsDialogLoading.value = false;
-      });
-  }
-
-  // 获取接口树结构数据
-  async function getApisData() {
-    // 启用加载特效
-    permsDialogLoading.value = true;
-    await await getApisTree()
-      .then(res => {
-        // 深拷贝
-        const obj = JSON.parse(JSON.stringify(res.data));
-        Object.assign(apisTreeData.value, obj.tree);
       })
       .catch(res => {
         message(res.message, {
