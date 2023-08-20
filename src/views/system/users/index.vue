@@ -20,18 +20,27 @@ defineOptions({
 const formRef = ref();
 const {
   form,
+  isEdit,
   loading,
   columns,
   dataList,
   pagination,
   buttonClass,
+  dialogVisible,
+  editUserForm,
+  editUserFormRef,
+  userFormRules,
   onSearch,
   resetForm,
+  resetDialogForm,
+  onUpdate,
   handleUpdate,
   handleDelete,
   handleSizeChange,
   handleCurrentChange,
-  handleSelectionChange
+  handleSelectionChange,
+  dialogTitle,
+  handleEditSubmit
 } = useUser();
 </script>
 
@@ -90,7 +99,11 @@ const {
 
       <PureTableBar title="用户管理" :columns="columns" @refresh="onSearch">
         <template #buttons>
-          <el-button type="primary" :icon="useRenderIcon(AddFill)">
+          <el-button
+            type="primary"
+            :icon="useRenderIcon(AddFill)"
+            @click="dialogVisible = true"
+          >
             新增用户
           </el-button>
         </template>
@@ -120,7 +133,7 @@ const {
                 link
                 type="primary"
                 :size="size"
-                @click="handleUpdate(row)"
+                @click="onUpdate(row)"
                 :icon="useRenderIcon(EditPen)"
               >
                 修改
@@ -179,6 +192,100 @@ const {
           </pure-table>
         </template>
       </PureTableBar>
+
+      <!-- 新建/编辑对话框 -->
+      <div class="system-menu-dialog-container">
+        <el-dialog
+          v-model="dialogVisible"
+          :title="dialogTitle()"
+          draggable
+          width="769px"
+          @close="resetDialogForm(editUserFormRef)"
+        >
+          <el-form
+            ref="editUserFormRef"
+            size="default"
+            :model="editUserForm"
+            :rules="userFormRules"
+            label-width="80px"
+          >
+            <el-row :gutter="35">
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <el-form-item label="用户名称" prop="username">
+                  <el-input v-model="editUserForm.username" />
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <el-form-item label="用户昵称" prop="nickname">
+                  <el-input v-model="editUserForm.nickname" />
+                </el-form-item>
+              </el-col>
+              <el-col
+                v-if="!isEdit"
+                :xs="24"
+                :sm="12"
+                :md="12"
+                :lg="12"
+                :xl="12"
+              >
+                <el-form-item label="输入密码" prop="password">
+                  <el-input type="password" v-model="editUserForm.password" />
+                </el-form-item>
+              </el-col>
+              <el-col
+                v-if="!isEdit"
+                :xs="24"
+                :sm="12"
+                :md="12"
+                :lg="12"
+                :xl="12"
+              >
+                <el-form-item label="确认密码" prop="confirmPass">
+                  <el-input
+                    type="password"
+                    v-model="editUserForm.confirmPass"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <el-form-item label="手机号码" prop="mobile">
+                  <el-input v-model="editUserForm.mobile" />
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <el-form-item label="性别">
+                  <el-radio-group v-model="editUserForm.sex">
+                    <el-radio :label="1">男</el-radio>
+                    <el-radio :label="2">女</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <el-form-item label="用户备注">
+                  <el-input type="textarea" v-model="editUserForm.remark" />
+                </el-form-item>
+              </el-col>
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <el-form-item label="是否启用">
+                  <el-switch
+                    v-model.Number="editUserForm.status"
+                    :active-value="1"
+                    :inactive-value="2"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="dialogVisible = false">取消</el-button>
+              <el-button type="primary" @click="handleEditSubmit()">
+                确定
+              </el-button>
+            </span>
+          </template>
+        </el-dialog>
+      </div>
     </div>
   </div>
 </template>

@@ -43,6 +43,7 @@ const {
   checkedRoleIds,
   onSearch,
   resetForm,
+  resetDialogForm,
   resetPerms,
   dialogTitle,
   permsDialogTitle,
@@ -180,7 +181,7 @@ const {
         :title="dialogTitle()"
         draggable
         width="769px"
-        @close="resetForm(editRoleFormRef)"
+        @close="resetDialogForm(editRoleFormRef)"
       >
         <el-form
           ref="editRoleFormRef"

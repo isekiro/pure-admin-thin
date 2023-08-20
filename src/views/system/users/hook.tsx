@@ -1,11 +1,23 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import { getUserList } from "@/api/system/user";
-import { ElMessageBox } from "element-plus";
+import { ElMessageBox, ElForm, FormRules } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, computed, onMounted } from "vue";
 
 export function useUser() {
+  interface EditUserFormType {
+    username: string;
+    password: string;
+    confirmPass: string;
+    nickname: string;
+    mobile: string;
+    sex: number;
+    status: number;
+    remark: string;
+    avatar: string;
+  }
+
   const form = reactive({
     username: "",
     mobile: "",
@@ -20,6 +32,56 @@ export function useUser() {
     currentPage: 1,
     background: true
   });
+
+  const dialogVisible = ref(false);
+  const isEdit = ref(false);
+  const editUserFormRef = ref<InstanceType<typeof ElForm>>();
+  const initEditUserForm: EditUserFormType = {
+    username: "",
+    password: "",
+    confirmPass: "",
+    nickname: "",
+    mobile: "",
+    sex: 1,
+    status: 1,
+    remark: "",
+    avatar: ""
+  };
+
+  function getEditUserForm() {
+    // 深拷贝
+    const obj: EditUserFormType = JSON.parse(JSON.stringify(initEditUserForm));
+    return reactive(obj);
+  }
+
+  const editUserForm = getEditUserForm();
+
+  const userFormRules = reactive<FormRules>({
+    username: [
+      {
+        required: true,
+        message: "请输入用户名",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+    ],
+    sort: [
+      {
+        type: "number",
+        required: true,
+        message: "请输入用户序号",
+        trigger: "blur"
+      }
+    ],
+    code: [
+      {
+        required: true,
+        message: "请输入用户标识符",
+        trigger: "blur"
+      }
+    ]
+  });
+
   const columns: TableColumnList = [
     {
       type: "selection",
@@ -149,6 +211,21 @@ export function useUser() {
       });
   }
 
+  function dialogTitle() {
+    return isEdit.value ? "编辑菜单" : "新建菜单";
+  }
+
+  function handleEditSubmit() {}
+
+  function onUpdate(row) {
+    isEdit.value = true;
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(row));
+    // 给proxy对象赋值
+    Object.assign(editUserForm, obj);
+    dialogVisible.value = true;
+  }
+
   function handleUpdate(row) {
     console.log(row);
   }
@@ -194,6 +271,10 @@ export function useUser() {
     formEl.resetFields();
     onSearch();
   };
+  const resetDialogForm = formEl => {
+    if (!formEl) return;
+    formEl.resetFields();
+  };
 
   onMounted(() => {
     onSearch();
@@ -201,17 +282,26 @@ export function useUser() {
 
   return {
     form,
+    isEdit,
     loading,
     columns,
     dataList,
     pagination,
     buttonClass,
+    dialogVisible,
+    editUserForm,
+    editUserFormRef,
+    userFormRules,
     onSearch,
     resetForm,
+    resetDialogForm,
+    onUpdate,
     handleUpdate,
     handleDelete,
     handleSizeChange,
     handleCurrentChange,
-    handleSelectionChange
+    handleSelectionChange,
+    dialogTitle,
+    handleEditSubmit
   };
 }

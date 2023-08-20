@@ -68,7 +68,7 @@ export function useRole() {
     background: true
   });
 
-  const initeditRoleForm = reactive<editRoleFormType>({
+  const initEditRoleForm = reactive<editRoleFormType>({
     createTime: 0,
     updateTime: 0,
     creator: "",
@@ -87,7 +87,7 @@ export function useRole() {
 
   function getEditRoleForm() {
     // 深拷贝
-    const obj: editRoleFormType = JSON.parse(JSON.stringify(initeditRoleForm));
+    const obj: editRoleFormType = JSON.parse(JSON.stringify(initEditRoleForm));
     return reactive(obj);
   }
 
@@ -575,6 +575,10 @@ export function useRole() {
     formEl.resetFields();
     onSearch();
   };
+  const resetDialogForm = formEl => {
+    if (!formEl) return;
+    formEl.resetFields();
+  };
 
   const resetPerms = () => {
     menuTreeRef.value!.setCheckedKeys([], false);
@@ -610,6 +614,7 @@ export function useRole() {
     checkedRoleIds,
     onSearch,
     resetForm,
+    resetDialogForm,
     resetPerms,
     dialogTitle,
     permsDialogTitle,
