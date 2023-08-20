@@ -23,8 +23,8 @@ export const deleteRole = (data: object) => {
 };
 
 /** 获取角色下拉列表选项 */
-export const getRolesOptions = (data: object) => {
-  return http.request<Result>("get", roleUrlApi("/options"), { data });
+export const getRolesOptions = () => {
+  return http.request<Result>("get", roleUrlApi("/options"));
 };
 
 /** 获取角色的权限菜单 */

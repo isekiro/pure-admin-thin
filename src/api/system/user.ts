@@ -46,3 +46,8 @@ export const refreshTokenApi = (data: object) => {
 export const getUserList = (data: object) => {
   return http.request<Result>("post", userUrlApi("/list"), { data });
 };
+
+/** 更新用户信息 */
+export const updateUserInfo = (id: number, data: object) => {
+  return http.request<Result>("put", userUrlApi("/update/" + id), { data });
+};

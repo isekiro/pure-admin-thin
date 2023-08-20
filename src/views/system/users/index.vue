@@ -4,8 +4,6 @@ import { useUser } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import Role from "@iconify-icons/ri/admin-line";
-import Password from "@iconify-icons/ri/lock-password-line";
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
 import Search from "@iconify-icons/ep/search";
@@ -19,7 +17,7 @@ defineOptions({
 const formRef = ref();
 const {
   form,
-  isEdit,
+  rolesOptions,
   loading,
   columns,
   dataList,
@@ -140,24 +138,6 @@ const {
               >
                 修改
               </el-button>
-              <el-button
-                class="reset-margin"
-                link
-                type="primary"
-                :size="size"
-                :icon="useRenderIcon(Password)"
-              >
-                重置密码
-              </el-button>
-              <el-button
-                class="reset-margin"
-                link
-                type="primary"
-                :size="size"
-                :icon="useRenderIcon(Role)"
-              >
-                分配角色
-              </el-button>
             </template>
           </pure-table>
         </template>
@@ -190,31 +170,30 @@ const {
                   <el-input v-model="editUserForm.nickname" />
                 </el-form-item>
               </el-col>
-              <el-col
-                v-if="!isEdit"
-                :xs="24"
-                :sm="12"
-                :md="12"
-                :lg="12"
-                :xl="12"
-              >
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <el-form-item label="输入密码" prop="password">
                   <el-input type="password" v-model="editUserForm.password" />
                 </el-form-item>
               </el-col>
-              <el-col
-                v-if="!isEdit"
-                :xs="24"
-                :sm="12"
-                :md="12"
-                :lg="12"
-                :xl="12"
-              >
-                <el-form-item label="确认密码" prop="confirmPass">
-                  <el-input
-                    type="password"
-                    v-model="editUserForm.confirmPass"
-                  />
+              <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                <el-form-item label="分配角色">
+                  <el-select
+                    v-model="editUserForm.roleIds"
+                    clearable
+                    multiple
+                    collapse-tags
+                    collapse-tags-tooltip
+                    size="default"
+                    placeholder="请选择角色"
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in rolesOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">

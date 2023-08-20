@@ -1,15 +1,17 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { getUserList } from "@/api/system/user";
+import { getUserList, updateUserInfo } from "@/api/system/user";
+import { getRolesOptions } from "@/api/system/role";
 import { ElMessageBox, ElForm, FormRules } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, computed, onMounted } from "vue";
 
 export function useUser() {
   interface EditUserFormType {
+    ID: number;
     username: string;
     password: string;
-    confirmPass: string;
+    roleIds: number[];
     nickname: string;
     mobile: string;
     sex: number;
@@ -37,9 +39,10 @@ export function useUser() {
   const isEdit = ref(false);
   const editUserFormRef = ref<InstanceType<typeof ElForm>>();
   const initEditUserForm: EditUserFormType = {
+    ID: 0,
     username: "",
     password: "",
-    confirmPass: "",
+    roleIds: [],
     nickname: "",
     mobile: "",
     sex: 1,
@@ -55,6 +58,7 @@ export function useUser() {
   }
 
   const editUserForm = getEditUserForm();
+  const rolesOptions = ref();
 
   const userFormRules = reactive<FormRules>({
     username: [
@@ -155,7 +159,7 @@ export function useUser() {
     {
       label: "操作",
       fixed: "right",
-      width: 260,
+      minWidth: 60,
       slot: "operation"
     }
   ];
@@ -215,13 +219,17 @@ export function useUser() {
     return isEdit.value ? "编辑用户" : "新建用户";
   }
 
-  function handleEditSubmit() {}
+  function handleEditSubmit() {
+    isEdit.value ? handleUpdate(editUserForm.ID, editUserForm) : handleCreate();
+  }
 
   function onCreate() {
     isEdit.value = false;
     Object.assign(editUserForm, getEditUserForm());
     dialogVisible.value = true;
   }
+
+  function handleCreate() {}
 
   function onUpdate(row) {
     isEdit.value = true;
@@ -232,8 +240,28 @@ export function useUser() {
     dialogVisible.value = true;
   }
 
-  function handleUpdate(row) {
-    console.log(row);
+  function handleUpdate(id: number, form: EditUserFormType) {
+    updateUserInfo(id, form)
+      .then(res => {
+        if (res.success) {
+          message(res.message, {
+            type: "success"
+          });
+          onSearch();
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+      })
+      .finally(() => {
+        dialogVisible.value = false;
+      });
   }
 
   function handleDelete(row) {
@@ -257,10 +285,27 @@ export function useUser() {
   async function onSearch() {
     loading.value = true;
     const formData = Object.assign({}, form, pagination);
+    // 获取用户数据
     await getUserList(formData)
       .then(res => {
         dataList.value = res.data.list;
         pagination.total = res.data.total;
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+
+    loading.value = true;
+    // 获取角色下拉列表数据
+    await getRolesOptions()
+      .then(res => {
+        const roles = res.data.list;
+        rolesOptions.value = roles;
       })
       .catch(res => {
         message(res.response.data.message, {
@@ -288,7 +333,7 @@ export function useUser() {
 
   return {
     form,
-    isEdit,
+    rolesOptions,
     loading,
     columns,
     dataList,
