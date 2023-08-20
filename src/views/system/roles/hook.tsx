@@ -336,7 +336,7 @@ export function useRole() {
   // 获取角色的权限接口
   async function getApisDefaultCheckedData(id: string) {
     // 打开对话框
-    loading.value = true;
+    permsDialogLoading.value = true;
     await getApisDefaultCheckedId(id)
       .then(res => {
         // 深拷贝
@@ -353,7 +353,7 @@ export function useRole() {
         });
       })
       .finally(() => {
-        loading.value = false;
+        permsDialogLoading.value = false;
       });
   }
 
