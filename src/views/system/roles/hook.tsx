@@ -259,7 +259,7 @@ export function useRole() {
         Object.assign(menuTreeData.value, obj.tree);
       })
       .catch(res => {
-        message(res.message, {
+        message(res.response.data.message, {
           type: "warning"
         });
       })
@@ -283,7 +283,7 @@ export function useRole() {
         );
       })
       .catch(res => {
-        message(res.message, {
+        message(res.response.data.message, {
           type: "warning"
         });
       })
@@ -323,7 +323,8 @@ export function useRole() {
         }
       })
       .catch(res => {
-        message(res.message, {
+        console.log(res);
+        message(res.response.data.message, {
           type: "error"
         });
       })
@@ -344,7 +345,7 @@ export function useRole() {
         Object.assign(apisTreeData.value, obj.tree);
       })
       .catch(res => {
-        message(res.message, {
+        message(res.response.data.message, {
           type: "warning"
         });
       })
@@ -368,7 +369,7 @@ export function useRole() {
         );
       })
       .catch(res => {
-        message(res.message, {
+        message(res.response.data.message, {
           type: "warning"
         });
       })
@@ -402,6 +403,11 @@ export function useRole() {
           });
         }
       })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "warning"
+        });
+      })
       .finally(() => {
         dialogVisible.value = false;
       });
@@ -433,7 +439,7 @@ export function useRole() {
         }
       })
       .catch(res => {
-        message(res.message, {
+        message(res.response.data.message, {
           type: "error"
         });
       })
@@ -494,6 +500,11 @@ export function useRole() {
           });
         }
       })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+      })
       .finally(() => {
         loading.value = false;
       });
@@ -510,7 +521,7 @@ export function useRole() {
         pagination.total = obj.total;
       })
       .catch(res => {
-        message(res.message, {
+        message(res.response.data.message, {
           type: "warning"
         });
       })
