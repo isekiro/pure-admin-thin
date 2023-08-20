@@ -9,7 +9,7 @@ export function useUser() {
   const form = reactive({
     username: "",
     mobile: "",
-    status: ""
+    status: 3
   });
   const dataList = ref([]);
   const loading = ref(true);
@@ -30,11 +30,6 @@ export function useUser() {
       type: "index",
       width: 70,
       fixed: "left"
-    },
-    {
-      label: "用户编号",
-      prop: "id",
-      minWidth: 130
     },
     {
       label: "用户名称",
@@ -61,12 +56,6 @@ export function useUser() {
       )
     },
     {
-      label: "部门",
-      prop: "dept",
-      minWidth: 90,
-      formatter: ({ dept }) => dept.name
-    },
-    {
       label: "手机号码",
       prop: "mobile",
       minWidth: 90
@@ -88,6 +77,11 @@ export function useUser() {
           onChange={() => onChange(scope as any)}
         />
       )
+    },
+    {
+      label: "备注",
+      prop: "remark",
+      minWidth: 180
     },
     {
       label: "创建时间",
@@ -164,11 +158,13 @@ export function useUser() {
   }
 
   function handleSizeChange(val: number) {
-    console.log(`${val} items per page`);
+    pagination.pageSize = val;
+    onSearch();
   }
 
   function handleCurrentChange(val: number) {
-    console.log(`current page: ${val}`);
+    pagination.currentPage = val;
+    onSearch();
   }
 
   function handleSelectionChange(val) {
@@ -177,12 +173,20 @@ export function useUser() {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getUserList();
-    dataList.value = data.list;
-    pagination.total = data.total;
-    setTimeout(() => {
-      loading.value = false;
-    }, 500);
+    const formData = Object.assign({}, form, pagination);
+    await getUserList(formData)
+      .then(res => {
+        dataList.value = res.data.list;
+        pagination.total = res.data.total;
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   const resetForm = formEl => {

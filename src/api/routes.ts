@@ -7,6 +7,6 @@ type Result = {
 };
 
 /** 获取左侧菜单栏 */
-export const getAsyncRoutes = (params?: string) => {
+export const getAsyncRoutes = (params: string) => {
   return http.request<Result>("get", menuUrlApi("/access/tree/" + params));
 };

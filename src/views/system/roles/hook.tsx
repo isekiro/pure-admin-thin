@@ -573,6 +573,7 @@ export function useRole() {
   const resetForm = formEl => {
     if (!formEl) return;
     formEl.resetFields();
+    onSearch();
   };
 
   const resetPerms = () => {

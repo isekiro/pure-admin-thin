@@ -1,6 +1,6 @@
 import { type Result } from "./type";
 import { http } from "@/utils/http";
-import { baseUrlApi } from "../utils";
+import { baseUrlApi, userUrlApi } from "../utils";
 
 export type UserResult = {
   success: boolean;
@@ -31,18 +31,18 @@ export type RefreshTokenResult = {
 };
 
 /** 登录 */
-export const getLogin = (data?: object) => {
+export const getLogin = (data: object) => {
   return http.request<UserResult>("post", baseUrlApi("/login"), { data });
 };
 
 /** 刷新token */
-export const refreshTokenApi = (data?: object) => {
+export const refreshTokenApi = (data: object) => {
   return http.request<RefreshTokenResult>("post", baseUrlApi("/refreshToken"), {
     data
   });
 };
 
 /** 获取用户管理列表 */
-export const getUserList = (data?: object) => {
-  return http.request<Result>("post", "/user", { data });
+export const getUserList = (data: object) => {
+  return http.request<Result>("post", userUrlApi("/list"), { data });
 };

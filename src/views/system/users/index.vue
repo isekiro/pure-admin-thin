@@ -63,13 +63,14 @@ const {
         </el-form-item>
         <el-form-item label="状态：" prop="status">
           <el-select
-            v-model="form.status"
+            v-model.number="form.status"
             placeholder="请选择"
             clearable
             class="!w-[160px]"
           >
-            <el-option label="已开启" value="1" />
-            <el-option label="已关闭" value="0" />
+            <el-option label="全部" :value="3" />
+            <el-option label="已开启" :value="1" />
+            <el-option label="已关闭" :value="2" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -109,9 +110,9 @@ const {
               background: 'var(--el-table-row-hover-bg-color)',
               color: 'var(--el-text-color-primary)'
             }"
-            @selection-change="handleSelectionChange"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
+            @page-selection-change="handleSelectionChange"
+            @page-size-change="handleSizeChange"
+            @page-current-change="handleCurrentChange"
           >
             <template #operation="{ row }">
               <el-button
