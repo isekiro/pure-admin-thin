@@ -133,7 +133,6 @@ export function useRole() {
   };
   const defaultMenuTreeCheckKeys = ref([]);
   const defaultApisTreeCheckKeys = ref([]);
-  const permsDialogLoading = ref(false);
   const permsMenuTreeLoading = ref(false);
   const permsApisTreeLoading = ref(false);
   const checkedRoleIds = ref([]);
@@ -308,8 +307,6 @@ export function useRole() {
       menuIds: ids.value
     };
     // 开始调用后端删除接口
-    // 打开对话框
-    permsDialogLoading.value = true;
     await updateRoleMenuByRoleId(permsSelectedMenu.value, menuIdsObj)
       .then(res => {
         if (res.success) {
@@ -330,15 +327,13 @@ export function useRole() {
         });
       })
       .finally(() => {
-        permsDialogLoading.value = false;
         permsDialogVisible.value = false;
       });
   }
 
   // 获取接口树结构数据
   async function getApisData() {
-    // 启用加载特效
-    permsDialogLoading.value = true;
+    loading.value = true;
     await await getApisTree()
       .then(res => {
         // 深拷贝
@@ -351,7 +346,7 @@ export function useRole() {
         });
       })
       .finally(() => {
-        permsDialogLoading.value = false;
+        loading.value = false;
       });
   }
 
@@ -567,7 +562,6 @@ export function useRole() {
     apisTreeData,
     defaultMenuTreeCheckKeys,
     defaultApisTreeCheckKeys,
-    permsDialogLoading,
     permsMenuTreeLoading,
     permsApisTreeLoading,
     checkedRoleIds,
