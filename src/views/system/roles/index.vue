@@ -38,7 +38,8 @@ const {
   apisTreeData,
   defaultMenuTreeCheckKeys,
   defaultApisTreeCheckKeys,
-  permsDialogLoading,
+  permsMenuTreeLoading,
+  permsApisTreeLoading,
   checkedRoleIds,
   onSearch,
   resetForm,
@@ -251,6 +252,7 @@ const {
               node-key="ID"
               highlight-current
               :props="defaultMenuTreeProps"
+              v-loading="permsMenuTreeLoading"
             >
               <template #default="{ data }">
                 <span v-html="data.meta.title" />
@@ -266,6 +268,7 @@ const {
               node-key="ID"
               highlight-current
               :props="defaultRoleApisTreeProps"
+              v-loading="permsApisTreeLoading"
             >
               <template #default="{ data }">
                 <span v-html="data.desc" />
@@ -275,11 +278,7 @@ const {
         </el-tabs>
         <template #footer>
           <span class="dialog-footer">
-            <el-button
-              :loading="permsDialogLoading"
-              @click="permsDialogVisible = false"
-              >取消</el-button
-            >
+            <el-button @click="permsDialogVisible = false">取消</el-button>
             <el-button type="primary" @click="handleRoleMenuSubmit()">
               确定
             </el-button>

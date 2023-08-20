@@ -134,6 +134,8 @@ export function useRole() {
   const defaultMenuTreeCheckKeys = ref([]);
   const defaultApisTreeCheckKeys = ref([]);
   const permsDialogLoading = ref(false);
+  const permsMenuTreeLoading = ref(false);
+  const permsApisTreeLoading = ref(false);
   const checkedRoleIds = ref([]);
 
   // 权限对话框选中的角色
@@ -270,8 +272,7 @@ export function useRole() {
 
   // 获取角色的权限菜单
   async function getMenuDefaultCheckedData(id: string) {
-    // 打开对话框
-    permsDialogLoading.value = true;
+    permsMenuTreeLoading.value = true;
     await getMenuDefaultCheckedId(id)
       .then(res => {
         // 深拷贝
@@ -288,7 +289,7 @@ export function useRole() {
         });
       })
       .finally(() => {
-        permsDialogLoading.value = false;
+        permsMenuTreeLoading.value = false;
       });
   }
 
@@ -357,7 +358,7 @@ export function useRole() {
   // 获取角色的权限接口
   async function getApisDefaultCheckedData(id: string) {
     // 打开对话框
-    permsDialogLoading.value = true;
+    permsApisTreeLoading.value = true;
     await getApisDefaultCheckedId(id)
       .then(res => {
         // 深拷贝
@@ -374,7 +375,7 @@ export function useRole() {
         });
       })
       .finally(() => {
-        permsDialogLoading.value = false;
+        permsApisTreeLoading.value = false;
       });
   }
 
@@ -567,6 +568,8 @@ export function useRole() {
     defaultMenuTreeCheckKeys,
     defaultApisTreeCheckKeys,
     permsDialogLoading,
+    permsMenuTreeLoading,
+    permsApisTreeLoading,
     checkedRoleIds,
     onSearch,
     resetForm,
