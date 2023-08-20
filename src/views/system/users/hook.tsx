@@ -217,6 +217,12 @@ export function useUser() {
 
   function handleEditSubmit() {}
 
+  function onCreate() {
+    isEdit.value = false;
+    Object.assign(editUserForm, getEditUserForm());
+    dialogVisible.value = true;
+  }
+
   function onUpdate(row) {
     isEdit.value = true;
     // 深拷贝
@@ -295,6 +301,7 @@ export function useUser() {
     onSearch,
     resetForm,
     resetDialogForm,
+    onCreate,
     onUpdate,
     handleUpdate,
     handleDelete,

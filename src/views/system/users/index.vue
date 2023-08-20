@@ -31,6 +31,7 @@ const {
   onSearch,
   resetForm,
   resetDialogForm,
+  onCreate,
   onUpdate,
   // handleUpdate,
   // handleDelete,
@@ -103,7 +104,7 @@ const {
           <el-button
             type="primary"
             :icon="useRenderIcon(AddFill)"
-            @click="dialogVisible = true"
+            @click="onCreate()"
           >
             新增用户
           </el-button>
