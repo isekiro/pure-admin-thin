@@ -45,14 +45,15 @@ const {
   resetPerms,
   dialogTitle,
   permsDialogTitle,
-  handleSubmit,
+  handleEditSubmit,
   onCreate,
   onUpdate,
   handlePermission,
   handleSizeChange,
   handleCurrentChange,
   handleSelectionChange,
-  openDeleteConfirm
+  openDeleteConfirm,
+  handleRoleMenuSubmit
 } = useRole();
 </script>
 
@@ -222,7 +223,9 @@ const {
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="handleSubmit()"> 确定 </el-button>
+            <el-button type="primary" @click="handleEditSubmit()">
+              确定
+            </el-button>
           </span>
         </template>
       </el-dialog>
@@ -277,7 +280,9 @@ const {
               @click="permsDialogVisible = false"
               >取消</el-button
             >
-            <el-button type="primary"> 确定 </el-button>
+            <el-button type="primary" @click="handleRoleMenuSubmit()">
+              确定
+            </el-button>
           </span>
         </template>
       </el-dialog>

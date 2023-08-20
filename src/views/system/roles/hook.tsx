@@ -6,6 +6,7 @@ import {
   deleteRole,
   getRoleList,
   getMenuDefaultCheckedId,
+  updateRoleMenuByRoleId,
   getApisDefaultCheckedId
 } from "@/api/system/role";
 import { getMenuTree } from "@/api/system/menu";
@@ -40,6 +41,10 @@ interface FormType {
 
 interface RoleIdsType {
   roleIds: number[];
+}
+
+interface MenuIdsType {
+  menuIds: number[];
 }
 
 export function useRole() {
@@ -130,6 +135,9 @@ export function useRole() {
   const defaultApisTreeCheckKeys = ref([]);
   const permsDialogLoading = ref(false);
   const checkedRoleIds = ref([]);
+
+  // 权限对话框选中的角色
+  const permsSelectedMenu = ref(0);
 
   // 标签页默认选择
   const activeName = ref("menuTag");
@@ -231,7 +239,7 @@ export function useRole() {
       type: "warning"
     })
       .then(() => {
-        batchDeleteRoleByIds();
+        handleDeleteRoleByIds();
       })
       .catch(() => {
         message("取消批量删除角色", {
@@ -264,16 +272,65 @@ export function useRole() {
   async function getMenuDefaultCheckedData(id: string) {
     // 打开对话框
     permsDialogLoading.value = true;
-    try {
-      const { data } = await getMenuDefaultCheckedId(id);
-      // 深拷贝
-      const obj = JSON.parse(JSON.stringify(data));
-      // 给proxy对象赋值
-      defaultMenuTreeCheckKeys.value = obj.list;
-      menuTreeRef.value!.setCheckedKeys(defaultMenuTreeCheckKeys.value, false);
-    } finally {
-      permsDialogLoading.value = false;
-    }
+    await getMenuDefaultCheckedId(id)
+      .then(res => {
+        // 深拷贝
+        const obj = JSON.parse(JSON.stringify(res.data));
+        defaultMenuTreeCheckKeys.value = obj.list;
+        menuTreeRef.value!.setCheckedKeys(
+          defaultMenuTreeCheckKeys.value,
+          false
+        );
+      })
+      .catch(res => {
+        message(res.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        permsDialogLoading.value = false;
+      });
+  }
+
+  // 更新角色的权限菜单
+  async function handleRoleMenuSubmit() {
+    // 深拷贝，将id临时存放在一个数组
+    const ids = ref<number[]>();
+    // 获取选中的权限菜单
+    const defaultCheckKeys = menuTreeRef.value!.getCheckedKeys(false);
+    const defaultHalfCheckKeys = menuTreeRef.value!.getHalfCheckedKeys();
+    // 赋值给ids
+    ids.value = defaultCheckKeys.concat(defaultHalfCheckKeys) as any;
+
+    // 组装数据格式，给后端识别
+    const menuIdsObj: MenuIdsType = {
+      menuIds: ids.value
+    };
+    // 开始调用后端删除接口
+    // 打开对话框
+    permsDialogLoading.value = true;
+    await updateRoleMenuByRoleId(permsSelectedMenu.value, menuIdsObj)
+      .then(res => {
+        if (res.success) {
+          message(res.message, {
+            type: "success"
+          });
+          onSearch();
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.message, {
+          type: "error"
+        });
+      })
+      .finally(() => {
+        permsDialogLoading.value = false;
+        permsDialogVisible.value = false;
+      });
   }
 
   // 获取角色的权限接口
@@ -302,16 +359,25 @@ export function useRole() {
 
   // 获取接口树结构数据
   async function getApisData() {
+    // 启用加载特效
     loading.value = true;
-    const { data } = await getApisTree();
-    // 深拷贝
-    const obj = JSON.parse(JSON.stringify(data));
-    // 给proxy对象赋值
-    Object.assign(apisTreeData.value, obj.tree);
-    loading.value = false;
+    await await getApisTree()
+      .then(res => {
+        // 深拷贝
+        const obj = JSON.parse(JSON.stringify(res.data));
+        Object.assign(apisTreeData.value, obj.list);
+      })
+      .catch(res => {
+        message(res.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
-  function handleSubmit() {
+  function handleEditSubmit() {
     isEdit.value ? handleUpdate(editRoleForm.ID, editRoleForm) : handleCreate();
   }
 
@@ -381,8 +447,8 @@ export function useRole() {
     permsDialogVisible.value = true;
     // 深拷贝
     const obj = JSON.parse(JSON.stringify(row));
-    // 给proxy对象赋值
     permsTitle.value = obj.name;
+    permsSelectedMenu.value = obj.ID;
     // 获取权限菜单和接口
     getMenuDefaultCheckedData(row.ID);
     getApisDefaultCheckedData(row.ID);
@@ -403,7 +469,7 @@ export function useRole() {
   }
 
   // 批量删除角色
-  function batchDeleteRoleByIds() {
+  function handleDeleteRoleByIds() {
     // 深拷贝，将id临时存放在一个数组
     const ids = ref([]);
     checkedRoleIds.value.forEach(element => {
@@ -496,14 +562,15 @@ export function useRole() {
     resetPerms,
     dialogTitle,
     permsDialogTitle,
-    handleSubmit,
+    handleEditSubmit,
     onCreate,
     onUpdate,
     handlePermission,
     handleSizeChange,
     handleCurrentChange,
     handleSelectionChange,
-    batchDeleteRoleByIds,
+    handleDeleteRoleByIds,
+    handleRoleMenuSubmit,
     openDeleteConfirm
   };
 }
