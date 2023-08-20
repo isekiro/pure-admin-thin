@@ -365,7 +365,7 @@ export function useRole() {
       .then(res => {
         // 深拷贝
         const obj = JSON.parse(JSON.stringify(res.data));
-        Object.assign(apisTreeData.value, obj.list);
+        Object.assign(apisTreeData.value, obj.tree);
       })
       .catch(res => {
         message(res.message, {
