@@ -26,18 +26,18 @@ const {
   editUserForm,
   editUserFormRef,
   userFormRules,
+  checkedUserIds,
   onSearch,
   resetForm,
   resetDialogForm,
   onCreate,
   onUpdate,
-  // handleUpdate,
-  // handleDelete,
   handleSizeChange,
   handleCurrentChange,
   handleSelectionChange,
   dialogTitle,
-  handleEditSubmit
+  handleEditSubmit,
+  openDeleteConfirm
 } = useUser();
 </script>
 
@@ -91,7 +91,12 @@ const {
           <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
             重置
           </el-button>
-          <el-button type="danger" :icon="useRenderIcon(Delete)">
+          <el-button
+            :disabled="checkedUserIds.length == 0"
+            type="danger"
+            :icon="useRenderIcon(Delete)"
+            @click="openDeleteConfirm()"
+          >
             删除
           </el-button>
         </el-form-item>
@@ -123,7 +128,7 @@ const {
               background: 'var(--el-table-row-hover-bg-color)',
               color: 'var(--el-text-color-primary)'
             }"
-            @page-selection-change="handleSelectionChange"
+            @selection-change="handleSelectionChange"
             @page-size-change="handleSizeChange"
             @page-current-change="handleCurrentChange"
           >

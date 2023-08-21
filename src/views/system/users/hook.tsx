@@ -1,7 +1,12 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import { encryptorFunc } from "@/utils/encrypt";
-import { getUserList, updateUserInfo, createUser } from "@/api/system/user";
+import {
+  getUserList,
+  updateUserInfo,
+  createUser,
+  deleteUser
+} from "@/api/system/user";
 import { getRolesOptions } from "@/api/system/role";
 import { ElMessageBox, ElForm, FormRules } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
@@ -19,6 +24,10 @@ export function useUser() {
     status: number;
     remark: string;
     avatar: string;
+  }
+
+  interface UserIdsType {
+    userIds: number[];
   }
 
   const form = reactive({
@@ -60,6 +69,7 @@ export function useUser() {
 
   const editUserForm = getEditUserForm();
   const rolesOptions = ref();
+  const checkedUserIds = ref([]);
 
   const userFormRules = reactive<FormRules>({
     username: [
@@ -303,7 +313,60 @@ export function useUser() {
   }
 
   function handleSelectionChange(val) {
-    console.log("handleSelectionChange", val);
+    checkedUserIds.value = val;
+  }
+
+  // 批量删除弹窗提醒
+  const openDeleteConfirm = () => {
+    ElMessageBox.confirm("是否要批量删除用户？", "警告", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+      type: "warning"
+    })
+      .then(() => {
+        handleDeleteUserByIds();
+      })
+      .catch(() => {
+        message("取消批量删除用户", {
+          type: "info"
+        });
+      });
+  };
+
+  // 批量删除用户
+  function handleDeleteUserByIds() {
+    // 深拷贝，将id临时存放在一个数组
+    const ids = ref([]);
+    checkedUserIds.value.forEach(element => {
+      ids.value.push(element.ID);
+    });
+    // 组装数据格式，给后端识别
+    const userIdsObj: UserIdsType = {
+      userIds: ids.value
+    };
+    // 开始调用后端删除接口
+    loading.value = true;
+    deleteUser(userIdsObj)
+      .then(res => {
+        if (res.success) {
+          message(res.message, {
+            type: "success"
+          });
+          onSearch();
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   async function onSearch() {
@@ -367,6 +430,7 @@ export function useUser() {
     editUserForm,
     editUserFormRef,
     userFormRules,
+    checkedUserIds,
     onSearch,
     resetForm,
     resetDialogForm,
@@ -378,6 +442,7 @@ export function useUser() {
     handleCurrentChange,
     handleSelectionChange,
     dialogTitle,
-    handleEditSubmit
+    handleEditSubmit,
+    openDeleteConfirm
   };
 }
