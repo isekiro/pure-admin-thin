@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import { encryptorFunc } from "@/utils/encrypt";
-import { getUserList, updateUserInfo } from "@/api/system/user";
+import { getUserList, updateUserInfo, createUser } from "@/api/system/user";
 import { getRolesOptions } from "@/api/system/role";
 import { ElMessageBox, ElForm, FormRules } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
@@ -230,7 +230,32 @@ export function useUser() {
     dialogVisible.value = true;
   }
 
-  function handleCreate() {}
+  async function handleCreate() {
+    if (editUserForm.password.length !== 0) {
+      editUserForm.password = encryptorFunc(editUserForm.password) as any;
+    }
+    await createUser(editUserForm)
+      .then(res => {
+        if (res.success) {
+          message(res.message, {
+            type: "success"
+          });
+          onSearch();
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+      })
+      .finally(() => {
+        dialogVisible.value = false;
+      });
+  }
 
   function onUpdate(row) {
     isEdit.value = true;
@@ -241,11 +266,11 @@ export function useUser() {
     dialogVisible.value = true;
   }
 
-  function handleUpdate(id: number, form: EditUserFormType) {
+  async function handleUpdate(id: number, form: EditUserFormType) {
     if (form.password.length !== 0) {
       form.password = encryptorFunc(form.password) as any;
     }
-    updateUserInfo(id, form)
+    await updateUserInfo(id, form)
       .then(res => {
         if (res.success) {
           message(res.message, {

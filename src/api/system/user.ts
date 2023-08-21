@@ -51,3 +51,8 @@ export const getUserList = (data: object) => {
 export const updateUserInfo = (id: number, data: object) => {
   return http.request<Result>("put", userUrlApi("/update/" + id), { data });
 };
+
+/** 获取用户管理列表 */
+export const createUser = (data: object) => {
+  return http.request<Result>("post", userUrlApi("/create"), { data });
+};
