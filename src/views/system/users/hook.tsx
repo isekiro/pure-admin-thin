@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
+import { encryptorFunc } from "@/utils/encrypt";
 import { getUserList, updateUserInfo } from "@/api/system/user";
 import { getRolesOptions } from "@/api/system/role";
 import { ElMessageBox, ElForm, FormRules } from "element-plus";
@@ -241,6 +242,9 @@ export function useUser() {
   }
 
   function handleUpdate(id: number, form: EditUserFormType) {
+    if (form.password.length !== 0) {
+      form.password = encryptorFunc(form.password) as any;
+    }
     updateUserInfo(id, form)
       .then(res => {
         if (res.success) {
