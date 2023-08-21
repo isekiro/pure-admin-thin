@@ -177,7 +177,12 @@ const {
               </el-col>
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <el-form-item label="输入密码" prop="password">
-                  <el-input type="password" v-model="editUserForm.password" />
+                  <el-input
+                    type="password"
+                    clearable
+                    show-password
+                    v-model="editUserForm.password"
+                  />
                 </el-form-item>
               </el-col>
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
