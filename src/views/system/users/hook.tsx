@@ -187,7 +187,7 @@ export function useUser() {
   function onChange({ row, index }) {
     ElMessageBox.confirm(
       `确认要<strong>${
-        row.status === 1 ? "启用" : "停用"
+        row.status === 2 ? "启用" : "停用"
       }</strong><strong style='color:var(--el-color-primary)'>${
         row.username
       }</strong>用户吗?`,
@@ -208,16 +208,35 @@ export function useUser() {
             loading: true
           }
         );
-        switchLoadMap.value[index] = Object.assign(
-          {},
-          switchLoadMap.value[index],
-          {
-            loading: false
-          }
-        );
+        updateUserInfo(row.ID, row)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "error"
+            });
+          })
+          .finally(() => {
+            switchLoadMap.value[index] = Object.assign(
+              {},
+              switchLoadMap.value[index],
+              {
+                loading: false
+              }
+            );
+          });
       })
       .catch(() => {
-        row.status === 1 ? (row.status = 2) : (row.status = 1);
+        row.status === 2 ? (row.status = 1) : (row.status = 2);
       });
   }
 
