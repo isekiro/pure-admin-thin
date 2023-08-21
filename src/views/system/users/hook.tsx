@@ -137,7 +137,7 @@ export function useUser() {
           loading={switchLoadMap.value[scope.index]?.loading}
           v-model={scope.row.status}
           active-value={1}
-          inactive-value={0}
+          inactive-value={2}
           active-text="已开启"
           inactive-text="已关闭"
           inline-prompt
@@ -177,7 +177,7 @@ export function useUser() {
   function onChange({ row, index }) {
     ElMessageBox.confirm(
       `确认要<strong>${
-        row.status === 0 ? "停用" : "启用"
+        row.status === 1 ? "启用" : "停用"
       }</strong><strong style='color:var(--el-color-primary)'>${
         row.username
       }</strong>用户吗?`,
@@ -198,21 +198,16 @@ export function useUser() {
             loading: true
           }
         );
-        setTimeout(() => {
-          switchLoadMap.value[index] = Object.assign(
-            {},
-            switchLoadMap.value[index],
-            {
-              loading: false
-            }
-          );
-          message("已成功修改用户状态", {
-            type: "success"
-          });
-        }, 300);
+        switchLoadMap.value[index] = Object.assign(
+          {},
+          switchLoadMap.value[index],
+          {
+            loading: false
+          }
+        );
       })
       .catch(() => {
-        row.status === 0 ? (row.status = 1) : (row.status = 0);
+        row.status === 1 ? (row.status = 2) : (row.status = 1);
       });
   }
 

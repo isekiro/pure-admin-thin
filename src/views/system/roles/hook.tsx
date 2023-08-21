@@ -205,7 +205,7 @@ export function useRole() {
     }
   ];
 
-  function onChange({ row }) {
+  function onChange({ row, index }) {
     ElMessageBox.confirm(
       `确认要<strong>${
         row.status === 2 ? "停用" : "启用"
@@ -222,7 +222,39 @@ export function useRole() {
       }
     )
       .then(() => {
-        handleUpdate(row.ID, row);
+        switchLoadMap.value[index] = Object.assign(
+          {},
+          switchLoadMap.value[index],
+          {
+            loading: true
+          }
+        );
+        updateRole(row.ID, row)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "error"
+            });
+          })
+          .finally(() => {
+            switchLoadMap.value[index] = Object.assign(
+              {},
+              switchLoadMap.value[index],
+              {
+                loading: false
+              }
+            );
+          });
       })
       .catch(() => {
         row.status === 2 ? (row.status = 1) : (row.status = 2);
