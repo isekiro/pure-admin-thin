@@ -245,6 +245,7 @@ export function useRole() {
             message(res.response.data.message, {
               type: "error"
             });
+            onSearch();
           })
           .finally(() => {
             switchLoadMap.value[index] = Object.assign(
