@@ -12,7 +12,7 @@ import {
 } from "@/api/system/role";
 import { getMenuTree } from "@/api/system/menu";
 import { getApisTree } from "@/api/system/api";
-import { ElMessageBox, ElTree, ElForm } from "element-plus";
+import { ElMessageBox, ElTree, ElForm, FormInstance } from "element-plus";
 import type { FormRules } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
@@ -105,9 +105,18 @@ export function useRole() {
     ],
     sort: [
       {
+        validator: (rule, value, callback) => {
+          if (value === "") {
+            callback(new Error("角色等级排序不能为空"));
+          }
+          if (value === 0) {
+            callback(new Error("角色等级排序不能为0"));
+          } else {
+            callback();
+          }
+        },
         type: "number",
         required: true,
-        message: "请输入角色序号",
         trigger: "blur"
       }
     ],
@@ -453,8 +462,8 @@ export function useRole() {
       });
   }
 
-  function handleEditSubmit() {
-    isEdit.value ? handleUpdate(editRoleForm.ID, editRoleForm) : handleCreate();
+  function handleEditSubmit(formEl: FormInstance | undefined) {
+    isEdit.value ? handleUpdate(formEl) : handleCreate(formEl);
   }
 
   function onCreate() {
@@ -464,28 +473,35 @@ export function useRole() {
   }
 
   // 创建角色
-  function handleCreate() {
-    createRole(editRoleForm)
-      .then(res => {
-        if (res.success) {
-          message(res.message, {
-            type: "success"
+  async function handleCreate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        createRole(editRoleForm)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "warning"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
           });
-          onSearch();
-        } else {
-          message(res.message, {
-            type: "error"
-          });
-        }
-      })
-      .catch(res => {
-        message(res.response.data.message, {
-          type: "warning"
-        });
-      })
-      .finally(() => {
-        dialogVisible.value = false;
-      });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   }
 
   function onUpdate(row) {
@@ -499,28 +515,35 @@ export function useRole() {
   }
 
   // 更新角色
-  function handleUpdate(id: number, form: editRoleFormType) {
-    updateRole(id, form)
-      .then(res => {
-        if (res.success) {
-          message(res.message, {
-            type: "success"
+  async function handleUpdate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        updateRole(editRoleForm.ID, editRoleForm)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "error"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
           });
-          onSearch();
-        } else {
-          message(res.message, {
-            type: "error"
-          });
-        }
-      })
-      .catch(res => {
-        message(res.response.data.message, {
-          type: "error"
-        });
-      })
-      .finally(() => {
-        dialogVisible.value = false;
-      });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   }
 
   function handlePermission(row) {
