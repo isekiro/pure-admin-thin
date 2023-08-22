@@ -270,7 +270,7 @@ export function useUser() {
   }
 
   function handleEditSubmit(formEl: FormInstance | undefined) {
-    isEdit.value ? handleUpdate(formEl) : handleCreate();
+    isEdit.value ? handleUpdate(formEl) : handleCreate(formEl);
   }
 
   function onCreate() {
@@ -279,31 +279,40 @@ export function useUser() {
     dialogVisible.value = true;
   }
 
-  async function handleCreate() {
-    if (editUserForm.password.length !== 0) {
-      editUserForm.password = encryptorFunc(editUserForm.password) as any;
-    }
-    await createUser(editUserForm)
-      .then(res => {
-        if (res.success) {
-          message(res.message, {
-            type: "success"
-          });
-          onSearch();
-        } else {
-          message(res.message, {
-            type: "error"
-          });
+  async function handleCreate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        // 深拷贝
+        const userFormData = JSON.parse(JSON.stringify(editUserForm));
+        if (userFormData.password.length !== 0) {
+          userFormData.password = encryptorFunc(userFormData.password) as any;
         }
-      })
-      .catch(res => {
-        message(res.response.data.message, {
-          type: "error"
-        });
-      })
-      .finally(() => {
-        dialogVisible.value = false;
-      });
+        await createUser(userFormData)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "error"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
+          });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   }
 
   function onUpdate(row) {
