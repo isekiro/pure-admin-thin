@@ -8,7 +8,7 @@ import {
   deleteUser
 } from "@/api/system/user";
 import { getRolesOptions } from "@/api/system/role";
-import { ElMessageBox, ElForm, FormRules } from "element-plus";
+import { ElMessageBox, ElForm, FormRules, FormInstance } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, computed, onMounted } from "vue";
 
@@ -71,6 +71,11 @@ export function useUser() {
   const rolesOptions = ref();
   const checkedUserIds = ref([]);
 
+  const REGEXP_PWD =
+    /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){8,18}$/;
+  const REGEXP_MOBILE =
+    /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
+
   const userFormRules = reactive<FormRules>({
     username: [
       {
@@ -80,19 +85,34 @@ export function useUser() {
       },
       { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
     ],
-    sort: [
+    password: [
       {
-        type: "number",
-        required: true,
-        message: "请输入用户序号",
-        trigger: "blur"
+        validator: (rule, value, callback) => {
+          if (value === "") {
+            callback();
+          }
+          if (!REGEXP_PWD.test(value)) {
+            callback(new Error("密码应为8-18位数字、字母、符号的任意两种组合"));
+          } else {
+            callback();
+          }
+        },
+        trigger: "change"
       }
     ],
-    code: [
+    mobile: [
       {
-        required: true,
-        message: "请输入用户标识符",
-        trigger: "blur"
+        validator: (rule, value, callback) => {
+          if (value === "") {
+            callback(new Error("请输入手机号码"));
+          } else if (!REGEXP_MOBILE.test(value)) {
+            callback(new Error("手机号码格式不正确"));
+          } else {
+            callback();
+          }
+        },
+        trigger: "blur",
+        required: true
       }
     ]
   });
@@ -249,8 +269,8 @@ export function useUser() {
     return isEdit.value ? "编辑用户" : "新建用户";
   }
 
-  function handleEditSubmit() {
-    isEdit.value ? handleUpdate(editUserForm.ID, editUserForm) : handleCreate();
+  function handleEditSubmit(formEl: FormInstance | undefined) {
+    isEdit.value ? handleUpdate(formEl) : handleCreate();
   }
 
   function onCreate() {
@@ -295,31 +315,40 @@ export function useUser() {
     dialogVisible.value = true;
   }
 
-  async function handleUpdate(id: number, form: EditUserFormType) {
-    if (form.password.length !== 0) {
-      form.password = encryptorFunc(form.password) as any;
-    }
-    await updateUserInfo(id, form)
-      .then(res => {
-        if (res.success) {
-          message(res.message, {
-            type: "success"
-          });
-          onSearch();
-        } else {
-          message(res.message, {
-            type: "error"
-          });
+  async function handleUpdate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        // 深拷贝
+        const userFormData = JSON.parse(JSON.stringify(editUserForm));
+        if (userFormData.password.length !== 0) {
+          userFormData.password = encryptorFunc(userFormData.password) as any;
         }
-      })
-      .catch(res => {
-        message(res.response.data.message, {
-          type: "error"
-        });
-      })
-      .finally(() => {
-        dialogVisible.value = false;
-      });
+        await updateUserInfo(userFormData.ID, userFormData)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "error"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
+          });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   }
 
   function handleDelete(row) {
