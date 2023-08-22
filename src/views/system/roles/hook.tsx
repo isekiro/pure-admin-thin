@@ -222,40 +222,44 @@ export function useRole() {
       }
     )
       .then(() => {
-        switchLoadMap.value[index] = Object.assign(
-          {},
-          switchLoadMap.value[index],
-          {
-            loading: true
-          }
-        );
-        updateRole(row.ID, row)
-          .then(res => {
-            if (res.success) {
-              message(res.message, {
-                type: "success"
-              });
-            } else {
-              message(res.message, {
+        return new Promise((resolve, reject) => {
+          switchLoadMap.value[index] = Object.assign(
+            {},
+            switchLoadMap.value[index],
+            {
+              loading: true
+            }
+          );
+          updateRole(row.ID, row)
+            .then(res => {
+              if (res.success) {
+                message(res.message, {
+                  type: "success"
+                });
+                return resolve(true);
+              } else {
+                message(res.message, {
+                  type: "error"
+                });
+                return reject(new Error("Error"));
+              }
+            })
+            .catch(res => {
+              message(res.response.data.message, {
                 type: "error"
               });
-            }
-          })
-          .catch(res => {
-            message(res.response.data.message, {
-              type: "error"
+              return reject(new Error("Error"));
+            })
+            .finally(() => {
+              switchLoadMap.value[index] = Object.assign(
+                {},
+                switchLoadMap.value[index],
+                {
+                  loading: false
+                }
+              );
             });
-            onSearch();
-          })
-          .finally(() => {
-            switchLoadMap.value[index] = Object.assign(
-              {},
-              switchLoadMap.value[index],
-              {
-                loading: false
-              }
-            );
-          });
+        });
       })
       .catch(() => {
         row.status === 2 ? (row.status = 1) : (row.status = 2);
