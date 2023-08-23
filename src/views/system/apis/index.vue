@@ -20,13 +20,23 @@ const {
   columns,
   dataList,
   pagination,
+  dialogVisible,
+  editApiFormRef,
+  editApiForm,
+  apiFormRules,
+  checkedApiIds,
   onSearch,
   resetForm,
-  handleUpdate,
+  onCreate,
+  onUpdate,
   handleDelete,
   handleSizeChange,
   handleCurrentChange,
-  handleSelectionChange
+  handleSelectionChange,
+  dialogTitle,
+  resetDialogForm,
+  handleEditSubmit,
+  openDeleteConfirm
 } = useApi();
 </script>
 
@@ -62,14 +72,6 @@ const {
           class="!w-[180px]"
         />
       </el-form-item>
-      <el-form-item label="创建者：" prop="code">
-        <el-input
-          v-model="form.creator"
-          placeholder="请输入创建者"
-          clearable
-          class="!w-[180px]"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -82,12 +84,24 @@ const {
         <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
           重置
         </el-button>
+        <el-button
+          :disabled="checkedApiIds.length == 0"
+          type="danger"
+          :icon="useRenderIcon(Delete)"
+          @click="openDeleteConfirm()"
+        >
+          删除
+        </el-button>
       </el-form-item>
     </el-form>
 
     <PureTableBar title="接口列表" :columns="columns" @refresh="onSearch">
       <template #buttons>
-        <el-button type="primary" :icon="useRenderIcon(AddFill)">
+        <el-button
+          type="primary"
+          @click="onCreate()"
+          :icon="useRenderIcon(AddFill)"
+        >
           新增接口
         </el-button>
       </template>
@@ -118,7 +132,7 @@ const {
               type="primary"
               :size="size"
               :icon="useRenderIcon(EditPen)"
-              @click="handleUpdate(row)"
+              @click="onUpdate(row)"
             >
               修改
             </el-button>
@@ -140,5 +154,55 @@ const {
         </pure-table>
       </template>
     </PureTableBar>
+
+    <!-- 新建/编辑对话框 -->
+    <div class="system-menu-dialog-container">
+      <el-dialog
+        v-model="dialogVisible"
+        :title="dialogTitle()"
+        draggable
+        width="769px"
+        @close="resetDialogForm(editApiFormRef)"
+      >
+        <el-form
+          ref="editApiFormRef"
+          size="default"
+          :model="editApiForm"
+          :rules="apiFormRules"
+          label-width="80px"
+        >
+          <el-row :gutter="35">
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="接口方法" prop="method">
+                <el-input v-model="editApiForm.method" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="接口路径" prop="path">
+                <el-input v-model="editApiForm.path" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="接口分类" prop="category">
+                <el-input v-model="editApiForm.category" />
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="接口描述" prop="desc">
+                <el-input type="textarea" v-model="editApiForm.desc" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="handleEditSubmit(editApiFormRef)">
+              确定
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>

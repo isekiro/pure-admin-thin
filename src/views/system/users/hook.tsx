@@ -5,7 +5,7 @@ import {
   getUserList,
   updateUserInfo,
   createUser,
-  deleteUser
+  batchDeleteUser
 } from "@/api/system/user";
 import { getRolesOptions } from "@/api/system/role";
 import { ElMessageBox, ElForm, FormRules, FormInstance } from "element-plus";
@@ -360,10 +360,6 @@ export function useUser() {
     });
   }
 
-  function handleDelete(row) {
-    console.log(row);
-  }
-
   function handleSizeChange(val: number) {
     pagination.pageSize = val;
     onSearch();
@@ -386,7 +382,7 @@ export function useUser() {
       type: "warning"
     })
       .then(() => {
-        handleDeleteUserByIds();
+        handlebatchDeleteUserByIds();
       })
       .catch(() => {
         message("取消批量删除用户", {
@@ -396,7 +392,7 @@ export function useUser() {
   };
 
   // 批量删除用户
-  function handleDeleteUserByIds() {
+  function handlebatchDeleteUserByIds() {
     // 深拷贝，将id临时存放在一个数组
     const ids = ref([]);
     checkedUserIds.value.forEach(element => {
@@ -408,7 +404,7 @@ export function useUser() {
     };
     // 开始调用后端删除接口
     loading.value = true;
-    deleteUser(userIdsObj)
+    batchDeleteUser(userIdsObj)
       .then(res => {
         if (res.success) {
           message(res.message, {
@@ -499,7 +495,6 @@ export function useUser() {
     onCreate,
     onUpdate,
     handleUpdate,
-    handleDelete,
     handleSizeChange,
     handleCurrentChange,
     handleSelectionChange,

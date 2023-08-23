@@ -58,6 +58,6 @@ export const createUser = (data: object) => {
 };
 
 /** 删除用户 */
-export const deleteUser = (data: object) => {
+export const batchDeleteUser = (data: object) => {
   return http.request<Result>("delete", userUrlApi("/delete/batch"), { data });
 };

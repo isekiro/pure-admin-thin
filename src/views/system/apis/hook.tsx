@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
-import { ElTree } from "element-plus";
+import { message } from "@/utils/message";
+import { ElTree, ElForm, FormInstance, ElMessageBox } from "element-plus";
 import { getApiList } from "@/api/system/api";
 import { type PaginationProps } from "@pureadmin/table";
-import { reactive, ref, computed, onMounted } from "vue";
+import { reactive, ref, onMounted } from "vue";
 
 export function useApi() {
   // 表单数据类型
@@ -10,24 +11,22 @@ export function useApi() {
     method: string;
     path: string;
     category: string;
+    desc: string;
     creator: string;
   }
 
-  const initFormData: FormType = {
+  // interface ApiIdsType {
+  //   apiIds: number[];
+  // }
+
+  // 表单数据初始化
+  const form = reactive({
     method: "",
     path: "",
     category: "",
+    desc: "",
     creator: ""
-  };
-
-  // 生成空的表单
-  function getForm() {
-    // 深拷贝
-    const obj = JSON.parse(JSON.stringify(initFormData));
-    return reactive<FormType>(obj);
-  }
-  // 表单数据初始化
-  const form = getForm();
+  });
 
   const formRef = ref<InstanceType<typeof ElTree>>();
   const dataList = ref([]);
@@ -41,6 +40,28 @@ export function useApi() {
     currentPage: 1,
     background: true
   });
+
+  const initFormData: FormType = {
+    method: "",
+    path: "",
+    category: "",
+    desc: "",
+    creator: ""
+  };
+
+  // 生成空的表单
+  function getEditApiForm() {
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(initFormData));
+    return reactive<FormType>(obj);
+  }
+
+  const isEdit = ref(false);
+  const dialogVisible = ref(false);
+  const editApiFormRef = ref<InstanceType<typeof ElForm>>();
+  const editApiForm = getEditApiForm();
+  const apiFormRules = ref();
+  const checkedApiIds = ref([]);
 
   // 表格表头
   const columns: TableColumnList = [
@@ -57,31 +78,33 @@ export function useApi() {
     {
       label: "接口方法",
       prop: "method",
-      minWidth: 120
+      minWidth: 70
     },
     {
       label: "接口路径",
       prop: "path",
+      align: "left",
       minWidth: 150
     },
     {
       label: "接口分类",
       prop: "category",
-      minWidth: 100
+      minWidth: 70
     },
     {
       label: "接口描述",
       prop: "desc",
-      minWidth: 100
+      align: "left",
+      minWidth: 150
     },
     {
       label: "创建者",
       prop: "creator",
-      minWidth: 100
+      minWidth: 70
     },
     {
       label: "创建时间",
-      minWidth: 180,
+      minWidth: 100,
       prop: "createTime",
       formatter: ({ createTime }) =>
         dayjs(createTime).format("YYYY-MM-DD HH:mm:ss")
@@ -94,18 +117,35 @@ export function useApi() {
     }
   ];
 
-  const buttonClass = computed(() => {
-    return [
-      "!h-[20px]",
-      "reset-margin",
-      "!text-gray-500",
-      "dark:!text-white",
-      "dark:hover:!text-primary"
-    ];
-  });
+  function dialogTitle() {
+    return isEdit.value ? "编辑接口" : "新建接口";
+  }
 
-  function handleUpdate(row) {
-    console.log(row);
+  function handleEditSubmit(formEl: FormInstance | undefined) {
+    isEdit.value ? handleUpdate(formEl) : handleCreate(formEl);
+  }
+
+  function onCreate() {
+    isEdit.value = false;
+    Object.assign(editApiForm, getEditApiForm());
+    dialogVisible.value = true;
+  }
+
+  function handleCreate(formEl: FormInstance | undefined) {
+    console.log(formEl);
+  }
+
+  function onUpdate(row) {
+    isEdit.value = true;
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(row));
+    // 给proxy对象赋值
+    Object.assign(editApiForm, obj);
+    dialogVisible.value = true;
+  }
+
+  function handleUpdate(formEl: FormInstance | undefined) {
+    console.log(formEl);
   }
 
   function handleDelete(row) {
@@ -126,6 +166,59 @@ export function useApi() {
     console.log("handleSelectionChange", val);
   }
 
+  // 批量删除弹窗提醒
+  const openDeleteConfirm = () => {
+    ElMessageBox.confirm("是否要批量删除用户？", "警告", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+      type: "warning"
+    })
+      .then(() => {
+        handleDeleteUserByIds();
+      })
+      .catch(() => {
+        message("取消批量删除用户", {
+          type: "info"
+        });
+      });
+  };
+
+  // 批量删除用户
+  function handleDeleteUserByIds() {
+    // 深拷贝，将id临时存放在一个数组
+    const ids = ref([]);
+    checkedApiIds.value.forEach(element => {
+      ids.value.push(element.ID);
+    });
+    // 组装数据格式，给后端识别
+    // const userIdsObj: ApiIdsType = {
+    //   apiIds: ids.value
+    // };
+    // 开始调用后端删除接口
+    loading.value = true;
+    // batchDeleteApi(userIdsObj)
+    //   .then(res => {
+    //     if (res.success) {
+    //       message(res.message, {
+    //         type: "success"
+    //       });
+    //       onSearch();
+    //     } else {
+    //       message(res.message, {
+    //         type: "error"
+    //       });
+    //     }
+    //   })
+    //   .catch(res => {
+    //     message(res.response.data.message, {
+    //       type: "error"
+    //     });
+    //   })
+    //   .finally(() => {
+    //     loading.value = false;
+    //   });
+  }
+
   async function onSearch() {
     loading.value = true;
     const formData = Object.assign(form, pagination);
@@ -137,9 +230,13 @@ export function useApi() {
 
   const resetForm = formEl => {
     if (!formEl) return;
-    Object.assign(form, getForm());
+    Object.assign(form, getEditApiForm());
     formEl.resetFields();
     onSearch();
+  };
+  const resetDialogForm = formEl => {
+    if (!formEl) return;
+    formEl.resetFields();
   };
 
   onMounted(() => {
@@ -153,13 +250,22 @@ export function useApi() {
     columns,
     dataList,
     pagination,
-    buttonClass,
+    dialogVisible,
+    editApiFormRef,
+    editApiForm,
+    apiFormRules,
+    checkedApiIds,
     onSearch,
     resetForm,
-    handleUpdate,
+    onCreate,
+    onUpdate,
     handleDelete,
     handleSizeChange,
     handleCurrentChange,
-    handleSelectionChange
+    handleSelectionChange,
+    dialogTitle,
+    resetDialogForm,
+    handleEditSubmit,
+    openDeleteConfirm
   };
 }
