@@ -1,7 +1,18 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { ElTree, ElForm, FormInstance, ElMessageBox } from "element-plus";
-import { getApiList, createApi, updateApi } from "@/api/system/api";
+import {
+  ElTree,
+  ElForm,
+  FormInstance,
+  ElMessageBox,
+  FormRules
+} from "element-plus";
+import {
+  getApiList,
+  createApi,
+  updateApi,
+  batchDeleteApis
+} from "@/api/system/api";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 
@@ -16,9 +27,9 @@ export function useApi() {
     creator: string;
   }
 
-  // interface ApiIdsType {
-  //   apiIds: number[];
-  // }
+  interface ApiIdsType {
+    apiIds: number[];
+  }
 
   // 表单数据初始化
   const form = reactive({
@@ -63,7 +74,7 @@ export function useApi() {
   const dialogVisible = ref(false);
   const editApiFormRef = ref<InstanceType<typeof ElForm>>();
   const editApiForm = getEditApiForm();
-  const apiFormRules = ref({
+  const apiFormRules = reactive<FormRules>({
     method: [
       {
         required: true,
@@ -148,7 +159,7 @@ export function useApi() {
     {
       label: "操作",
       fixed: "right",
-      width: 180,
+      width: 80,
       slot: "operation"
     }
   ];
@@ -240,10 +251,6 @@ export function useApi() {
     });
   }
 
-  function handleDelete(row) {
-    console.log(row);
-  }
-
   function handleSizeChange(val: number) {
     pagination.pageSize = val;
     onSearch();
@@ -255,60 +262,60 @@ export function useApi() {
   }
 
   function handleSelectionChange(val) {
-    console.log("handleSelectionChange", val);
+    checkedApiIds.value = val;
   }
 
   // 批量删除弹窗提醒
   const openDeleteConfirm = () => {
-    ElMessageBox.confirm("是否要批量删除用户？", "警告", {
+    ElMessageBox.confirm("是否要批量删除接口？", "警告", {
       confirmButtonText: "确认",
       cancelButtonText: "取消",
       type: "warning"
     })
       .then(() => {
-        handleDeleteUserByIds();
+        handleDeleteApiByIds();
       })
       .catch(() => {
-        message("取消批量删除用户", {
+        message("取消批量删除接口", {
           type: "info"
         });
       });
   };
 
   // 批量删除用户
-  function handleDeleteUserByIds() {
+  function handleDeleteApiByIds() {
     // 深拷贝，将id临时存放在一个数组
     const ids = ref([]);
     checkedApiIds.value.forEach(element => {
       ids.value.push(element.ID);
     });
     // 组装数据格式，给后端识别
-    // const userIdsObj: ApiIdsType = {
-    //   apiIds: ids.value
-    // };
+    const apiIdsObj: ApiIdsType = {
+      apiIds: ids.value
+    };
     // 开始调用后端删除接口
     loading.value = true;
-    // batchDeleteApi(userIdsObj)
-    //   .then(res => {
-    //     if (res.success) {
-    //       message(res.message, {
-    //         type: "success"
-    //       });
-    //       onSearch();
-    //     } else {
-    //       message(res.message, {
-    //         type: "error"
-    //       });
-    //     }
-    //   })
-    //   .catch(res => {
-    //     message(res.response.data.message, {
-    //       type: "error"
-    //     });
-    //   })
-    //   .finally(() => {
-    //     loading.value = false;
-    //   });
+    batchDeleteApis(apiIdsObj)
+      .then(res => {
+        if (res.success) {
+          message(res.message, {
+            type: "success"
+          });
+          onSearch();
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   async function onSearch() {
@@ -351,7 +358,6 @@ export function useApi() {
     resetForm,
     onCreate,
     onUpdate,
-    handleDelete,
     handleSizeChange,
     handleCurrentChange,
     handleSelectionChange,

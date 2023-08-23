@@ -3,7 +3,7 @@ import { message } from "@/utils/message";
 import {
   createRole,
   updateRole,
-  deleteRole,
+  batchDeleteRole,
   getRoleList,
   getMenuDefaultCheckedId,
   updateRoleMenuByRoleId,
@@ -585,7 +585,7 @@ export function useRole() {
     };
     // 开始调用后端删除接口
     loading.value = true;
-    deleteRole(roleIdsObj)
+    batchDeleteRole(roleIdsObj)
       .then(res => {
         if (res.success) {
           message(res.message, {

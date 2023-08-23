@@ -18,7 +18,7 @@ export const updateRole = (id: number, data: object) => {
 };
 
 /** 删除角色 */
-export const deleteRole = (data: object) => {
+export const batchDeleteRole = (data: object) => {
   return http.request<Result>("delete", roleUrlApi("/delete/batch"), { data });
 };
 

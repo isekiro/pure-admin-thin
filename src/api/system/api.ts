@@ -21,3 +21,8 @@ export const createApi = (data: object) => {
 export const updateApi = (id: number, data: object) => {
   return http.request<Result>("put", apiUrlApi("/update/" + id), { data });
 };
+
+/** 删除接口 */
+export const batchDeleteApis = (data: object) => {
+  return http.request<Result>("delete", apiUrlApi("/delete/batch"), { data });
+};

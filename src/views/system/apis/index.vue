@@ -29,7 +29,6 @@ const {
   resetForm,
   onCreate,
   onUpdate,
-  handleDelete,
   handleSizeChange,
   handleCurrentChange,
   handleSelectionChange,
@@ -136,20 +135,6 @@ const {
             >
               修改
             </el-button>
-            <el-popconfirm title="是否确认删除?">
-              <template #reference>
-                <el-button
-                  class="reset-margin"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(Delete)"
-                  @click="handleDelete(row)"
-                >
-                  删除
-                </el-button>
-              </template>
-            </el-popconfirm>
           </template>
         </pure-table>
       </template>
