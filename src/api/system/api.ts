@@ -11,3 +11,13 @@ export const getApiList = (data: object) => {
 export const getApisTree = () => {
   return http.request<ResultTree>("get", apiUrlApi("/tree"));
 };
+
+/** 创建接口 */
+export const createApi = (data: object) => {
+  return http.request<Result>("post", apiUrlApi("/create"), { data });
+};
+
+/** 更新接口 */
+export const updateApi = (id: number, data: object) => {
+  return http.request<Result>("put", apiUrlApi("/update/" + id), { data });
+};

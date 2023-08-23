@@ -1,13 +1,14 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import { ElTree, ElForm, FormInstance, ElMessageBox } from "element-plus";
-import { getApiList } from "@/api/system/api";
+import { getApiList, createApi, updateApi } from "@/api/system/api";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 
 export function useApi() {
   // 表单数据类型
   interface FormType {
+    ID: number;
     method: string;
     path: string;
     category: string;
@@ -21,6 +22,7 @@ export function useApi() {
 
   // 表单数据初始化
   const form = reactive({
+    ID: 0,
     method: "",
     path: "",
     category: "",
@@ -42,6 +44,7 @@ export function useApi() {
   });
 
   const initFormData: FormType = {
+    ID: 0,
     method: "",
     path: "",
     category: "",
@@ -60,7 +63,40 @@ export function useApi() {
   const dialogVisible = ref(false);
   const editApiFormRef = ref<InstanceType<typeof ElForm>>();
   const editApiForm = getEditApiForm();
-  const apiFormRules = ref();
+  const apiFormRules = ref({
+    method: [
+      {
+        required: true,
+        message: "请输入接口方法",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+    ],
+    path: [
+      {
+        required: true,
+        message: "请输入接口路径",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 50", trigger: "blur" }
+    ],
+    desc: [
+      {
+        required: true,
+        message: "请输入接口描述",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 50", trigger: "blur" }
+    ],
+    category: [
+      {
+        required: true,
+        message: "请输入接口分类",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+    ]
+  });
   const checkedApiIds = ref([]);
 
   // 表格表头
@@ -131,8 +167,36 @@ export function useApi() {
     dialogVisible.value = true;
   }
 
-  function handleCreate(formEl: FormInstance | undefined) {
-    console.log(formEl);
+  // 创建api
+  async function handleCreate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        createApi(editApiForm)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "warning"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
+          });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   }
 
   function onUpdate(row) {
@@ -144,8 +208,36 @@ export function useApi() {
     dialogVisible.value = true;
   }
 
-  function handleUpdate(formEl: FormInstance | undefined) {
-    console.log(formEl);
+  // 更新api
+  async function handleUpdate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        updateApi(editApiForm.ID, editApiForm)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "error"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
+          });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   }
 
   function handleDelete(row) {
