@@ -7,6 +7,7 @@ import IconSelect from "@/components/ReIcon/src/Select.vue";
 
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
+import Refresh from "@iconify-icons/ep/refresh";
 import AddFill from "@iconify-icons/ri/add-circle-line";
 
 defineOptions({
@@ -18,13 +19,13 @@ const formRef = ref();
 const tableRef = ref();
 const {
   defaultProps,
-  menuData,
+  menuOptions,
   editMenuForm,
   loading,
-  menusOptions,
+  menusLevelOptions,
   dialogVisible,
   columns,
-  dataList,
+  menuFormData,
   checkedMenuIds,
   editMenuFormRef,
   dialogTitle,
@@ -52,6 +53,9 @@ const {
           @click="openDeleteConfirm()"
         >
           删除
+        </el-button>
+        <el-button :icon="useRenderIcon(Refresh)" @click="onSearch()">
+          刷新
         </el-button>
       </el-form-item>
     </el-form>
@@ -82,7 +86,7 @@ const {
           default-expand-all
           :loading="loading"
           :size="size"
-          :data="dataList"
+          :data="menuFormData"
           :columns="dynamicColumns"
           :header-cell-style="{
             background: 'var(--el-table-row-hover-bg-color)',
@@ -92,6 +96,7 @@ const {
         >
           <template #operation="{ row }">
             <el-button
+              :disabled="row.ID === 0"
               class="reset-margin"
               link
               type="primary"
@@ -160,7 +165,7 @@ const {
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="item in menusOptions"
+                    v-for="item in menusLevelOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -172,7 +177,7 @@ const {
               <el-form-item label="上级菜单">
                 <el-tree-select
                   v-model="editMenuForm.parentId"
-                  :data="menuData"
+                  :data="menuOptions"
                   :props="defaultProps"
                   check-strictly
                   style="width: 100%"
@@ -190,7 +195,7 @@ const {
               <el-form-item label="显示菜单">
                 <el-radio-group v-model.number="editMenuForm.meta.showLink">
                   <el-radio :label="1">是</el-radio>
-                  <el-radio :label="2">否</el-radio>
+                  <el-radio :label="0">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -198,7 +203,7 @@ const {
               <el-form-item label="开启缓存">
                 <el-radio-group v-model.number="editMenuForm.meta.keepAlive">
                   <el-radio :label="1">是</el-radio>
-                  <el-radio :label="2">否</el-radio>
+                  <el-radio :label="0">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -206,7 +211,7 @@ const {
               <el-form-item label="显示父级">
                 <el-radio-group v-model.number="editMenuForm.meta.showParent">
                   <el-radio :label="1">是</el-radio>
-                  <el-radio :label="2">否</el-radio>
+                  <el-radio :label="0">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -214,14 +219,15 @@ const {
               <el-form-item label="固定标签">
                 <el-radio-group v-model.number="editMenuForm.meta.hiddenTag">
                   <el-radio :label="1">是</el-radio>
-                  <el-radio :label="2">否</el-radio>
+                  <el-radio :label="0">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="启用">
                 <el-switch
-                  v-model.Number="editMenuForm.status"
+                  v-model.number="editMenuForm.status"
+                  :inactive-value="0"
                   :active-value="1"
                 />
               </el-form-item>

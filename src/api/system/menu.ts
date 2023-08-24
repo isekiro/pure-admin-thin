@@ -11,3 +11,8 @@ export const getMenuTree = () => {
 export const createMenu = (data: object) => {
   return http.request<Result>("post", menuUrlApi("/create"), { data });
 };
+
+/** 更新菜单 */
+export const updateMenu = (id: number, data: object) => {
+  return http.request<Result>("put", menuUrlApi("/update/" + id), { data });
+};

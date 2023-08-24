@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import { ElMessageBox, FormInstance, ElForm } from "element-plus";
-import { getMenuTree, createMenu } from "@/api/system/menu";
+import { getMenuTree, createMenu, updateMenu } from "@/api/system/menu";
 import { reactive, ref, onMounted } from "vue";
 
 interface MenusDataType {
@@ -33,18 +33,18 @@ export function useMenu() {
     children: "children",
     value: "ID"
   };
-  const menuData = ref([]);
+  const menuOptions = ref([]);
 
   // 获取菜单树结构数据
-  async function getMenusData() {
-    loading.value = true;
-    const { data } = await getMenuTree();
-    Object.assign(dataList.value, data.tree);
-    const topMenu = { ID: 0, meta: { title: "顶级类目" } };
-    data.tree.unshift(topMenu);
-    menuData.value = data.tree;
-    loading.value = false;
-  }
+  // async function getMenusData() {
+  //   loading.value = true;
+  //   const { data } = await getMenuTree();
+  //   menuFormData.value = JSON.parse(JSON.stringify(data.tree));
+  //   const topMenu = { ID: 0, meta: { title: "顶级类目" } };
+  //   data.tree.unshift(topMenu);
+  //   menuOptions.value = data.tree;
+  //   loading.value = false;
+  // }
 
   // 返回空菜单表单
   function getEditMenuForm() {
@@ -74,7 +74,7 @@ export function useMenu() {
   }
   const editMenuForm = getEditMenuForm();
   const menuFormRef = ref();
-  const dataList = ref([]);
+  const menuFormData = ref([]);
   const loading = ref(true);
   const dialogVisible = ref(false);
   // 是否编辑状态
@@ -83,7 +83,7 @@ export function useMenu() {
   const checkedMenuIds = ref([]);
   const editMenuFormRef = ref<InstanceType<typeof ElForm>>();
 
-  const menusOptions = [
+  const menusLevelOptions = [
     {
       value: 1,
       label: "一级菜单"
@@ -164,7 +164,7 @@ export function useMenu() {
     dialogVisible.value = true;
   }
 
-  // 创建角色
+  // 创建菜单
   async function handleCreate(formEl: FormInstance | undefined) {
     if (!formEl) return;
     await formEl.validate(async (valid, fields) => {
@@ -206,14 +206,36 @@ export function useMenu() {
     dialogVisible.value = true;
   }
 
-  function handleUpdate(row) {
-    isEdit.value = true;
-    // 深拷贝
-    const obj = JSON.parse(JSON.stringify(row));
-    // 给proxy对象赋值
-    Object.assign(editMenuForm, obj);
-    // 打开对话框
-    dialogVisible.value = true;
+  // 更新菜单
+  async function handleUpdate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        updateMenu(editMenuForm.ID, editMenuForm)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "error"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
+          });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   }
 
   // 批量删除弹窗提醒
@@ -249,8 +271,23 @@ export function useMenu() {
 
   async function onSearch() {
     loading.value = true;
-    getMenusData();
-    loading.value = false;
+    await getMenuTree()
+      .then(res => {
+        // 深拷贝
+        const obj = JSON.parse(JSON.stringify(res.data));
+        menuFormData.value = obj.tree;
+        const topMenu = { ID: 0, meta: { title: "顶级类目" } };
+        obj.tree.unshift(topMenu);
+        menuOptions.value = obj.tree;
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   onMounted(() => {
@@ -259,15 +296,15 @@ export function useMenu() {
 
   return {
     defaultProps,
-    menuData,
+    menuOptions,
     editMenuForm,
     menuFormRef,
     loading,
     isEdit,
-    menusOptions,
+    menusLevelOptions,
     dialogVisible,
     columns,
-    dataList,
+    menuFormData,
     checkedMenuIds,
     editMenuFormRef,
     dialogTitle,
