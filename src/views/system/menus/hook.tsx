@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
-import { getMenuTree } from "@/api/system/menu";
+import { message } from "@/utils/message";
+import { ElMessageBox, FormInstance, ElForm } from "element-plus";
+import { getMenuTree, createMenu } from "@/api/system/menu";
 import { reactive, ref, onMounted } from "vue";
 
 interface MenusDataType {
@@ -32,11 +34,6 @@ export function useMenu() {
     value: "ID"
   };
   const menuData = ref([]);
-  // 查询表单
-  const form = reactive({
-    name: "",
-    status: ""
-  });
 
   // 获取菜单树结构数据
   async function getMenusData() {
@@ -50,7 +47,7 @@ export function useMenu() {
   }
 
   // 返回空菜单表单
-  function getMenuForm() {
+  function getEditMenuForm() {
     return reactive<MenusDataType>({
       ID: 0,
       createdAt: 0,
@@ -64,24 +61,27 @@ export function useMenu() {
         icon: "",
         rank: 0,
         roles: [],
-        showLink: 0,
-        keepAlive: 0,
-        showParent: 0,
-        hiddenTag: 0
+        showLink: 1,
+        keepAlive: 1,
+        showParent: 1,
+        hiddenTag: 1
       },
-      status: 0,
+      status: 1,
       parentId: 0,
       creator: "",
-      type: 0
+      type: 2
     });
   }
-  const menuForm = getMenuForm();
+  const editMenuForm = getEditMenuForm();
   const menuFormRef = ref();
   const dataList = ref([]);
   const loading = ref(true);
   const dialogVisible = ref(false);
   // 是否编辑状态
   const isEdit = ref(true);
+
+  const checkedMenuIds = ref([]);
+  const editMenuFormRef = ref<InstanceType<typeof ElForm>>();
 
   const menusOptions = [
     {
@@ -99,6 +99,10 @@ export function useMenu() {
   ];
 
   const columns: TableColumnList = [
+    {
+      type: "selection",
+      align: "left"
+    },
     {
       label: "菜单名称",
       prop: "meta.title",
@@ -141,7 +145,7 @@ export function useMenu() {
     {
       label: "操作",
       fixed: "right",
-      width: 160,
+      width: 80,
       slot: "operation"
     }
   ];
@@ -150,10 +154,55 @@ export function useMenu() {
     return isEdit.value ? "编辑菜单" : "新建菜单";
   }
 
-  function handleCreate() {
+  function handleEditSubmit(formEl: FormInstance | undefined) {
+    isEdit.value ? handleUpdate(formEl) : handleCreate(formEl);
+  }
+
+  function onCreate() {
     isEdit.value = false;
-    Object.assign(menuForm, getMenuForm());
-    // nextTick(menuFormRef.resetFields());
+    Object.assign(editMenuForm, getEditMenuForm());
+    dialogVisible.value = true;
+  }
+
+  // 创建角色
+  async function handleCreate(formEl: FormInstance | undefined) {
+    if (!formEl) return;
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        createMenu(editMenuForm)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "warning"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
+          });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
+  }
+
+  function onUpdate(row) {
+    isEdit.value = true;
+    // 深拷贝
+    const obj = JSON.parse(JSON.stringify(row));
+    // 给proxy对象赋值
+    Object.assign(editMenuForm, obj);
+    // 打开对话框
     dialogVisible.value = true;
   }
 
@@ -162,17 +211,34 @@ export function useMenu() {
     // 深拷贝
     const obj = JSON.parse(JSON.stringify(row));
     // 给proxy对象赋值
-    Object.assign(menuForm, obj);
+    Object.assign(editMenuForm, obj);
     // 打开对话框
     dialogVisible.value = true;
   }
 
-  function handleDelete(row) {
-    console.log(row);
+  // 批量删除弹窗提醒
+  const openDeleteConfirm = () => {
+    ElMessageBox.confirm("是否要批量删除菜单？", "警告", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+      type: "warning"
+    })
+      .then(() => {
+        handleDeleteRoleByIds();
+      })
+      .catch(() => {
+        message("取消批量删除菜单", {
+          type: "info"
+        });
+      });
+  };
+
+  function handleDeleteRoleByIds() {
+    console.log();
   }
 
   function handleSelectionChange(val) {
-    console.log("handleSelectionChange", val);
+    checkedMenuIds.value = val;
   }
 
   function resetForm(formEl) {
@@ -194,8 +260,7 @@ export function useMenu() {
   return {
     defaultProps,
     menuData,
-    form,
-    menuForm,
+    editMenuForm,
     menuFormRef,
     loading,
     isEdit,
@@ -203,12 +268,15 @@ export function useMenu() {
     dialogVisible,
     columns,
     dataList,
+    checkedMenuIds,
+    editMenuFormRef,
     dialogTitle,
     onSearch,
     resetForm,
-    handleCreate,
-    handleUpdate,
-    handleDelete,
-    handleSelectionChange
+    onCreate,
+    onUpdate,
+    handleEditSubmit,
+    handleSelectionChange,
+    openDeleteConfirm
   };
 }

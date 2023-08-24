@@ -7,8 +7,6 @@ import IconSelect from "@/components/ReIcon/src/Select.vue";
 
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
-import Search from "@iconify-icons/ep/search";
-import Refresh from "@iconify-icons/ep/refresh";
 import AddFill from "@iconify-icons/ri/add-circle-line";
 
 defineOptions({
@@ -16,25 +14,26 @@ defineOptions({
 });
 
 const formRef = ref();
-// const menuFormRef = ref();
+// const editMenuFormRef = ref();
 const tableRef = ref();
 const {
   defaultProps,
   menuData,
-  form,
-  menuForm,
+  editMenuForm,
   loading,
   menusOptions,
   dialogVisible,
   columns,
   dataList,
+  checkedMenuIds,
+  editMenuFormRef,
   dialogTitle,
   onSearch,
-  resetForm,
-  handleCreate,
-  handleUpdate,
-  handleDelete,
-  handleSelectionChange
+  onCreate,
+  onUpdate,
+  handleSelectionChange,
+  openDeleteConfirm,
+  handleEditSubmit
 } = useMenu();
 </script>
 
@@ -43,34 +42,16 @@ const {
     <el-form
       ref="formRef"
       :inline="true"
-      :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="菜单名称：" prop="name">
-        <el-input v-model="form.name" placeholder="请输入菜单名称" clearable />
-      </el-form-item>
-      <el-form-item label="状态：" prop="status">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择状态"
-          clearable
-          class="!w-[180px]"
-        >
-          <el-option label="开启" value="1" />
-          <el-option label="关闭" value="0" />
-        </el-select>
-      </el-form-item>
       <el-form-item>
         <el-button
-          type="primary"
-          :icon="useRenderIcon(Search)"
-          :loading="loading"
-          @click="onSearch"
+          :disabled="checkedMenuIds.length == 0"
+          type="danger"
+          :icon="useRenderIcon(Delete)"
+          @click="openDeleteConfirm()"
         >
-          搜索
-        </el-button>
-        <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
-          重置
+          删除
         </el-button>
       </el-form-item>
     </el-form>
@@ -84,7 +65,7 @@ const {
         <el-button
           type="primary"
           :icon="useRenderIcon(AddFill)"
-          @click="handleCreate()"
+          @click="onCreate()"
         >
           新增菜单
         </el-button>
@@ -115,25 +96,11 @@ const {
               link
               type="primary"
               :size="size"
-              @click="handleUpdate(row)"
+              @click="onUpdate(row)"
               :icon="useRenderIcon(EditPen)"
             >
               修改
             </el-button>
-            <el-popconfirm title="是否确认删除?">
-              <template #reference>
-                <el-button
-                  class="reset-margin"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(Delete)"
-                  @click="handleDelete(row)"
-                >
-                  删除
-                </el-button>
-              </template>
-            </el-popconfirm>
           </template>
         </pure-table>
       </template>
@@ -147,44 +114,49 @@ const {
         draggable
         width="769px"
       >
-        <el-form size="default" :model="menuForm" label-width="80px">
+        <el-form
+          size="default"
+          :model="editMenuForm"
+          ref="editMenuFormRef"
+          label-width="80px"
+        >
           <el-row :gutter="35">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="菜单名称">
-                <el-input v-model="menuForm.meta.title" />
+                <el-input v-model="editMenuForm.meta.title" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="路由名称">
-                <el-input v-model="menuForm.name" />
+                <el-input v-model="editMenuForm.name" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="组件路径">
-                <el-input v-model="menuForm.path" />
+                <el-input v-model="editMenuForm.path" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="重定向">
-                <el-input v-model="menuForm.redirect" />
+                <el-input v-model="editMenuForm.redirect" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="菜单图标">
-                <IconSelect v-model="menuForm.meta.icon" />
+                <IconSelect v-model="editMenuForm.meta.icon" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="排序">
-                <el-input v-model="menuForm.meta.rank" />
+                <el-input v-model.number="editMenuForm.meta.rank" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="菜单类型">
                 <el-select
-                  v-model="menuForm.type"
+                  v-model="editMenuForm.type"
                   clearable
-                  placeholder="Select"
+                  placeholder="选择菜单类型"
                   style="width: 100%"
                 >
                   <el-option
@@ -199,7 +171,7 @@ const {
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="上级菜单">
                 <el-tree-select
-                  v-model="menuForm.parentId"
+                  v-model="editMenuForm.parentId"
                   :data="menuData"
                   :props="defaultProps"
                   check-strictly
@@ -216,7 +188,7 @@ const {
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="显示菜单">
-                <el-radio-group v-model="menuForm.meta.showLink">
+                <el-radio-group v-model.number="editMenuForm.meta.showLink">
                   <el-radio :label="1">是</el-radio>
                   <el-radio :label="2">否</el-radio>
                 </el-radio-group>
@@ -224,7 +196,7 @@ const {
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="开启缓存">
-                <el-radio-group v-model="menuForm.meta.keepAlive">
+                <el-radio-group v-model.number="editMenuForm.meta.keepAlive">
                   <el-radio :label="1">是</el-radio>
                   <el-radio :label="2">否</el-radio>
                 </el-radio-group>
@@ -232,7 +204,7 @@ const {
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="显示父级">
-                <el-radio-group v-model="menuForm.meta.showParent">
+                <el-radio-group v-model.number="editMenuForm.meta.showParent">
                   <el-radio :label="1">是</el-radio>
                   <el-radio :label="2">否</el-radio>
                 </el-radio-group>
@@ -240,7 +212,7 @@ const {
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="固定标签">
-                <el-radio-group v-model="menuForm.meta.hiddenTag">
+                <el-radio-group v-model.number="editMenuForm.meta.hiddenTag">
                   <el-radio :label="1">是</el-radio>
                   <el-radio :label="2">否</el-radio>
                 </el-radio-group>
@@ -248,7 +220,10 @@ const {
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="启用">
-                <el-switch v-model.Number="menuForm.status" :active-value="1" />
+                <el-switch
+                  v-model.Number="editMenuForm.status"
+                  :active-value="1"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -256,7 +231,10 @@ const {
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">
+            <el-button
+              type="primary"
+              @click="handleEditSubmit(editMenuFormRef)"
+            >
               确定
             </el-button>
           </span>
