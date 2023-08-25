@@ -28,13 +28,15 @@ const {
   menuFormData,
   checkedMenuIds,
   editMenuFormRef,
+  menuFormRules,
   dialogTitle,
   onSearch,
   onCreate,
   onUpdate,
   handleSelectionChange,
   openDeleteConfirm,
-  handleEditSubmit
+  handleEditSubmit,
+  resetDialogForm
 } = useMenu();
 </script>
 
@@ -118,26 +120,28 @@ const {
         :title="dialogTitle()"
         draggable
         width="769px"
+        @close="resetDialogForm(editMenuFormRef)"
       >
         <el-form
           size="default"
+          :rules="menuFormRules"
           :model="editMenuForm"
           ref="editMenuFormRef"
           label-width="80px"
         >
           <el-row :gutter="35">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="菜单名称">
+              <el-form-item label="菜单名称" prop="meta.title">
                 <el-input v-model="editMenuForm.meta.title" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="路由名称">
+              <el-form-item label="路由名称" prop="name">
                 <el-input v-model="editMenuForm.name" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="组件路径">
+              <el-form-item label="组件路径" prop="path">
                 <el-input v-model="editMenuForm.path" />
               </el-form-item>
             </el-col>
@@ -152,7 +156,7 @@ const {
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="排序">
+              <el-form-item label="排序" prop="meta.rank">
                 <el-input v-model.number="editMenuForm.meta.rank" />
               </el-form-item>
             </el-col>

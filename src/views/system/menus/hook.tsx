@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
-import { ElMessageBox, FormInstance, ElForm } from "element-plus";
+import { ElMessageBox, FormInstance, ElForm, FormRules } from "element-plus";
 import {
   getMenuTree,
   createMenu,
@@ -79,6 +79,50 @@ export function useMenu() {
 
   const checkedMenuIds = ref([]);
   const editMenuFormRef = ref<InstanceType<typeof ElForm>>();
+
+  const menuFormRules = reactive<FormRules>({
+    "meta.title": [
+      {
+        required: true,
+        message: "请输入菜单名",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+    ],
+    name: [
+      {
+        required: true,
+        message: "请输入路由名",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+    ],
+    "meta.rank": [
+      {
+        validator: (rule, value, callback) => {
+          if (value === "") {
+            callback(new Error("菜单排序不能为空"));
+          }
+          if (value === 0) {
+            callback(new Error("菜单排序不能为0"));
+          } else {
+            callback();
+          }
+        },
+        type: "number",
+        required: true,
+        trigger: "blur"
+      }
+    ],
+    path: [
+      {
+        required: true,
+        message: "请输入路由路径",
+        trigger: "blur"
+      },
+      { min: 2, max: 60, message: "字符长度必须 2 到 60", trigger: "blur" }
+    ]
+  });
 
   const menusLevelOptions = [
     {
@@ -297,6 +341,10 @@ export function useMenu() {
     formEl.resetFields();
     onSearch();
   }
+  const resetDialogForm = formEl => {
+    if (!formEl) return;
+    formEl.resetFields();
+  };
 
   async function onSearch() {
     loading.value = true;
@@ -336,6 +384,7 @@ export function useMenu() {
     menuFormData,
     checkedMenuIds,
     editMenuFormRef,
+    menuFormRules,
     dialogTitle,
     onSearch,
     resetForm,
@@ -343,6 +392,7 @@ export function useMenu() {
     onUpdate,
     handleEditSubmit,
     handleSelectionChange,
-    openDeleteConfirm
+    openDeleteConfirm,
+    resetDialogForm
   };
 }
