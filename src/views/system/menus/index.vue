@@ -220,7 +220,7 @@ const {
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
-              <el-form-item label="固定标签">
+              <el-form-item label="隐藏标签">
                 <el-radio-group v-model.number="editMenuForm.meta.hiddenTag">
                   <el-radio :label="1">是</el-radio>
                   <el-radio :label="0">否</el-radio>

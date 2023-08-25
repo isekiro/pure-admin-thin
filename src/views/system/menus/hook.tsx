@@ -61,7 +61,7 @@ export function useMenu() {
         showLink: 1,
         keepAlive: 1,
         showParent: 1,
-        hiddenTag: 1
+        hiddenTag: 0
       },
       status: 1,
       parentId: 0,
