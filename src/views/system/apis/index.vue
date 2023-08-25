@@ -25,6 +25,7 @@ const {
   editApiForm,
   apiFormRules,
   checkedApiIds,
+  apiMethodOptions,
   onSearch,
   resetForm,
   onCreate,
@@ -48,12 +49,19 @@ const {
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
       <el-form-item label="接口方法：" prop="name">
-        <el-input
+        <el-select
           v-model="form.method"
-          placeholder="请输入接口方法"
           clearable
-          class="!w-[200px]"
-        />
+          placeholder="请选择接口方法"
+          style="width: 100%"
+        >
+          <el-option
+            v-for="item in apiMethodOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="接口路径：" prop="code">
         <el-input
@@ -159,7 +167,19 @@ const {
           <el-row :gutter="35">
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="接口方法" prop="method">
-                <el-input v-model="editApiForm.method" />
+                <el-select
+                  v-model="editApiForm.method"
+                  clearable
+                  placeholder="请选择接口方法"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in apiMethodOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">

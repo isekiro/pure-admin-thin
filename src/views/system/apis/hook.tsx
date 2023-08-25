@@ -31,6 +31,25 @@ export function useApi() {
     apiIds: number[];
   }
 
+  const apiMethodOptions = [
+    {
+      value: "GET",
+      label: "GET"
+    },
+    {
+      value: "PUT",
+      label: "PUT"
+    },
+    {
+      value: "POST",
+      label: "POST"
+    },
+    {
+      value: "DELETE",
+      label: "DELETE"
+    }
+  ];
+
   // 表单数据初始化
   const form = reactive({
     ID: 0,
@@ -74,6 +93,8 @@ export function useApi() {
   const dialogVisible = ref(false);
   const editApiFormRef = ref<InstanceType<typeof ElForm>>();
   const editApiForm = getEditApiForm();
+
+  const REGEXP_URL = /^(\/)[^\s]+/;
   const apiFormRules = reactive<FormRules>({
     method: [
       {
@@ -85,11 +106,19 @@ export function useApi() {
     ],
     path: [
       {
+        validator: (rule, value, callback) => {
+          if (value === "") {
+            callback(new Error("接口路径不能为空"));
+          }
+          if (!REGEXP_URL.test(value)) {
+            callback(new Error("请输入正确的接口路径，如/name"));
+          } else {
+            callback();
+          }
+        },
         required: true,
-        message: "请输入接口路径",
         trigger: "blur"
-      },
-      { min: 2, max: 30, message: "字符长度必须 2 到 50", trigger: "blur" }
+      }
     ],
     desc: [
       {
@@ -354,6 +383,7 @@ export function useApi() {
     editApiForm,
     apiFormRules,
     checkedApiIds,
+    apiMethodOptions,
     onSearch,
     resetForm,
     onCreate,
