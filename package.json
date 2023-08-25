@@ -41,6 +41,7 @@
     "element-plus": "2.3.6",
     "js-cookie": "^3.0.5",
     "jsencrypt": "^3.3.2",
+    "md-editor-v3": "2.7.2",
     "mitt": "^3.0.0",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
@@ -50,6 +51,7 @@
     "qs": "^6.11.2",
     "responsive-storage": "^2.2.0",
     "sortablejs": "^1.15.0",
+    "typeit": "8.7.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2",
     "vue-types": "^5.1.0"

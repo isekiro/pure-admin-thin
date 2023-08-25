@@ -70,6 +70,10 @@ export function useNav() {
     useUserStoreHook().logOut();
   }
 
+  function toProfileMenu() {
+    router.push({ name: "Profile" });
+  }
+
   function backTopMenu() {
     router.push(getTopMenu()?.path);
   }
@@ -128,6 +132,7 @@ export function useNav() {
     username,
     userAvatar,
     avatarsStyle,
-    tooltipEffect
+    tooltipEffect,
+    toProfileMenu
   };
 }

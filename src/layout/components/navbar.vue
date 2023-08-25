@@ -6,6 +6,7 @@ import { useNav } from "@/layout/hooks/useNav";
 import Breadcrumb from "./sidebar/breadCrumb.vue";
 import topCollapse from "./sidebar/topCollapse.vue";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
+import ProfileLine from "@iconify-icons/ri/profile-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
 
 const {
@@ -17,7 +18,8 @@ const {
   username,
   userAvatar,
   avatarsStyle,
-  toggleSideBar
+  toggleSideBar,
+  toProfileMenu
 } = useNav();
 </script>
 
@@ -52,6 +54,10 @@ const {
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
+            <el-dropdown-item @click="toProfileMenu">
+              <IconifyIconOffline :icon="ProfileLine" style="margin: 5px" />
+              个人中心
+            </el-dropdown-item>
             <el-dropdown-item @click="logout">
               <IconifyIconOffline
                 :icon="LogoutCircleRLine"

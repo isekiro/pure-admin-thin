@@ -23,10 +23,10 @@ export function useMenu() {
       icon: string;
       rank: number;
       roles: string[];
-      showLink: number;
-      keepAlive: number;
-      showParent: number;
-      hiddenTag: number;
+      showLink: boolean;
+      keepAlive: boolean;
+      showParent: boolean;
+      hiddenTag: boolean;
     };
     status: number;
     parentId: number;
@@ -58,10 +58,10 @@ export function useMenu() {
         icon: "",
         rank: 0,
         roles: [],
-        showLink: 1,
-        keepAlive: 1,
-        showParent: 1,
-        hiddenTag: 0
+        showLink: true,
+        keepAlive: true,
+        showParent: true,
+        hiddenTag: false
       },
       status: 1,
       parentId: 0,
