@@ -190,7 +190,7 @@ export function useUser() {
     {
       label: "操作",
       fixed: "right",
-      minWidth: 60,
+      minWidth: 80,
       slot: "operation"
     }
   ];

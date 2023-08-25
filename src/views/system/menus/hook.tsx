@@ -204,7 +204,7 @@ export function useMenu() {
     {
       label: "操作",
       fixed: "right",
-      width: 80,
+      minWidth: 80,
       slot: "operation"
     }
   ];
