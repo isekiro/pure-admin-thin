@@ -16,3 +16,8 @@ export const createMenu = (data: object) => {
 export const updateMenu = (id: number, data: object) => {
   return http.request<Result>("put", menuUrlApi("/update/" + id), { data });
 };
+
+/** 删除菜单 */
+export const batchDeleteMenu = (data: object) => {
+  return http.request<Result>("delete", menuUrlApi("/delete/batch"), { data });
+};

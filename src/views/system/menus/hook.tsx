@@ -1,50 +1,47 @@
 import dayjs from "dayjs";
 import { message } from "@/utils/message";
 import { ElMessageBox, FormInstance, ElForm } from "element-plus";
-import { getMenuTree, createMenu, updateMenu } from "@/api/system/menu";
+import {
+  getMenuTree,
+  createMenu,
+  updateMenu,
+  batchDeleteMenu
+} from "@/api/system/menu";
 import { reactive, ref, onMounted } from "vue";
 
-interface MenusDataType {
-  ID: number;
-  createdAt: number;
-  updatedAt: number;
-  deletedAt: number;
-  name: string;
-  path: string;
-  redirect: string;
-  meta: {
-    title: string;
-    icon: string;
-    rank: number;
-    roles: string[];
-    showLink: number;
-    keepAlive: number;
-    showParent: number;
-    hiddenTag: number;
-  };
-  status: number;
-  parentId: number;
-  creator: string;
-  type: number;
-}
-
 export function useMenu() {
+  interface MenusDataType {
+    ID: number;
+    createdAt: number;
+    updatedAt: number;
+    deletedAt: number;
+    name: string;
+    path: string;
+    redirect: string;
+    meta: {
+      title: string;
+      icon: string;
+      rank: number;
+      roles: string[];
+      showLink: number;
+      keepAlive: number;
+      showParent: number;
+      hiddenTag: number;
+    };
+    status: number;
+    parentId: number;
+    creator: string;
+    type: number;
+  }
+
+  interface MenuIdsType {
+    menuIds: number[];
+  }
   const defaultProps = {
     children: "children",
     value: "ID"
   };
   const menuOptions = ref([]);
-
-  // 获取菜单树结构数据
-  // async function getMenusData() {
-  //   loading.value = true;
-  //   const { data } = await getMenuTree();
-  //   menuFormData.value = JSON.parse(JSON.stringify(data.tree));
-  //   const topMenu = { ID: 0, meta: { title: "顶级类目" } };
-  //   data.tree.unshift(topMenu);
-  //   menuOptions.value = data.tree;
-  //   loading.value = false;
-  // }
 
   // 返回空菜单表单
   function getEditMenuForm() {
@@ -255,12 +252,44 @@ export function useMenu() {
       });
   };
 
-  function handleDeleteRoleByIds() {
-    console.log();
-  }
-
   function handleSelectionChange(val) {
     checkedMenuIds.value = val;
+  }
+
+  // 批量删除角色
+  function handleDeleteRoleByIds() {
+    // 深拷贝，将id临时存放在一个数组
+    const ids = ref([]);
+    checkedMenuIds.value.forEach(element => {
+      ids.value.push(element.ID);
+    });
+    // 组装数据格式，给后端识别
+    const roleIdsObj: MenuIdsType = {
+      menuIds: ids.value
+    };
+    // 开始调用后端删除接口
+    loading.value = true;
+    batchDeleteMenu(roleIdsObj)
+      .then(res => {
+        if (res.success) {
+          message(res.message, {
+            type: "success"
+          });
+          onSearch();
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   function resetForm(formEl) {
@@ -276,7 +305,7 @@ export function useMenu() {
         // 深拷贝
         const obj = JSON.parse(JSON.stringify(res.data));
         menuFormData.value = obj.tree;
-        const topMenu = { ID: 0, meta: { title: "顶级类目" } };
+        const topMenu = { ID: 0, meta: { title: "顶级类目" }, status: 1 };
         obj.tree.unshift(topMenu);
         menuOptions.value = obj.tree;
       })
