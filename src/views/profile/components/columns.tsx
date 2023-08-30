@@ -1,10 +1,10 @@
-import TypeIt from "@/components/ReTypeit";
 import OfficeBuilding from "@iconify-icons/ep/office-building";
 import Tickets from "@iconify-icons/ep/tickets";
 import Location from "@iconify-icons/ep/location";
 import Iphone from "@iconify-icons/ep/iphone";
 import Notebook from "@iconify-icons/ep/notebook";
 import User from "@iconify-icons/ri/user-3-fill";
+import { reactive, ref } from "vue";
 
 export function useColumns() {
   const lists = [
@@ -14,6 +14,15 @@ export function useColumns() {
     { type: "danger", label: "旅游" },
     { type: "warning", label: "追剧" }
   ];
+
+  interface PasswdFormType {
+    password: string;
+  }
+
+  const editPasswdForm = reactive<PasswdFormType>({
+    password: ""
+  });
+  const passwdFormRules = ref();
 
   const columnsA = [
     {
@@ -95,12 +104,13 @@ export function useColumns() {
         </div>
       ),
       cellRenderer: () => (
-        <TypeIt
-          className={"github"}
-          values={["办法总比困难多"]}
-          cursor={false}
-          speed={100}
-        />
+        // <TypeIt
+        //   className={"github"}
+        //   values={["办法总比困难多"]}
+        //   cursor={false}
+        //   speed={100}
+        // />
+        <span>办法总比困难多</span>
       )
     }
   ];
@@ -108,6 +118,8 @@ export function useColumns() {
   return {
     columnsA,
     columnsB,
-    columnsC
+    columnsC,
+    editPasswdForm,
+    passwdFormRules
   };
 }

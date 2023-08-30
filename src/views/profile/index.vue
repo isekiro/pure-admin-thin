@@ -1,23 +1,20 @@
 <script setup lang="ts">
 import dayjs from "dayjs";
-import TypeIt from "@/components/ReTypeit";
-import MdEditor from "md-editor-v3";
 import { getReleases } from "@/api/list";
 import { useWindowSize } from "@vueuse/core";
-import { ref, computed, markRaw } from "vue";
-import Github from "./components/Github.vue";
+import { ref, markRaw } from "vue";
+import personInfo from "./components/personInfo.vue";
 import { randomColor } from "@pureadmin/utils";
 import { useRenderFlicker } from "@/components/ReFlicker";
+import { useColumns } from "./components/columns";
 
 defineOptions({
   name: "Profile"
 });
 
 const list = ref();
+const { editPasswdForm, passwdFormRules } = useColumns();
 const loading = ref<boolean>(true);
-const titleClass = computed(() => {
-  return ["text-base", "font-medium"];
-});
 
 const { height } = useWindowSize();
 
@@ -67,35 +64,59 @@ getReleases().then(({ data }) => {
           shadow="never"
           :style="{ height: `calc(${height}px - 35vh - 250px)` }"
         >
-          <template #header>
-            <a
-              :class="titleClass"
-              href="https://github.com/pure-admin/vue-pure-admin/releases"
-              target="_black"
-            >
-              <TypeIt
-                :className="'type-it2'"
-                :values="[`PureAdmin 版本日志（当前版本 v1)`]"
-                :cursor="false"
-                :speed="60"
-              />
-            </a>
-          </template>
+          <template #header>修改密码</template>
           <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
-              <el-scrollbar :height="`calc(${height}px - 35vh - 340px)`">
-                <el-timeline v-show="list?.length > 0">
-                  <el-timeline-item
-                    v-for="(item, index) in list"
-                    :key="index"
-                    :icon="item.icon"
-                    :timestamp="item.timestamp"
-                  >
-                    <md-editor v-model="item.content" preview-only />
-                  </el-timeline-item>
-                </el-timeline>
-                <el-empty v-show="list?.length === 0" />
-              </el-scrollbar>
+              <el-form
+                ref="editUserFormRef"
+                size="default"
+                :model="editPasswdForm"
+                :rules="passwdFormRules"
+                label-width="80px"
+              >
+                <el-row :gutter="35">
+                  <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                    <el-form-item label="旧密码" prop="password">
+                      <el-input
+                        type="password"
+                        clearable
+                        show-password
+                        v-model="editPasswdForm.password"
+                      />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="35">
+                  <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                    <el-form-item label="输入密码" prop="password">
+                      <el-input
+                        type="password"
+                        clearable
+                        show-password
+                        v-model="editPasswdForm.password"
+                      />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="35">
+                  <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                    <el-form-item label="确认密码" prop="password">
+                      <el-input
+                        type="password"
+                        clearable
+                        show-password
+                        v-model="editPasswdForm.password"
+                      />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="35" justify="center">
+                  <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                    <el-button plain>重置</el-button>
+                    <el-button type="primary" plain>确认</el-button>
+                  </el-col>
+                </el-row>
+              </el-form>
             </template>
           </el-skeleton>
         </el-card>
@@ -125,24 +146,11 @@ getReleases().then(({ data }) => {
           shadow="never"
           :style="{ height: `calc(${height}px - 35vh - 250px)` }"
         >
-          <template #header>
-            <a
-              :class="titleClass"
-              href="https://github.com/xiaoxian521"
-              target="_black"
-            >
-              <TypeIt
-                :className="'type-it1'"
-                :values="['GitHub信息']"
-                :cursor="false"
-                :speed="120"
-              />
-            </a>
-          </template>
+          <template #header> 个人信息 </template>
           <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
               <el-scrollbar :height="`calc(${height}px - 35vh - 340px)`">
-                <Github />
+                <personInfo />
               </el-scrollbar>
             </template>
           </el-skeleton>
@@ -159,5 +167,11 @@ getReleases().then(({ data }) => {
 
 .main-content {
   margin: 20px 20px 0 !important;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

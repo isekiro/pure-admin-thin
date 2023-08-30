@@ -54,11 +54,11 @@ export const useUserStore = defineStore({
       this.username = "";
       this.roles = [];
       removeToken();
-      useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
-      resetRouter();
       /** 去登录页 */
       // location.href = "/";
       router.push("/login");
+      useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+      resetRouter();
     },
     /** 前端登出（不调用接口） */
     internalError() {
