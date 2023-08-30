@@ -7,25 +7,11 @@ import User from "@iconify-icons/ri/user-3-fill";
 import { reactive, ref } from "vue";
 
 export function useColumns() {
-  const lists = [
-    { type: "", label: "善良" },
-    { type: "success", label: "好学" },
-    { type: "info", label: "幽默" },
-    { type: "danger", label: "旅游" },
-    { type: "warning", label: "追剧" }
-  ];
-
-  interface PasswdFormType {
-    password: string;
-  }
-
-  const editPasswdForm = reactive<PasswdFormType>({
-    password: ""
-  });
-  const passwdFormRules = ref();
+  const lists = [{ type: "", label: "启用" }];
 
   const columnsA = [
     {
+      prop: "name",
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
@@ -37,6 +23,7 @@ export function useColumns() {
       value: "乐于分享的程序员小铭"
     },
     {
+      prop: "mobile",
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
@@ -48,26 +35,41 @@ export function useColumns() {
       value: "123456789"
     },
     {
+      prop: "sex",
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
             <iconify-icon-offline icon={Location} />
           </el-icon>
-          居住地
+          性别
         </div>
       ),
-      value: "中国"
+      value: "男"
     }
   ];
 
   const columnsB = [
     {
+      prop: "nickname",
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
             <iconify-icon-offline icon={Tickets} />
           </el-icon>
-          标签
+          昵称
+        </div>
+      ),
+      value: "管理员",
+      width: 80
+    },
+    {
+      prop: "status",
+      labelRenderer: () => (
+        <div class="flex items-center">
+          <el-icon>
+            <iconify-icon-offline icon={Tickets} />
+          </el-icon>
+          状态
         </div>
       ),
       cellRenderer: () => {
@@ -78,42 +80,47 @@ export function useColumns() {
             </el-tag>
           );
         });
-      }
+      },
+      width: 80
     },
     {
+      prop: "CreatedAt",
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
             <iconify-icon-offline icon={OfficeBuilding} />
           </el-icon>
-          联系地址
+          创建时间
         </div>
       ),
-      value: "中华人民共和国"
+      value: "2023-03-23 18:19:37",
+      width: 80
     }
   ];
 
   const columnsC = [
     {
+      prop: "remark",
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
             <iconify-icon-offline icon={Notebook} />
           </el-icon>
-          个性签名
+          备注
         </div>
       ),
-      cellRenderer: () => (
-        // <TypeIt
-        //   className={"github"}
-        //   values={["办法总比困难多"]}
-        //   cursor={false}
-        //   speed={100}
-        // />
-        <span>办法总比困难多</span>
-      )
+      cellRenderer: () => <span>办法总比困难多</span>
     }
   ];
+
+  interface PasswdFormType {
+    password: string;
+  }
+
+  const editPasswdForm = reactive<PasswdFormType>({
+    password: ""
+  });
+  const passwdFormRules = ref();
 
   return {
     columnsA,

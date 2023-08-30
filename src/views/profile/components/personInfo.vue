@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useColumns } from "./columns";
-const { columnsA, columnsB, columnsC } = useColumns();
 
+const { columnsA, columnsB, columnsC } = useColumns();
 const list = [
   {
     columns: columnsA,
@@ -9,7 +9,7 @@ const list = [
   },
   {
     columns: columnsB,
-    column: 2
+    column: 3
   },
   {
     columns: columnsC,
