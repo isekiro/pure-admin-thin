@@ -61,3 +61,8 @@ export const createUser = (data: object) => {
 export const batchDeleteUser = (data: object) => {
   return http.request<Result>("delete", userUrlApi("/delete/batch"), { data });
 };
+
+/** 获取用户信息*/
+export const getUserInfo = () => {
+  return http.request<Result>("get", userUrlApi("/info"));
+};

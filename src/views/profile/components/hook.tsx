@@ -1,17 +1,51 @@
-import OfficeBuilding from "@iconify-icons/ep/office-building";
+import AlarmClock from "@iconify-icons/ep/alarm-clock";
+import Male from "@iconify-icons/ep/male";
 import Tickets from "@iconify-icons/ep/tickets";
-import Location from "@iconify-icons/ep/location";
+import Warning from "@iconify-icons/ep/warning";
 import Iphone from "@iconify-icons/ep/iphone";
 import Notebook from "@iconify-icons/ep/notebook";
 import User from "@iconify-icons/ri/user-3-fill";
 import { reactive, ref } from "vue";
+import { message } from "@/utils/message";
+import { getUserInfo } from "@/api/system/user";
 
-export function useColumns() {
-  const lists = [{ type: "", label: "启用" }];
+export function useProfile() {
+  const loading = ref(false);
+  const userInfo = ref([]);
+  const sexMap = new Map([
+    [1, "男"],
+    [2, "女"]
+  ]);
+  const statusMap = new Map([
+    [1, "启用"],
+    [2, "禁用"]
+  ]);
+
+  async function onLoadUserInfo() {
+    loading.value = true;
+    await getUserInfo()
+      .then(res => {
+        if (res.success) {
+          userInfo.value.push(res.data.list);
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
 
   const columnsA = [
     {
-      prop: "name",
+      prop: "username",
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
@@ -19,8 +53,7 @@ export function useColumns() {
           </el-icon>
           用户名
         </div>
-      ),
-      value: "乐于分享的程序员小铭"
+      )
     },
     {
       prop: "mobile",
@@ -31,20 +64,21 @@ export function useColumns() {
           </el-icon>
           手机号
         </div>
-      ),
-      value: "123456789"
+      )
     },
     {
       prop: "sex",
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
-            <iconify-icon-offline icon={Location} />
+            <iconify-icon-offline icon={Male} />
           </el-icon>
           性别
         </div>
       ),
-      value: "男"
+      cellRenderer: ({ value }) => {
+        return <el-tag size="small">{sexMap.get(value)}</el-tag>;
+      }
     }
   ];
 
@@ -59,7 +93,6 @@ export function useColumns() {
           昵称
         </div>
       ),
-      value: "管理员",
       width: 80
     },
     {
@@ -67,19 +100,13 @@ export function useColumns() {
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
-            <iconify-icon-offline icon={Tickets} />
+            <iconify-icon-offline icon={Warning} />
           </el-icon>
           状态
         </div>
       ),
-      cellRenderer: () => {
-        return lists.map(v => {
-          return (
-            <el-tag class="mr-[10px]" type={v.type} size="small" effect="dark">
-              {v.label}
-            </el-tag>
-          );
-        });
+      cellRenderer: ({ value }) => {
+        return <el-tag size="small">{statusMap.get(value)}</el-tag>;
       },
       width: 80
     },
@@ -88,12 +115,11 @@ export function useColumns() {
       labelRenderer: () => (
         <div class="flex items-center">
           <el-icon>
-            <iconify-icon-offline icon={OfficeBuilding} />
+            <iconify-icon-offline icon={AlarmClock} />
           </el-icon>
           创建时间
         </div>
       ),
-      value: "2023-03-23 18:19:37",
       width: 80
     }
   ];
@@ -108,8 +134,7 @@ export function useColumns() {
           </el-icon>
           备注
         </div>
-      ),
-      cellRenderer: () => <span>办法总比困难多</span>
+      )
     }
   ];
 
@@ -126,6 +151,9 @@ export function useColumns() {
     columnsA,
     columnsB,
     columnsC,
+    loading,
+    userInfo,
+    onLoadUserInfo,
     editPasswdForm,
     passwdFormRules
   };

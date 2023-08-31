@@ -1,40 +1,16 @@
 <script setup lang="ts">
-import dayjs from "dayjs";
-import { getReleases } from "@/api/list";
 import { useWindowSize } from "@vueuse/core";
-import { ref, markRaw } from "vue";
 import personInfo from "./components/personInfo.vue";
-import { randomColor } from "@pureadmin/utils";
-import { useRenderFlicker } from "@/components/ReFlicker";
-import { useColumns } from "./components/columns";
+import { useProfile } from "./components/hook";
 
 defineOptions({
   name: "Profile"
 });
 
-const list = ref();
-const { editPasswdForm, passwdFormRules } = useColumns();
-const loading = ref<boolean>(true);
+// const list = ref();
+const { editPasswdForm, passwdFormRules, loading } = useProfile();
 
 const { height } = useWindowSize();
-
-setTimeout(() => {
-  loading.value = !loading.value;
-}, 800);
-
-getReleases().then(({ data }) => {
-  list.value = data.list.map(v => {
-    return {
-      content: v.body,
-      timestamp: dayjs(v.published_at).format("YYYY/MM/DD hh:mm:ss A"),
-      icon: markRaw(
-        useRenderFlicker({
-          background: randomColor({ type: "hex" }) as string
-        })
-      )
-    };
-  });
-});
 </script>
 
 <template>

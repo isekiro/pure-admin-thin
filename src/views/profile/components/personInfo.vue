@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { useColumns } from "./columns";
+import { onMounted } from "vue";
+import { useProfile } from "./hook";
 
-const { columnsA, columnsB, columnsC } = useColumns();
+const { columnsA, columnsB, columnsC, userInfo, onLoadUserInfo } = useProfile();
+
+onMounted(() => {
+  onLoadUserInfo();
+});
+
 const list = [
   {
     columns: columnsA,
@@ -20,6 +26,7 @@ const list = [
 
 <template>
   <PureDescriptions
+    :data="userInfo"
     v-for="(item, index) in list"
     :key="index"
     :columns="item.columns"
