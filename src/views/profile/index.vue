@@ -8,7 +8,8 @@ defineOptions({
 });
 
 // const list = ref();
-const { editPasswdForm, passwdFormRules, loading } = useProfile();
+const { editPasswdForm, passwdFormRules, loading, editPasswdFormRef } =
+  useProfile();
 
 const { height } = useWindowSize();
 </script>
@@ -44,7 +45,7 @@ const { height } = useWindowSize();
           <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
               <el-form
-                ref="editUserFormRef"
+                ref="editPasswdFormRef"
                 size="default"
                 :model="editPasswdForm"
                 :rules="passwdFormRules"
@@ -52,36 +53,36 @@ const { height } = useWindowSize();
               >
                 <el-row :gutter="35">
                   <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-form-item label="旧密码" prop="password">
+                    <el-form-item label="旧密码" prop="oldPassword">
                       <el-input
                         type="password"
                         clearable
                         show-password
-                        v-model="editPasswdForm.password"
+                        v-model="editPasswdForm.oldPassword"
                       />
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row :gutter="35">
                   <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-form-item label="输入密码" prop="password">
+                    <el-form-item label="输入密码" prop="newPassword">
                       <el-input
                         type="password"
                         clearable
                         show-password
-                        v-model="editPasswdForm.password"
+                        v-model="editPasswdForm.newPassword"
                       />
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-row :gutter="35">
                   <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-form-item label="确认密码" prop="password">
+                    <el-form-item label="确认密码" prop="confirmPassword">
                       <el-input
                         type="password"
                         clearable
                         show-password
-                        v-model="editPasswdForm.password"
+                        v-model="editPasswdForm.confirmPassword"
                       />
                     </el-form-item>
                   </el-col>
