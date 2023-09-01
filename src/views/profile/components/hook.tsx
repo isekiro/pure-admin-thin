@@ -5,10 +5,10 @@ import Warning from "@iconify-icons/ep/warning";
 import Iphone from "@iconify-icons/ep/iphone";
 import Notebook from "@iconify-icons/ep/notebook";
 import User from "@iconify-icons/ri/user-3-fill";
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { message } from "@/utils/message";
 import { getUserInfo, updatePasswd } from "@/api/system/user";
-import { FormRules, ElForm, ElMessageBox } from "element-plus";
+import { FormRules, ElForm, ElMessageBox, FormInstance } from "element-plus";
 import { encryptorFunc } from "@/utils/encrypt";
 
 export function useProfile() {
@@ -219,20 +219,27 @@ export function useProfile() {
   });
 
   // 确认保存弹窗提醒
-  const openSavingConfirm = () => {
-    ElMessageBox.confirm("是否要保存密码？", "警告", {
-      confirmButtonText: "确认",
-      cancelButtonText: "取消",
-      type: "warning"
-    })
-      .then(() => {
-        handlePasswordChange();
-      })
-      .catch(() => {
-        message("取消密码保存", {
-          type: "info"
-        });
-      });
+  const openSavingConfirm = (formEl: FormInstance | undefined) => {
+    if (!formEl) return;
+    formEl.validate(async (valid, fields) => {
+      if (valid) {
+        ElMessageBox.confirm("是否要保存密码？", "警告", {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            handlePasswordChange();
+          })
+          .catch(() => {
+            message("取消密码保存", {
+              type: "info"
+            });
+          });
+      } else {
+        console.log("error submit!", fields);
+      }
+    });
   };
 
   // 保存密码
@@ -273,6 +280,14 @@ export function useProfile() {
       });
   }
 
+  // 密码长度小于等于8禁用按钮
+  const hasPasswd = computed(
+    () =>
+      editPasswdForm.oldPassword.length <= 8 &&
+      editPasswdForm.newPassword.length <= 8 &&
+      editPasswdForm.confirmPassword.length <= 8
+  );
+
   const resetForm = formEl => {
     if (!formEl) return;
     formEl.resetFields();
@@ -287,6 +302,7 @@ export function useProfile() {
     editPasswdForm,
     passwdFormRules,
     editPasswdFormRef,
+    hasPasswd,
     resetForm,
     onLoadUserInfo,
     openSavingConfirm

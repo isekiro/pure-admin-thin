@@ -13,6 +13,7 @@ const {
   passwdFormRules,
   loading,
   editPasswdFormRef,
+  hasPasswd,
   resetForm,
   openSavingConfirm
 } = useProfile();
@@ -98,7 +99,11 @@ const { height } = useWindowSize();
                     <el-button plain @click="resetForm(editPasswdFormRef)"
                       >重置</el-button
                     >
-                    <el-button type="primary" @click="openSavingConfirm()" plain
+                    <el-button
+                      type="primary"
+                      @click="openSavingConfirm(editPasswdFormRef)"
+                      :disabled="hasPasswd"
+                      plain
                       >保存</el-button
                     >
                   </el-col>
