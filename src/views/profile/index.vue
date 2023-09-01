@@ -7,7 +7,6 @@ defineOptions({
   name: "Profile"
 });
 
-// const list = ref();
 const {
   editPasswdForm,
   passwdFormRules,
@@ -51,64 +50,66 @@ const { height } = useWindowSize();
           <template #header>修改密码</template>
           <el-skeleton animated :rows="7" :loading="loading">
             <template #default>
-              <el-form
-                ref="editPasswdFormRef"
-                size="default"
-                :model="editPasswdForm"
-                :rules="passwdFormRules"
-                label-width="80px"
-              >
-                <el-row :gutter="35">
-                  <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-form-item label="旧密码" prop="oldPassword">
-                      <el-input
-                        type="password"
-                        clearable
-                        show-password
-                        v-model="editPasswdForm.oldPassword"
-                      />
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :gutter="35">
-                  <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-form-item label="输入密码" prop="newPassword">
-                      <el-input
-                        type="password"
-                        clearable
-                        show-password
-                        v-model="editPasswdForm.newPassword"
-                      />
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :gutter="35">
-                  <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-form-item label="确认密码" prop="confirmPassword">
-                      <el-input
-                        type="password"
-                        clearable
-                        show-password
-                        v-model="editPasswdForm.confirmPassword"
-                      />
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-                <el-row :gutter="35" justify="center">
-                  <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-button plain @click="resetForm(editPasswdFormRef)"
-                      >重置</el-button
-                    >
-                    <el-button
-                      type="primary"
-                      @click="openSavingConfirm(editPasswdFormRef)"
-                      :disabled="hasPasswd"
-                      plain
-                      >保存</el-button
-                    >
-                  </el-col>
-                </el-row>
-              </el-form>
+              <el-scrollbar :height="`calc(${height}px - 35vh - 340px)`">
+                <el-form
+                  ref="editPasswdFormRef"
+                  size="default"
+                  :model="editPasswdForm"
+                  :rules="passwdFormRules"
+                  label-width="80px"
+                >
+                  <el-row :gutter="35">
+                    <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                      <el-form-item label="旧密码" prop="oldPassword">
+                        <el-input
+                          type="password"
+                          clearable
+                          show-password
+                          v-model="editPasswdForm.oldPassword"
+                        />
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row :gutter="35">
+                    <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                      <el-form-item label="输入密码" prop="newPassword">
+                        <el-input
+                          type="password"
+                          clearable
+                          show-password
+                          v-model="editPasswdForm.newPassword"
+                        />
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row :gutter="35">
+                    <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                      <el-form-item label="确认密码" prop="confirmPassword">
+                        <el-input
+                          type="password"
+                          clearable
+                          show-password
+                          v-model="editPasswdForm.confirmPassword"
+                        />
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                  <el-row :gutter="35" justify="center">
+                    <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                      <el-button plain @click="resetForm(editPasswdFormRef)"
+                        >重置</el-button
+                      >
+                      <el-button
+                        type="primary"
+                        @click="openSavingConfirm(editPasswdFormRef)"
+                        :disabled="hasPasswd"
+                        plain
+                        >保存</el-button
+                      >
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </el-scrollbar>
             </template>
           </el-skeleton>
         </el-card>

@@ -10,6 +10,7 @@ import { message } from "@/utils/message";
 import { getUserInfo, updatePasswd } from "@/api/system/user";
 import { FormRules, ElForm, ElMessageBox, FormInstance } from "element-plus";
 import { encryptorFunc } from "@/utils/encrypt";
+import { useUserStoreHook } from "@/store/modules/user";
 
 export function useProfile() {
   const loading = ref(false);
@@ -188,9 +189,8 @@ export function useProfile() {
                 "confirmPassword",
                 () => null
               );
-            } else {
-              callback();
             }
+            callback();
           }
         },
         trigger: "change"
@@ -209,6 +209,8 @@ export function useProfile() {
             } else {
               if (value !== editPasswdForm.newPassword) {
                 callback(new Error("两次输入的密码不一致!"));
+              } else {
+                callback();
               }
             }
           }
@@ -219,9 +221,9 @@ export function useProfile() {
   });
 
   // 确认保存弹窗提醒
-  const openSavingConfirm = (formEl: FormInstance | undefined) => {
+  async function openSavingConfirm(formEl: FormInstance | undefined) {
     if (!formEl) return;
-    formEl.validate(async (valid, fields) => {
+    await formEl.validate(async (valid, fields) => {
       if (valid) {
         ElMessageBox.confirm("是否要保存密码？", "警告", {
           confirmButtonText: "确认",
@@ -240,7 +242,7 @@ export function useProfile() {
         console.log("error submit!", fields);
       }
     });
-  };
+  }
 
   // 保存密码
   function handlePasswordChange() {
@@ -264,6 +266,7 @@ export function useProfile() {
           message(res.message, {
             type: "success"
           });
+          openLogoutConfirm();
         } else {
           message(res.message, {
             type: "error"
@@ -280,12 +283,32 @@ export function useProfile() {
       });
   }
 
+  const { logOut } = useUserStoreHook();
+  function mustLogout() {
+    logOut();
+  }
+
+  // 退出登录弹窗提醒
+  const openLogoutConfirm = () => {
+    ElMessageBox.alert("修改密码后需要退出重新登录？", "警告", {
+      confirmButtonText: "确认",
+      type: "warning"
+    })
+      .then(() => {
+        mustLogout();
+      })
+      .catch(() => {
+        mustLogout();
+      });
+  };
+
   // 密码长度小于等于8禁用按钮
-  const hasPasswd = computed(
-    () =>
-      editPasswdForm.oldPassword.length <= 8 &&
-      editPasswdForm.newPassword.length <= 8 &&
-      editPasswdForm.confirmPassword.length <= 8
+  const hasPasswd = computed(() =>
+    editPasswdForm.oldPassword.length >= 8 &&
+    editPasswdForm.newPassword.length >= 8 &&
+    editPasswdForm.confirmPassword.length >= 8
+      ? false
+      : true
   );
 
   const resetForm = formEl => {
