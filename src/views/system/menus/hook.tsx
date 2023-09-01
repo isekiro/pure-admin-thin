@@ -188,6 +188,20 @@ export function useMenu() {
       )
     },
     {
+      label: "菜单显示",
+      prop: "meta.showLink",
+      minWidth: 100,
+      cellRenderer: ({ row, props }) => (
+        <el-tag
+          size={props.size}
+          type={row.meta.showLink === false ? "danger" : "success"}
+          effect="plain"
+        >
+          {row.meta.showLink === true ? "显示" : "隐藏"}
+        </el-tag>
+      )
+    },
+    {
       label: "更新时间",
       minWidth: 200,
       prop: "UpdatedAt",
@@ -371,7 +385,11 @@ export function useMenu() {
         // 深拷贝
         const obj = JSON.parse(JSON.stringify(res.data));
         menuFormData.value = obj.tree;
-        const topMenu = { ID: 0, meta: { title: "顶级类目" }, status: 1 };
+        const topMenu = {
+          ID: 0,
+          meta: { title: "顶级类目", showLink: false },
+          status: 1
+        };
         obj.tree.unshift(topMenu);
         menuOptions.value = obj.tree;
       })
