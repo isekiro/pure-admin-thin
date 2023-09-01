@@ -7,8 +7,9 @@ import Notebook from "@iconify-icons/ep/notebook";
 import User from "@iconify-icons/ri/user-3-fill";
 import { reactive, ref } from "vue";
 import { message } from "@/utils/message";
-import { getUserInfo } from "@/api/system/user";
-import { FormRules, ElForm } from "element-plus";
+import { getUserInfo, updatePasswd } from "@/api/system/user";
+import { FormRules, ElForm, ElMessageBox } from "element-plus";
+import { encryptorFunc } from "@/utils/encrypt";
 
 export function useProfile() {
   const loading = ref(false);
@@ -217,15 +218,77 @@ export function useProfile() {
     ]
   });
 
+  // 确认保存弹窗提醒
+  const openSavingConfirm = () => {
+    ElMessageBox.confirm("是否要保存密码？", "警告", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+      type: "warning"
+    })
+      .then(() => {
+        handlePasswordChange();
+      })
+      .catch(() => {
+        message("取消密码保存", {
+          type: "info"
+        });
+      });
+  };
+
+  // 保存密码
+  function handlePasswordChange() {
+    // 深拷贝
+    const editPasswdFormData = JSON.parse(JSON.stringify(editPasswdForm));
+    if (editPasswdFormData.oldPassword.length !== 0) {
+      editPasswdFormData.oldPassword = encryptorFunc(
+        editPasswdFormData.oldPassword
+      ) as any;
+    }
+    if (editPasswdFormData.newPassword.length !== 0) {
+      editPasswdFormData.newPassword = encryptorFunc(
+        editPasswdFormData.newPassword
+      ) as any;
+    }
+    // 开始调用后端更新密码
+    loading.value = true;
+    updatePasswd(editPasswdFormData)
+      .then(res => {
+        if (res.success) {
+          message(res.message, {
+            type: "success"
+          });
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "error"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
+
+  const resetForm = formEl => {
+    if (!formEl) return;
+    formEl.resetFields();
+  };
+
   return {
     columnsA,
     columnsB,
     columnsC,
     loading,
     userInfo,
-    onLoadUserInfo,
     editPasswdForm,
     passwdFormRules,
-    editPasswdFormRef
+    editPasswdFormRef,
+    resetForm,
+    onLoadUserInfo,
+    openSavingConfirm
   };
 }

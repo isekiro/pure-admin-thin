@@ -8,8 +8,14 @@ defineOptions({
 });
 
 // const list = ref();
-const { editPasswdForm, passwdFormRules, loading, editPasswdFormRef } =
-  useProfile();
+const {
+  editPasswdForm,
+  passwdFormRules,
+  loading,
+  editPasswdFormRef,
+  resetForm,
+  openSavingConfirm
+} = useProfile();
 
 const { height } = useWindowSize();
 </script>
@@ -89,8 +95,12 @@ const { height } = useWindowSize();
                 </el-row>
                 <el-row :gutter="35" justify="center">
                   <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
-                    <el-button plain>重置</el-button>
-                    <el-button type="primary" plain>确认</el-button>
+                    <el-button plain @click="resetForm(editPasswdFormRef)"
+                      >重置</el-button
+                    >
+                    <el-button type="primary" @click="openSavingConfirm()" plain
+                      >保存</el-button
+                    >
                   </el-col>
                 </el-row>
               </el-form>

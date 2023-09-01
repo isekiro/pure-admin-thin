@@ -66,3 +66,8 @@ export const batchDeleteUser = (data: object) => {
 export const getUserInfo = () => {
   return http.request<Result>("get", userUrlApi("/info"));
 };
+
+/** 更新用户密码*/
+export const updatePasswd = (data: object) => {
+  return http.request<Result>("put", userUrlApi("/changePwd"), { data });
+};
