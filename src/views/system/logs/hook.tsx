@@ -198,8 +198,10 @@ export function useLog() {
         message(res.response.data.message, {
           type: "warning"
         });
+      })
+      .finally(() => {
+        loading.value = false;
       });
-    loading.value = false;
   }
 
   const resetForm = formEl => {

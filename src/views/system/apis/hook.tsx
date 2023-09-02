@@ -349,11 +349,26 @@ export function useApi() {
 
   async function onSearch() {
     loading.value = true;
-    const formData = Object.assign(form, pagination);
-    const { data } = await getApiList(formData);
-    dataList.value = data.list;
-    pagination.total = data.total;
-    loading.value = false;
+    const formData = Object.assign({}, form, pagination);
+    await getApiList(formData)
+      .then(res => {
+        if (res.success) {
+          dataList.value = res.data.list;
+          pagination.total = res.data.total;
+        } else {
+          message(res.message, {
+            type: "error"
+          });
+        }
+      })
+      .catch(res => {
+        message(res.response.data.message, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   const resetForm = formEl => {
