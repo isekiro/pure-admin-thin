@@ -15,7 +15,7 @@ export function useLog() {
   }
 
   interface LogIdsType {
-    logIds: number[];
+    operationLogIds: number[];
   }
 
   // 表单数据初始化
@@ -148,7 +148,7 @@ export function useLog() {
     });
     // 组装数据格式，给后端识别
     const logIdsObj: LogIdsType = {
-      logIds: ids.value
+      operationLogIds: ids.value
     };
     // 开始调用后端删除接口
     loading.value = true;

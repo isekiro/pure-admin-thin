@@ -46,7 +46,7 @@ const {
       </el-form-item>
       <el-form-item label="ip地址：" prop="ip">
         <el-input
-          v-model="form.path"
+          v-model="form.ip"
           placeholder="请输入ip地址"
           clearable
           class="!w-[180px]"
