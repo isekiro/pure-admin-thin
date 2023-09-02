@@ -58,7 +58,7 @@ const { height } = useWindowSize();
                   :rules="passwdFormRules"
                   label-width="80px"
                 >
-                  <el-row :gutter="35">
+                  <el-row>
                     <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                       <el-form-item label="旧密码" prop="oldPassword">
                         <el-input
@@ -70,7 +70,7 @@ const { height } = useWindowSize();
                       </el-form-item>
                     </el-col>
                   </el-row>
-                  <el-row :gutter="35">
+                  <el-row>
                     <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                       <el-form-item label="输入密码" prop="newPassword">
                         <el-input
@@ -82,7 +82,7 @@ const { height } = useWindowSize();
                       </el-form-item>
                     </el-col>
                   </el-row>
-                  <el-row :gutter="35">
+                  <el-row>
                     <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                       <el-form-item label="确认密码" prop="confirmPassword">
                         <el-input
@@ -94,7 +94,7 @@ const { height } = useWindowSize();
                       </el-form-item>
                     </el-col>
                   </el-row>
-                  <el-row :gutter="35" justify="center">
+                  <el-row justify="center">
                     <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                       <el-button plain @click="resetForm(editPasswdFormRef)"
                         >重置</el-button
