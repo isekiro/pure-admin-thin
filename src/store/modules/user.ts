@@ -54,9 +54,10 @@ export const useUserStore = defineStore({
       this.username = "";
       this.roles = [];
       removeToken();
-      /** 去登录页 */
-      // location.href = "/";
-      router.push("/login");
+      /** 去登录页，强制刷新 */
+      location.href = "/";
+      /** 去登录页，平台默认的方法，不刷新，可能有bug */
+      // router.push("/login");
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
     },

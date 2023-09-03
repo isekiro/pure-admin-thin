@@ -8,6 +8,7 @@ import topCollapse from "./sidebar/topCollapse.vue";
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import ProfileLine from "@iconify-icons/ri/profile-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
+import router from "@/router/index";
 
 const {
   layout,
@@ -54,7 +55,10 @@ const {
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
-            <el-dropdown-item @click="toProfileMenu">
+            <el-dropdown-item
+              :disabled="!router.hasRoute('Profile')"
+              @click="toProfileMenu"
+            >
               <IconifyIconOffline :icon="ProfileLine" style="margin: 5px" />
               个人中心
             </el-dropdown-item>

@@ -377,7 +377,6 @@ export function useRole() {
         message(res.response.data.message, {
           type: "error"
         });
-        permsDialogVisible.value = false;
       });
 
     // --------------------------------------------------------------------
@@ -414,9 +413,10 @@ export function useRole() {
         message(res.response.data.message, {
           type: "error"
         });
+      })
+      .finally(() => {
         permsDialogVisible.value = false;
       });
-    permsDialogVisible.value = false;
   }
 
   // 获取接口树结构数据
