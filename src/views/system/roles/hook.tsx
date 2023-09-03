@@ -573,7 +573,7 @@ export function useRole() {
   }
 
   // 批量删除角色
-  function handleDeleteRoleByIds() {
+  async function handleDeleteRoleByIds() {
     // 深拷贝，将id临时存放在一个数组
     const ids = ref([]);
     checkedRoleIds.value.forEach(element => {
@@ -585,7 +585,7 @@ export function useRole() {
     };
     // 开始调用后端删除接口
     loading.value = true;
-    batchDeleteRole(roleIdsObj)
+    await batchDeleteRole(roleIdsObj)
       .then(res => {
         if (res.success) {
           message(res.message, {
@@ -685,7 +685,6 @@ export function useRole() {
     handleSizeChange,
     handleCurrentChange,
     handleSelectionChange,
-    handleDeleteRoleByIds,
     handleRoleMenuSubmit,
     openDeleteConfirm
   };
