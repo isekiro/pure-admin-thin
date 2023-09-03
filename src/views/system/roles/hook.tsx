@@ -308,7 +308,8 @@ export function useRole() {
         // 深拷贝
         const obj = JSON.parse(JSON.stringify(res.data));
         // 给proxy对象赋值
-        Object.assign(menuTreeData.value, obj.tree);
+        const emptySlice = ref([]);
+        menuTreeData.value = Object.assign(emptySlice.value, obj.tree);
       })
       .catch(res => {
         message(res.response.data.message, {
@@ -426,7 +427,8 @@ export function useRole() {
       .then(res => {
         // 深拷贝
         const obj = JSON.parse(JSON.stringify(res.data));
-        Object.assign(apisTreeData.value, obj.tree);
+        const emptySlice = ref([]);
+        apisTreeData.value = Object.assign(emptySlice.value, obj.tree);
       })
       .catch(res => {
         message(res.response.data.message, {
