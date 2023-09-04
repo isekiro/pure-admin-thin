@@ -7,14 +7,14 @@ import { ElMessageBox, ElTree } from "element-plus";
 
 export function useLog() {
   // 表单数据类型
-  interface FormType {
+  interface IForm {
     username: string;
     ip: string;
     path: string;
     status?: number;
   }
 
-  interface LogIdsType {
+  interface ILogIds {
     operationLogIds: number[];
   }
 
@@ -39,7 +39,7 @@ export function useLog() {
     background: true
   });
 
-  const initFormData: FormType = {
+  const initFormData: IForm = {
     username: "",
     ip: "",
     path: "",
@@ -50,7 +50,7 @@ export function useLog() {
   function getEditLogForm() {
     // 深拷贝
     const obj = JSON.parse(JSON.stringify(initFormData));
-    return reactive<FormType>(obj);
+    return reactive<IForm>(obj);
   }
 
   const checkedLogIds = ref([]);
@@ -104,9 +104,7 @@ export function useLog() {
     {
       label: "ip地址",
       minWidth: 100,
-      prop: "ip",
-      formatter: ({ start_time }) =>
-        dayjs(start_time).format("YYYY-MM-DD HH:mm:ss")
+      prop: "ip"
     },
     {
       label: "耗时(ms)",
@@ -154,7 +152,7 @@ export function useLog() {
       ids.value.push(element.ID);
     });
     // 组装数据格式，给后端识别
-    const logIdsObj: LogIdsType = {
+    const logIdsObj: ILogIds = {
       operationLogIds: ids.value
     };
     // 开始调用后端删除接口

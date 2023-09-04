@@ -18,7 +18,7 @@ import { reactive, ref, onMounted } from "vue";
 
 export function useApi() {
   // 表单数据类型
-  interface FormType {
+  interface IForm {
     ID: number;
     method: string;
     path: string;
@@ -27,7 +27,7 @@ export function useApi() {
     creator: string;
   }
 
-  interface ApiIdsType {
+  interface IApiIds {
     apiIds: number[];
   }
 
@@ -73,7 +73,7 @@ export function useApi() {
     background: true
   });
 
-  const initFormData: FormType = {
+  const initFormData: IForm = {
     ID: 0,
     method: "",
     path: "",
@@ -86,7 +86,7 @@ export function useApi() {
   function getEditApiForm() {
     // 深拷贝
     const obj = JSON.parse(JSON.stringify(initFormData));
-    return reactive<FormType>(obj);
+    return reactive<IForm>(obj);
   }
 
   const isEdit = ref(false);
@@ -319,7 +319,7 @@ export function useApi() {
       ids.value.push(element.ID);
     });
     // 组装数据格式，给后端识别
-    const apiIdsObj: ApiIdsType = {
+    const apiIdsObj: IApiIds = {
       apiIds: ids.value
     };
     // 开始调用后端删除接口

@@ -17,7 +17,7 @@ import type { FormRules } from "element-plus";
 import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
 
-interface editRoleFormType {
+interface IEditRoleForm {
   createTime: number;
   updateTime: number;
   creator: string;
@@ -34,26 +34,26 @@ interface editRoleFormType {
   dataScope: number;
 }
 
-interface FormType {
+interface IForm {
   name: string;
   code: string;
   status: number;
 }
 
-interface RoleIdsType {
+interface IRoleIds {
   roleIds: number[];
 }
 
-interface MenuIdsType {
+interface IMenuIds {
   menuIds: number[];
 }
 
-interface ApisIdsType {
+interface IApisIds {
   apisIds: number[];
 }
 
 export function useRole() {
-  const form = reactive<FormType>({
+  const form = reactive<IForm>({
     name: "",
     code: "",
     status: 3
@@ -68,7 +68,7 @@ export function useRole() {
     background: true
   });
 
-  const initEditRoleForm = reactive<editRoleFormType>({
+  const initEditRoleForm = reactive<IEditRoleForm>({
     createTime: 0,
     updateTime: 0,
     creator: "",
@@ -87,7 +87,7 @@ export function useRole() {
 
   function getEditRoleForm() {
     // 深拷贝
-    const obj: editRoleFormType = JSON.parse(JSON.stringify(initEditRoleForm));
+    const obj: IEditRoleForm = JSON.parse(JSON.stringify(initEditRoleForm));
     return reactive(obj);
   }
 
@@ -357,7 +357,7 @@ export function useRole() {
     ) as any;
 
     // 组装数据格式，给后端识别
-    const menuIdsObj: MenuIdsType = {
+    const menuIdsObj: IMenuIds = {
       menuIds: menuTreeIds.value
     };
     // 开始调用后端更新角色权限菜单
@@ -393,7 +393,7 @@ export function useRole() {
     });
 
     // 组装数据格式，给后端识别
-    const apisIdsObj: ApisIdsType = {
+    const apisIdsObj: IApisIds = {
       apisIds: apisTreeIds.value
     };
     // 开始调用后端更新角色权限接口
@@ -582,7 +582,7 @@ export function useRole() {
       ids.value.push(element.ID);
     });
     // 组装数据格式，给后端识别
-    const roleIdsObj: RoleIdsType = {
+    const roleIdsObj: IRoleIds = {
       roleIds: ids.value
     };
     // 开始调用后端删除接口

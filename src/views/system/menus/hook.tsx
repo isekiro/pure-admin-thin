@@ -10,7 +10,7 @@ import {
 import { reactive, ref, onMounted } from "vue";
 
 export function useMenu() {
-  interface MenusDataType {
+  interface IMenusData {
     ID: number;
     createdAt: number;
     updatedAt: number;
@@ -34,7 +34,7 @@ export function useMenu() {
     type: number;
   }
 
-  interface MenuIdsType {
+  interface IMenuIds {
     menuIds: number[];
   }
   const defaultProps = {
@@ -45,7 +45,7 @@ export function useMenu() {
 
   // 返回空菜单表单
   function getEditMenuForm() {
-    return reactive<MenusDataType>({
+    return reactive<IMenusData>({
       ID: 0,
       createdAt: 0,
       updatedAt: 0,
@@ -340,7 +340,7 @@ export function useMenu() {
       ids.value.push(element.ID);
     });
     // 组装数据格式，给后端识别
-    const roleIdsObj: MenuIdsType = {
+    const roleIdsObj: IMenuIds = {
       menuIds: ids.value
     };
     // 开始调用后端删除接口

@@ -13,7 +13,7 @@ import { type PaginationProps } from "@pureadmin/table";
 import { reactive, ref, computed, onMounted } from "vue";
 
 export function useUser() {
-  interface EditUserFormType {
+  interface IEditUserForm {
     ID: number;
     username: string;
     password: string;
@@ -26,7 +26,7 @@ export function useUser() {
     avatar: string;
   }
 
-  interface UserIdsType {
+  interface IUserIds {
     userIds: number[];
   }
 
@@ -48,7 +48,7 @@ export function useUser() {
   const dialogVisible = ref(false);
   const isEdit = ref(false);
   const editUserFormRef = ref<InstanceType<typeof ElForm>>();
-  const initEditUserForm: EditUserFormType = {
+  const initEditUserForm: IEditUserForm = {
     ID: 0,
     username: "",
     password: "",
@@ -63,7 +63,7 @@ export function useUser() {
 
   function getEditUserForm() {
     // 深拷贝
-    const obj: EditUserFormType = JSON.parse(JSON.stringify(initEditUserForm));
+    const obj: IEditUserForm = JSON.parse(JSON.stringify(initEditUserForm));
     return reactive(obj);
   }
 
@@ -399,7 +399,7 @@ export function useUser() {
       ids.value.push(element.ID);
     });
     // 组装数据格式，给后端识别
-    const userIdsObj: UserIdsType = {
+    const userIdsObj: IUserIds = {
       userIds: ids.value
     };
     // 开始调用后端删除接口
