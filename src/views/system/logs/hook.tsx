@@ -102,6 +102,13 @@ export function useLog() {
         dayjs(start_time).format("YYYY-MM-DD HH:mm:ss")
     },
     {
+      label: "ip地址",
+      minWidth: 100,
+      prop: "ip",
+      formatter: ({ start_time }) =>
+        dayjs(start_time).format("YYYY-MM-DD HH:mm:ss")
+    },
+    {
       label: "耗时(ms)",
       prop: "timeCost",
       minWidth: 70

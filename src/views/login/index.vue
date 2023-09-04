@@ -34,7 +34,7 @@ dataThemeChange();
 const { title } = useNav();
 
 const ruleForm = reactive({
-  username: "admin",
+  username: "",
   password: ""
 });
 
