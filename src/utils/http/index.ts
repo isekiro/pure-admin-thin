@@ -80,7 +80,7 @@ class PureHttp {
           : new Promise(resolve => {
               const data = getToken();
               if (data) {
-                const now = new Date().getTime();
+                const now = Math.floor(new Date().getTime() / 1000);
                 const expired = parseInt(data.expires) - now <= 0;
                 if (expired) {
                   if (!PureHttp.isRefreshing) {
@@ -142,7 +142,7 @@ class PureHttp {
         if (status) {
           if (status === 401) {
             // 请求 401 返回的提示
-            useUserStoreHook().logOut();
+            // useUserStoreHook().logOut();
             message("token 认证失败", { type: "error" });
           }
           if (status >= 500) {
