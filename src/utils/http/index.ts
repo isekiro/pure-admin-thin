@@ -142,7 +142,7 @@ class PureHttp {
         if (status) {
           if (status === 401) {
             // 请求 401 返回的提示
-            // useUserStoreHook().logOut();
+            useUserStoreHook().logOut();
             message("token 认证失败", { type: "error" });
           }
           if (status >= 500) {
