@@ -1,5 +1,5 @@
 // 模拟后端动态生成路由
-import { MockMethod } from "vite-plugin-mock";
+import { defineFakeRoute } from "vite-plugin-fake-server/client";
 // import { system } from "@/router/enums";
 
 /**
@@ -7,12 +7,11 @@ import { MockMethod } from "vite-plugin-mock";
  * admin：管理员角色
  * common：普通角色
  */
-
 const permissionRouter = {
   path: "/permission",
   meta: {
     title: "权限管理",
-    icon: "lollipop",
+    icon: "ep:lollipop",
     rank: 10
   },
   children: [
@@ -30,7 +29,11 @@ const permissionRouter = {
       meta: {
         title: "按钮权限",
         roles: ["admin", "common"],
-        auths: ["btn_add", "btn_edit", "btn_delete"]
+        auths: [
+          "permission:btn:add",
+          "permission:btn:edit",
+          "permission:btn:delete"
+        ]
       }
     }
   ]
@@ -92,9 +95,65 @@ const permissionRouter = {
 //   ]
 // };
 
-export default [
+// const systemRouter = {
+//   path: "/system",
+//   meta: {
+//     icon: "settingFilled",
+//     title: "系统管理",
+//     rank: system
+//   },
+//   children: [
+//     {
+//       path: "/system/user/index",
+//       name: "User",
+//       meta: {
+//         icon: "flUser",
+//         title: "用户管理"
+//         // roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/role/index",
+//       name: "Role",
+//       meta: {
+//         icon: "role",
+//         title: "角色管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/dept/index",
+//       name: "Dept",
+//       meta: {
+//         icon: "dept",
+//         title: "部门管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/menu/index",
+//       name: "Menu",
+//       meta: {
+//         icon: "menu",
+//         title: "菜单管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/apis/index",
+//       name: "Apis",
+//       meta: {
+//         icon: "apis",
+//         title: "接口管理",
+//         roles: ["admin"]
+//       }
+//     }
+//   ]
+// };
+
+export default defineFakeRoute([
   {
-    url: "/getAsyncRoutes",
+    url: "/get-async-routes",
     method: "get",
     response: () => {
       return {
@@ -104,4 +163,4 @@ export default [
       };
     }
   }
-] as MockMethod[];
+]);

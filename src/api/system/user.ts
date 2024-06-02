@@ -1,4 +1,4 @@
-import { type Result } from "./type";
+import type { Result } from "./type";
 import { http } from "@/utils/http";
 import { baseUrlApi, userUrlApi } from "../utils";
 
@@ -7,6 +7,8 @@ export type UserResult = {
   data: {
     /** 用户名 */
     username: string;
+    /** 用户id */
+    userId: string;
     /** 当前登陆用户的角色 */
     roles: Array<string>;
     /** `token` */

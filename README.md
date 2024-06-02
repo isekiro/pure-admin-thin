@@ -14,16 +14,21 @@
 
 ## 配套视频
 
-- [点我查看教程](https://www.bilibili.com/video/BV1kg411v7QT)
-- [点我查看 UI 设计](https://www.bilibili.com/video/BV17g411T7rq)
+[点我查看 UI 设计](https://www.bilibili.com/video/BV17g411T7rq)  
+[点我查看快速开发教程](https://www.bilibili.com/video/BV1kg411v7QT)
 
 ## 配套保姆级文档
 
-- [查看文档](https://yiming_chang.gitee.io/pure-admin-doc)
+[点我查看 vue-pure-admin 文档](https://pure-admin.github.io/pure-admin-doc)  
+[点我查看 @pureadmin/utils 文档](https://pure-admin-utils.netlify.app)
+
+## 优质服务、软件外包、赞助支持
+
+[点我查看详情](https://pure-admin.github.io/pure-admin-doc/pages/service/)
 
 ## 预览
 
-- [查看预览](https://pure-admin-thin.netlify.app/#/login)
+[查看预览](https://pure-admin-thin.netlify.app/#/login)
 
 ## 维护者
 
@@ -31,10 +36,8 @@
 
 ## ⚠️ 注意
 
-- 精简版不接受任何 `issues` 和 `pr`，如果有问题请到完整版 [issues](https://github.com/pure-admin/vue-pure-admin/issues/new/choose) 去提，谢谢！
+精简版不接受任何 `issues` 和 `pr`，如果有问题请到完整版 [issues](https://github.com/pure-admin/vue-pure-admin/issues/new/choose) 去提，谢谢！
 
 ## 许可证
-
-原则上不收取任何费用及版权，可商用，不过如需二次开源（比如用此平台二次开发并开源，要求前端代码必须开源免费）请联系作者获取许可！（免费，走个记录而已）
 
 [MIT © 2020-present, pure-admin](./LICENSE)

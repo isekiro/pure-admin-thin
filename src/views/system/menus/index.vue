@@ -103,8 +103,8 @@ const {
               link
               type="primary"
               :size="size"
-              @click="onUpdate(row)"
               :icon="useRenderIcon(EditPen)"
+              @click="onUpdate(row)"
             >
               修改
             </el-button>
@@ -123,10 +123,10 @@ const {
         @close="resetDialogForm(editMenuFormRef)"
       >
         <el-form
+          ref="editMenuFormRef"
           size="default"
           :rules="menuFormRules"
           :model="editMenuForm"
-          ref="editMenuFormRef"
           label-width="80px"
         >
           <el-row :gutter="35">
@@ -198,32 +198,32 @@ const {
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="显示菜单">
                 <el-radio-group v-model="editMenuForm.meta.showLink">
-                  <el-radio :label="true">是</el-radio>
-                  <el-radio :label="false">否</el-radio>
+                  <el-radio :value="true">是</el-radio>
+                  <el-radio :value="false">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="开启缓存">
                 <el-radio-group v-model="editMenuForm.meta.keepAlive">
-                  <el-radio :label="true">是</el-radio>
-                  <el-radio :label="false">否</el-radio>
+                  <el-radio :value="true">是</el-radio>
+                  <el-radio :value="false">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="显示父级">
                 <el-radio-group v-model="editMenuForm.meta.showParent">
-                  <el-radio :label="true">是</el-radio>
-                  <el-radio :label="false">否</el-radio>
+                  <el-radio :value="true">是</el-radio>
+                  <el-radio :value="false">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="隐藏标签">
                 <el-radio-group v-model="editMenuForm.meta.hiddenTag">
-                  <el-radio :label="true">是</el-radio>
-                  <el-radio :label="false">否</el-radio>
+                  <el-radio :value="true">是</el-radio>
+                  <el-radio :value="false">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>

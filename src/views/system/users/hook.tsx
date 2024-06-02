@@ -8,8 +8,13 @@ import {
   batchDeleteUser
 } from "@/api/system/user";
 import { getRolesOptions } from "@/api/system/role";
-import { ElMessageBox, ElForm, FormRules, FormInstance } from "element-plus";
-import { type PaginationProps } from "@pureadmin/table";
+import {
+  ElMessageBox,
+  type ElForm,
+  type FormRules,
+  type FormInstance
+} from "element-plus";
+import type { PaginationProps } from "@pureadmin/table";
 import { reactive, ref, computed, onMounted } from "vue";
 
 export function useUser() {
@@ -145,7 +150,7 @@ export function useUser() {
       cellRenderer: ({ row, props }) => (
         <el-tag
           size={props.size}
-          type={row.sex === 1 ? "" : "danger"}
+          type={row.sex === 1 ? "primary" : "danger"}
           effect="plain"
         >
           {row.sex === 1 ? "男" : "女"}
@@ -433,8 +438,10 @@ export function useUser() {
     // 获取用户数据
     await getUserList(formData)
       .then(res => {
-        dataList.value = res.data.list;
-        pagination.total = res.data.total;
+        // 深拷贝
+        const obj = JSON.parse(JSON.stringify(res.data));
+        dataList.value = obj.list;
+        pagination.total = obj.total;
       })
       .catch(res => {
         message(res.response.data.message, {

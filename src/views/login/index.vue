@@ -29,8 +29,8 @@ const ruleFormRef = ref<FormInstance>();
 const { initStorage } = useLayout();
 initStorage();
 
-const { dataTheme, dataThemeChange } = useDataThemeChange();
-dataThemeChange();
+const { dataTheme, overallStyle, dataThemeChange } = useDataThemeChange();
+dataThemeChange(overallStyle.value);
 const { title } = useNav();
 
 const ruleForm = reactive({
@@ -39,9 +39,8 @@ const ruleForm = reactive({
 });
 
 const onLogin = async (formEl: FormInstance | undefined) => {
-  loading.value = true;
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
       const password = encryptorFunc(ruleForm.password);
       useUserStoreHook()
@@ -65,7 +64,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
         });
     } else {
       loading.value = false;
-      return fields;
+      // return fields;
     }
   });
 };
@@ -128,8 +127,8 @@ onBeforeUnmount(() => {
                 prop="username"
               >
                 <el-input
-                  clearable
                   v-model="ruleForm.username"
+                  clearable
                   placeholder="账号"
                   :prefix-icon="useRenderIcon(User)"
                 />
@@ -139,9 +138,9 @@ onBeforeUnmount(() => {
             <Motion :delay="150">
               <el-form-item prop="password">
                 <el-input
+                  v-model="ruleForm.password"
                   clearable
                   show-password
-                  v-model="ruleForm.password"
                   placeholder="密码"
                   :prefix-icon="useRenderIcon(Lock)"
                 />

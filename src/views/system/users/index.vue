@@ -138,8 +138,8 @@ const {
                 link
                 type="primary"
                 :size="size"
-                @click="onUpdate(row)"
                 :icon="useRenderIcon(EditPen)"
+                @click="onUpdate(row)"
               >
                 修改
               </el-button>
@@ -178,10 +178,10 @@ const {
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <el-form-item label="输入密码" prop="password">
                   <el-input
+                    v-model="editUserForm.password"
                     type="password"
                     clearable
                     show-password
-                    v-model="editUserForm.password"
                   />
                 </el-form-item>
               </el-col>
@@ -214,14 +214,14 @@ const {
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <el-form-item label="性别">
                   <el-radio-group v-model="editUserForm.sex">
-                    <el-radio :label="1">男</el-radio>
-                    <el-radio :label="2">女</el-radio>
+                    <el-radio :value="1">男</el-radio>
+                    <el-radio :value="2">女</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                 <el-form-item label="用户备注">
-                  <el-input type="textarea" v-model="editUserForm.remark" />
+                  <el-input v-model="editUserForm.remark" type="textarea" />
                 </el-form-item>
               </el-col>
               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
