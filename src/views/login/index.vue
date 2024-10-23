@@ -12,6 +12,7 @@ import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { encryptorFunc } from "@/utils/encrypt";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -33,30 +34,37 @@ dataThemeChange(overallStyle.value);
 const { title } = useNav();
 
 const ruleForm = reactive({
-  username: "admin",
-  password: "admin123"
+  username: "",
+  password: ""
 });
 
 const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
-      loading.value = true;
+      const password = encryptorFunc(ruleForm.password);
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        .loginByUsername({ username: ruleForm.username, password: password })
         .then(res => {
           if (res.success) {
             // 获取后端路由
-            return initRouter().then(() => {
-              router.push(getTopMenu(true).path).then(() => {
-                message("登录成功", { type: "success" });
-              });
+            initRouter().then(() => {
+              router.push(getTopMenu(true).path);
+              message("登录成功", { type: "success" });
             });
-          } else {
-            message("登录失败", { type: "error" });
           }
         })
-        .finally(() => (loading.value = false));
+        .catch(res => {
+          const result = res.response.data.message ?? "登录失败";
+          loading.value = false;
+          message(result, { type: "error" });
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    } else {
+      loading.value = false;
+      // return fields;
     }
   });
 };

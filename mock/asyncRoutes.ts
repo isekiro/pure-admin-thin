@@ -1,5 +1,6 @@
 // 模拟后端动态生成路由
 import { defineFakeRoute } from "vite-plugin-fake-server/client";
+// import { system } from "@/router/enums";
 
 /**
  * roles：页面级别权限，这里模拟二种 "admin"、"common"
@@ -38,6 +39,118 @@ const permissionRouter = {
   ]
 };
 
+// const systemRouter = {
+//   path: "/system",
+//   meta: {
+//     icon: "settingFilled",
+//     title: "系统管理",
+//     rank: system
+//   },
+//   children: [
+//     {
+//       path: "/system/user/index",
+//       name: "User",
+//       meta: {
+//         icon: "flUser",
+//         title: "用户管理"
+//         // roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/role/index",
+//       name: "Role",
+//       meta: {
+//         icon: "role",
+//         title: "角色管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/dept/index",
+//       name: "Dept",
+//       meta: {
+//         icon: "dept",
+//         title: "部门管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/menu/index",
+//       name: "Menu",
+//       meta: {
+//         icon: "menu",
+//         title: "菜单管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/apis/index",
+//       name: "Apis",
+//       meta: {
+//         icon: "apis",
+//         title: "接口管理",
+//         roles: ["admin"]
+//       }
+//     }
+//   ]
+// };
+
+// const systemRouter = {
+//   path: "/system",
+//   meta: {
+//     icon: "settingFilled",
+//     title: "系统管理",
+//     rank: system
+//   },
+//   children: [
+//     {
+//       path: "/system/user/index",
+//       name: "User",
+//       meta: {
+//         icon: "flUser",
+//         title: "用户管理"
+//         // roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/role/index",
+//       name: "Role",
+//       meta: {
+//         icon: "role",
+//         title: "角色管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/dept/index",
+//       name: "Dept",
+//       meta: {
+//         icon: "dept",
+//         title: "部门管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/menu/index",
+//       name: "Menu",
+//       meta: {
+//         icon: "menu",
+//         title: "菜单管理",
+//         roles: ["admin"]
+//       }
+//     },
+//     {
+//       path: "/system/apis/index",
+//       name: "Apis",
+//       meta: {
+//         icon: "apis",
+//         title: "接口管理",
+//         roles: ["admin"]
+//       }
+//     }
+//   ]
+// };
+
 export default defineFakeRoute([
   {
     url: "/get-async-routes",
@@ -45,6 +158,7 @@ export default defineFakeRoute([
     response: () => {
       return {
         success: true,
+        // data: [permissionRouter, systemRouter]
         data: [permissionRouter]
       };
     }

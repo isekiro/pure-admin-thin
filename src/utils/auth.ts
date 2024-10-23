@@ -13,6 +13,8 @@ export interface DataInfo<T> {
   avatar?: string;
   /** 用户名 */
   username?: string;
+  /** 用户id */
+  userId?: string;
   /** 昵称 */
   nickname?: string;
   /** 当前登录用户的角色 */
@@ -43,16 +45,17 @@ export function getToken(): DataInfo<number> {
  * 将`accessToken`、`expires`、`refreshToken`这三条信息放在key值为authorized-token的cookie里（过期自动销毁）
  * 将`avatar`、`username`、`nickname`、`roles`、`refreshToken`、`expires`这六条信息放在key值为`user-info`的localStorage里（利用`multipleTabsKey`当浏览器完全关闭后自动销毁）
  */
-export function setToken(data: DataInfo<Date>) {
+export function setToken(data: DataInfo<number>) {
   let expires = 0;
   const { accessToken, refreshToken } = data;
   const { isRemembered, loginDay } = useUserStoreHook();
   expires = new Date(data.expires).getTime(); // 如果后端直接设置时间戳，将此处代码改为expires = data.expires，然后把上面的DataInfo<Date>改成DataInfo<number>即可
   const cookieString = JSON.stringify({ accessToken, expires, refreshToken });
 
+  // 时间秒换成小时
   expires > 0
     ? Cookies.set(TokenKey, cookieString, {
-        expires: (expires - Date.now()) / 86400000
+        expires: (expires - Date.now() / 1000) / 86400
       })
     : Cookies.set(TokenKey, cookieString);
 
@@ -66,18 +69,20 @@ export function setToken(data: DataInfo<Date>) {
       : {}
   );
 
-  function setUserKey({ avatar, username, nickname, roles }) {
+  function setUserKey({ avatar, username, nickname, roles, userId }) {
     useUserStoreHook().SET_AVATAR(avatar);
     useUserStoreHook().SET_USERNAME(username);
     useUserStoreHook().SET_NICKNAME(nickname);
     useUserStoreHook().SET_ROLES(roles);
+    useUserStoreHook().SET_USERID(userId);
     storageLocal().setItem(userKey, {
       refreshToken,
       expires,
       avatar,
       username,
       nickname,
-      roles
+      roles,
+      userId
     });
   }
 
@@ -87,7 +92,8 @@ export function setToken(data: DataInfo<Date>) {
       avatar: data?.avatar ?? "",
       username,
       nickname: data?.nickname ?? "",
-      roles
+      roles,
+      userId: data?.userId ?? ""
     });
   } else {
     const avatar =
@@ -98,11 +104,14 @@ export function setToken(data: DataInfo<Date>) {
       storageLocal().getItem<DataInfo<number>>(userKey)?.nickname ?? "";
     const roles =
       storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [];
+    const userId =
+      storageLocal().getItem<DataInfo<number>>(userKey)?.userId ?? "";
     setUserKey({
       avatar,
       username,
       nickname,
-      roles
+      roles,
+      userId
     });
   }
 }
