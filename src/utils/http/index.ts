@@ -13,6 +13,7 @@ import { stringify } from "qs";
 import NProgress from "../progress";
 import { getToken, formatToken } from "@/utils/auth";
 import { useUserStoreHook } from "@/store/modules/user";
+import { message } from "@/utils/message";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
@@ -79,7 +80,7 @@ class PureHttp {
           : new Promise(resolve => {
               const data = getToken();
               if (data) {
-                const now = new Date().getTime();
+                const now = Math.floor(new Date().getTime() / 1000);
                 const expired = parseInt(data.expires) - now <= 0;
                 if (expired) {
                   if (!PureHttp.isRefreshing) {
@@ -136,7 +137,20 @@ class PureHttp {
       },
       (error: PureHttpError) => {
         const $error = error;
+        const status = error.response.status;
         $error.isCancelRequest = Axios.isCancel($error);
+        if (status) {
+          if (status === 401) {
+            // 请求 401 返回的提示
+            useUserStoreHook().logOut();
+            message("token 认证失败", { type: "error" });
+          }
+          if (status >= 500) {
+            // 请求大于 500 返回的提示
+            useUserStoreHook().internalError();
+            message("服务器请求失败", { type: "error" });
+          }
+        }
         // 关闭进度条动画
         NProgress.done();
         // 所有的响应异常 区分来源为取消请求/非取消请求

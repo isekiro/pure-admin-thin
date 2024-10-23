@@ -8,7 +8,9 @@ import LaySidebarBreadCrumb from "../lay-sidebar/components/SidebarBreadCrumb.vu
 import LaySidebarTopCollapse from "../lay-sidebar/components/SidebarTopCollapse.vue";
 
 import LogoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
+import ProfileLine from "@iconify-icons/ri/profile-line";
 import Setting from "@iconify-icons/ri/settings-3-line";
+import router from "@/router/index";
 
 const {
   layout,
@@ -19,7 +21,8 @@ const {
   username,
   userAvatar,
   avatarsStyle,
-  toggleSideBar
+  toggleSideBar,
+  toProfileMenu
 } = useNav();
 </script>
 
@@ -54,6 +57,13 @@ const {
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
+            <el-dropdown-item
+              :disabled="!router.hasRoute('Profile')"
+              @click="toProfileMenu"
+            >
+              <IconifyIconOffline :icon="ProfileLine" style="margin: 5px" />
+              个人中心
+            </el-dropdown-item>
             <el-dropdown-item @click="logout">
               <IconifyIconOffline
                 :icon="LogoutCircleRLine"

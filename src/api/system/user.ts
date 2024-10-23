@@ -1,0 +1,75 @@
+import type { Result } from "./type";
+import { http } from "@/utils/http";
+import { baseUrlApi, userUrlApi } from "../utils";
+
+export type UserResult = {
+  success: boolean;
+  data: {
+    /** 用户名 */
+    username: string;
+    /** 用户id */
+    userId: string;
+    /** 当前登陆用户的角色 */
+    roles: Array<string>;
+    /** `token` */
+    accessToken: string;
+    /** 用于调用刷新`accessToken`的接口时所需的`token` */
+    refreshToken: string;
+    /** `accessToken`的过期时间（格式'xxxx/xx/xx xx:xx:xx'） */
+    expires: number;
+  };
+};
+
+export type RefreshTokenResult = {
+  success: boolean;
+  data: {
+    /** `token` */
+    accessToken: string;
+    /** 用于调用刷新`accessToken`的接口时所需的`token` */
+    refreshToken: string;
+    /** `accessToken`的过期时间（格式'xxxx/xx/xx xx:xx:xx'） */
+    expires: number;
+  };
+};
+
+/** 登录 */
+export const getLogin = (data: object) => {
+  return http.request<UserResult>("post", baseUrlApi("/login"), { data });
+};
+
+/** 刷新token */
+export const refreshTokenApi = (data: object) => {
+  return http.request<RefreshTokenResult>("post", baseUrlApi("/refreshToken"), {
+    data
+  });
+};
+
+/** 获取用户管理列表 */
+export const getUserList = (data: object) => {
+  return http.request<Result>("post", userUrlApi("/list"), { data });
+};
+
+/** 更新用户信息 */
+export const updateUserInfo = (id: number, data: object) => {
+  return http.request<Result>("put", userUrlApi("/update/" + id), { data });
+};
+
+/** 创建用户 */
+export const createUser = (data: object) => {
+  return http.request<Result>("post", userUrlApi("/create"), { data });
+};
+
+/** 删除用户 */
+export const batchDeleteUser = (data: object) => {
+  return http.request<Result>("delete", userUrlApi("/delete/batch"), { data });
+};
+
+/** 获取用户信息*/
+export const getUserInfo = () => {
+  return http.request<Result>("get", userUrlApi("/info"));
+};
+
+/** 更新用户密码*/
+export const updatePasswd = (data: object) => {
+  return http.request<Result>("put", userUrlApi("/changePwd"), { data });
+};

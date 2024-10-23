@@ -12,7 +12,7 @@ import {
   type RefreshTokenResult,
   getLogin,
   refreshTokenApi
-} from "@/api/user";
+} from "@/api/system/user";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { type DataInfo, setToken, removeToken, userKey } from "@/utils/auth";
 
@@ -23,6 +23,8 @@ export const useUserStore = defineStore({
     avatar: storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "",
     // 用户名
     username: storageLocal().getItem<DataInfo<number>>(userKey)?.username ?? "",
+    // 用户id
+    userId: storageLocal().getItem<DataInfo<number>>(userKey)?.userId ?? "",
     // 昵称
     nickname: storageLocal().getItem<DataInfo<number>>(userKey)?.nickname ?? "",
     // 页面级别权限
@@ -43,6 +45,10 @@ export const useUserStore = defineStore({
     /** 存储用户名 */
     SET_USERNAME(username: string) {
       this.username = username;
+    },
+    /** 存储用户id */
+    SET_USERID(userId: number) {
+      this.userId = userId;
     },
     /** 存储昵称 */
     SET_NICKNAME(nickname: string) {
@@ -83,9 +89,16 @@ export const useUserStore = defineStore({
       this.roles = [];
       this.permissions = [];
       removeToken();
+      /** 去登录页，强制刷新 */
+      location.href = "/";
+      /** 去登录页，平台默认的方法，不刷新，可能有bug */
+      // router.push("/login");
       useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
       resetRouter();
-      router.push("/login");
+    },
+    /** 前端登出（不调用接口） */
+    internalError() {
+      router.push("/error/500");
     },
     /** 刷新`token` */
     async handRefreshToken(data) {

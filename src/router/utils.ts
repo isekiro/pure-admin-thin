@@ -6,6 +6,7 @@ import {
   createWebHashHistory
 } from "vue-router";
 import { router } from "./index";
+import { message } from "@/utils/message";
 import { isProxy, toRaw } from "vue";
 import { useTimeoutFn } from "@vueuse/core";
 import {
@@ -191,6 +192,8 @@ function handleAsyncRoutes(routeList) {
 
 /** 初始化路由（`new Promise` 写法防止在异步请求中造成无限循环）*/
 function initRouter() {
+  const userId =
+    storageLocal().getItem<DataInfo<string>>(userKey)?.userId ?? "";
   if (getConfig()?.CachingAsyncRoutes) {
     // 开启动态路由缓存本地localStorage
     const key = "async-routes";
@@ -199,22 +202,40 @@ function initRouter() {
       return new Promise(resolve => {
         handleAsyncRoutes(asyncRouteList);
         resolve(router);
+      }).catch(res => {
+        message(res, {
+          type: "error"
+        });
       });
     } else {
-      return new Promise(resolve => {
-        getAsyncRoutes().then(({ data }) => {
-          handleAsyncRoutes(cloneDeep(data));
-          storageLocal().setItem(key, data);
-          resolve(router);
-        });
+      return new Promise((resolve, reject) => {
+        getAsyncRoutes(userId)
+          .then(({ data }) => {
+            handleAsyncRoutes(cloneDeep(data));
+            storageLocal().setItem(key, data);
+            resolve(router);
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "error"
+            });
+            return reject(new Error("Error"));
+          });
       });
     }
   } else {
-    return new Promise(resolve => {
-      getAsyncRoutes().then(({ data }) => {
-        handleAsyncRoutes(cloneDeep(data));
-        resolve(router);
-      });
+    return new Promise((resolve, reject) => {
+      getAsyncRoutes(userId)
+        .then(({ data }) => {
+          handleAsyncRoutes(cloneDeep(data));
+          resolve(router);
+        })
+        .catch(res => {
+          message(res.response.data.message, {
+            type: "error"
+          });
+          return reject(new Error("Error"));
+        });
     });
   }
 }
