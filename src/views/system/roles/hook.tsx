@@ -327,9 +327,9 @@ export function useRole() {
   }
 
   // 获取角色的权限菜单
-  async function getMenuDefaultCheckedData(id: string) {
+  function getMenuDefaultCheckedData(id: string) {
     permsMenuTreeLoading.value = true;
-    await getMenuDefaultCheckedId(id)
+    getMenuDefaultCheckedId(id)
       .then(res => {
         // 深拷贝
         const obj = JSON.parse(JSON.stringify(res.data));
@@ -372,7 +372,6 @@ export function useRole() {
           message(res.message, {
             type: "success"
           });
-          onSearch();
         } else {
           message(res.message, {
             type: "error"
@@ -408,7 +407,6 @@ export function useRole() {
           message(res.message, {
             type: "success"
           });
-          onSearch();
         } else {
           message(res.message, {
             type: "error"
@@ -422,6 +420,7 @@ export function useRole() {
       })
       .finally(() => {
         permsDialogVisible.value = false;
+        onSearch();
       });
   }
 
@@ -446,10 +445,10 @@ export function useRole() {
   }
 
   // 获取角色的权限接口
-  async function getApisDefaultCheckedData(id: string) {
+  function getApisDefaultCheckedData(id: string) {
     // 打开对话框
     permsApisTreeLoading.value = true;
-    await getApisDefaultCheckedId(id)
+    getApisDefaultCheckedId(id)
       .then(res => {
         // 深拷贝
         const obj = JSON.parse(JSON.stringify(res.data));
@@ -522,9 +521,9 @@ export function useRole() {
   }
 
   // 更新角色
-  async function handleUpdate(formEl: FormInstance | undefined) {
+  function handleUpdate(formEl: FormInstance | undefined) {
     if (!formEl) return;
-    await formEl.validate(async (valid, fields) => {
+    formEl.validate(async (valid, fields) => {
       if (valid) {
         updateRole(editRoleForm.ID, editRoleForm)
           .then(res => {
@@ -580,7 +579,7 @@ export function useRole() {
   }
 
   // 批量删除角色
-  async function handleDeleteRoleByIds() {
+  function handleDeleteRoleByIds() {
     // 深拷贝，将id临时存放在一个数组
     const ids = ref([]);
     checkedRoleIds.value.forEach(element => {
@@ -592,7 +591,7 @@ export function useRole() {
     };
     // 开始调用后端删除接口
     loading.value = true;
-    await batchDeleteRole(roleIdsObj)
+    batchDeleteRole(roleIdsObj)
       .then(res => {
         if (res.success) {
           message(res.message, {
