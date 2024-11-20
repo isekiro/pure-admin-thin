@@ -32,6 +32,7 @@ export function useMenu() {
       keepAlive: boolean;
       showParent: boolean;
       hiddenTag: boolean;
+      frameSrc: string;
     };
     status: number;
     parentId: number;
@@ -66,7 +67,8 @@ export function useMenu() {
         showLink: true,
         keepAlive: true,
         showParent: true,
-        hiddenTag: false
+        hiddenTag: false,
+        frameSrc: ""
       },
       status: 1,
       parentId: 0,

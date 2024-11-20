@@ -4,3 +4,5 @@ export const roleUrlApi = (url: string) => `/api/role${url}`;
 export const apiUrlApi = (url: string) => `/api/api${url}`;
 export const userUrlApi = (url: string) => `/api/user${url}`;
 export const logUrlApi = (url: string) => `/api/log${url}`;
+export const podsUrlApi = (url: string) => `/api/k8s/pods${url}`;
+export const clusterUrlApi = (url: string) => `/api/k8s/cluster${url}`;

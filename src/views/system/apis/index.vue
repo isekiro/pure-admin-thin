@@ -53,7 +53,7 @@ const {
           v-model="form.method"
           clearable
           placeholder="请选择接口方法"
-          style="width: 100%"
+          style="width: 100px"
         >
           <el-option
             v-for="item in apiMethodOptions"
