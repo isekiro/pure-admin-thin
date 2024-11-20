@@ -49,34 +49,30 @@ export function useMenu() {
   };
   const menuOptions = ref([]);
 
-  // 返回空菜单表单
-  function getEditMenuForm() {
-    return reactive<IMenusData>({
-      ID: 0,
-      createdAt: 0,
-      updatedAt: 0,
-      deletedAt: 0,
-      name: "",
-      path: "",
-      redirect: "",
-      meta: {
-        title: "",
-        icon: "",
-        rank: 0,
-        roles: [],
-        showLink: true,
-        keepAlive: true,
-        showParent: true,
-        hiddenTag: false,
-        frameSrc: ""
-      },
-      status: 1,
-      parentId: 0,
-      creator: "",
-      type: 2
-    });
-  }
-  const editMenuForm = getEditMenuForm();
+  const editMenuForm = reactive<IMenusData>({
+    ID: 0,
+    createdAt: 0,
+    updatedAt: 0,
+    deletedAt: 0,
+    name: "",
+    path: "",
+    redirect: "",
+    meta: {
+      title: "",
+      icon: "",
+      rank: 0,
+      roles: [],
+      showLink: true,
+      keepAlive: true,
+      showParent: true,
+      hiddenTag: false,
+      frameSrc: ""
+    },
+    status: 1,
+    parentId: 0,
+    creator: "",
+    type: 2
+  });
   const menuFormRef = ref();
   const menuFormData = ref([]);
   const loading = ref(true);
@@ -240,9 +236,6 @@ export function useMenu() {
 
   function onCreate() {
     isEdit.value = false;
-    const obj = JSON.parse(JSON.stringify(editMenuForm));
-    // 给proxy对象赋值
-    Object.assign(editMenuForm, obj);
     dialogVisible.value = true;
   }
 
@@ -257,6 +250,7 @@ export function useMenu() {
               message(res.message, {
                 type: "success"
               });
+              resetDialogForm(formEl);
               onSearch();
             } else {
               message(res.message, {
@@ -299,6 +293,7 @@ export function useMenu() {
               message(res.message, {
                 type: "success"
               });
+              resetDialogForm(formEl);
               onSearch();
             } else {
               message(res.message, {

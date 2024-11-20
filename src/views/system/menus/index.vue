@@ -152,7 +152,7 @@ const {
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="菜单图标">
-                <IconSelect v-model="editMenuForm.meta.icon" />
+                <IconSelect v-model="editMenuForm.meta.icon" class="w-full" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
