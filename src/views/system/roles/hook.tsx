@@ -350,7 +350,7 @@ export function useRole() {
   }
 
   // 更新角色的权限菜单
-  async function handleRoleMenuSubmit() {
+  function handleRoleMenuSubmit() {
     // 深拷贝，将菜单树id临时存放在一个数组
     const menuTreeIds = ref([]);
     // 获取选中的权限菜单
@@ -366,7 +366,7 @@ export function useRole() {
       menuIds: menuTreeIds.value
     };
     // 开始调用后端更新角色权限菜单
-    await updateRoleMenuByRoleId(permsSelectedRole.value, menuIdsObj)
+    updateRoleMenuByRoleId(permsSelectedRole.value, menuIdsObj)
       .then(res => {
         if (res.success) {
           message(res.message, {
@@ -402,7 +402,7 @@ export function useRole() {
       apisIds: apisTreeIds.value
     };
     // 开始调用后端更新角色权限接口
-    await updateRoleApisByRoleId(permsSelectedRole.value, apisIdsObj)
+    updateRoleApisByRoleId(permsSelectedRole.value, apisIdsObj)
       .then(res => {
         if (res.success) {
           message(res.message, {
@@ -615,10 +615,10 @@ export function useRole() {
       });
   }
 
-  async function onSearch() {
+  function onSearch() {
     loading.value = true;
     const formData = Object.assign({}, form, pagination);
-    await getRoleList(formData)
+    getRoleList(formData)
       .then(res => {
         // 深拷贝
         const obj = JSON.parse(JSON.stringify(res.data));
