@@ -240,7 +240,9 @@ export function useMenu() {
 
   function onCreate() {
     isEdit.value = false;
-    Object.assign(editMenuForm, getEditMenuForm());
+    const obj = JSON.parse(JSON.stringify(editMenuForm));
+    // 给proxy对象赋值
+    Object.assign(editMenuForm, obj);
     dialogVisible.value = true;
   }
 
