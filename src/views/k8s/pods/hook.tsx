@@ -222,7 +222,8 @@ export function usePods() {
       .then(res => {
         if (res.success && res.data.result != "") {
           agent_id.value = res.data.result;
-          ElMessageBox.alert("请复制id：" + agent_id.value, "连接成功", {
+          ElMessageBox.alert("请复制id：\n" + agent_id.value, "连接成功", {
+            customStyle: { "max-width": "35%" },
             // if you want to disable its autofocus
             // autofocus: false,
             confirmButtonText: "OK"
