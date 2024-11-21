@@ -420,7 +420,6 @@ export function useRole() {
       })
       .finally(() => {
         permsDialogVisible.value = false;
-        onSearch();
       });
   }
 
@@ -562,6 +561,7 @@ export function useRole() {
     // 获取权限菜单和接口
     getMenuDefaultCheckedData(row.ID);
     getApisDefaultCheckedData(row.ID);
+    onSearch();
   }
 
   function handleSizeChange(val: number) {
