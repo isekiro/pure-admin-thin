@@ -74,8 +74,8 @@ export function usePods() {
           });
         }
       })
-      .catch(res => {
-        message(res.response.data.message, {
+      .catch(err => {
+        message(err, {
           type: "warning"
         });
       })
@@ -103,8 +103,8 @@ export function usePods() {
             });
           }
         })
-        .catch(res => {
-          message(res.response.data.message, {
+        .catch(err => {
+          message(err, {
             type: "warning"
           });
         })
@@ -136,8 +136,8 @@ export function usePods() {
             });
           }
         })
-        .catch(res => {
-          message(res.response.data.message, {
+        .catch(err => {
+          message(err, {
             type: "warning"
           });
         })
@@ -220,7 +220,7 @@ export function usePods() {
     });
     await podAttachArthas(pod)
       .then(res => {
-        if (res.success && res.data.result != "") {
+        if (res.success && res.data) {
           agent_id.value = res.data.result;
           ElMessageBox.alert("请复制id：\n" + agent_id.value, "连接成功", {
             customStyle: { "max-width": "35%" },
@@ -228,14 +228,14 @@ export function usePods() {
             // autofocus: false,
             confirmButtonText: "OK"
           });
-        } else {
+        } else if (res.data) {
           message(res.data.cause, {
             type: "error"
           });
         }
       })
-      .catch(res => {
-        message(res.response.data.message, {
+      .catch(err => {
+        message("连接失败，请重试 " + err, {
           type: "warning"
         });
       })
@@ -257,8 +257,8 @@ export function usePods() {
           });
         }
       })
-      .catch(res => {
-        message(res.response.data.message, {
+      .catch(err => {
+        message(err, {
           type: "warning"
         });
       })
