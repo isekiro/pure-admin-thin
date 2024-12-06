@@ -9,6 +9,7 @@ import {
 } from "@/api/k8s/cluster";
 import { reactive, ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
+import type { PaginationProps } from "@pureadmin/table";
 
 export function usePods() {
   // 表单数据类型
@@ -24,6 +25,15 @@ export function usePods() {
   const clusterEnvOptions = ref([]);
   const clusterNameOptions = ref([]);
   const clusterNamespaceOptions = ref([]);
+
+  /** 分页配置 */
+  const pagination = reactive<PaginationProps>({
+    total: 0,
+    pageSize: 10,
+    pageSizes: [10, 15, 20],
+    currentPage: 1,
+    background: true
+  });
 
   // 表单数据初始化
   const form = reactive({
@@ -246,11 +256,12 @@ export function usePods() {
 
   async function onSearch() {
     loading.value = true;
-    const formData = Object.assign({}, form);
+    const formData = Object.assign({}, form, pagination);
     await getPodsList(formData)
       .then(res => {
         if (res.success) {
           dataList.value = res.data.list;
+          pagination.total = res.data.total;
         } else {
           message(res.data.cause, {
             type: "error"
@@ -265,6 +276,16 @@ export function usePods() {
       .finally(() => {
         loading.value = false;
       });
+  }
+
+  function handleSizeChange(val: number) {
+    pagination.pageSize = val;
+    onSearch();
+  }
+
+  function handleCurrentChange(val: number) {
+    pagination.currentPage = val;
+    onSearch();
   }
 
   const resetForm = formEl => {
@@ -284,6 +305,7 @@ export function usePods() {
     loading,
     columns,
     dataList,
+    pagination,
     checkedPodsIds,
     clusterEnvOptions,
     clusterNameOptions,
@@ -294,6 +316,8 @@ export function usePods() {
     resetForm,
     onAttachArthas,
     getClusterNameMethod,
-    getClusterNamespaceMethod
+    getClusterNamespaceMethod,
+    handleSizeChange,
+    handleCurrentChange
   };
 }

@@ -20,6 +20,7 @@ const {
   loading,
   columns,
   dataList,
+  pagination,
   checkedPodsIds,
   clusterEnvOptions,
   clusterNameOptions,
@@ -30,7 +31,9 @@ const {
   resetForm,
   onAttachArthas,
   getClusterNameMethod,
-  getClusterNamespaceMethod
+  getClusterNamespaceMethod,
+  handleSizeChange,
+  handleCurrentChange
 } = usePods();
 </script>
 
@@ -132,10 +135,14 @@ const {
           :size="size"
           :data="dataList"
           :columns="dynamicColumns"
+          :pagination="pagination"
+          :paginationSmall="size === 'small' ? true : false"
           :header-cell-style="{
             background: 'var(--el-table-row-hover-bg-color)',
             color: 'var(--el-text-color-primary)'
           }"
+          @page-size-change="handleSizeChange"
+          @page-current-change="handleCurrentChange"
         >
           <template #operation="{ row }">
             <el-dropdown>
