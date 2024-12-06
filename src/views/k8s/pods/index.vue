@@ -7,6 +7,8 @@ import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
 import Search from "@iconify-icons/ep/search";
 import Refresh from "@iconify-icons/ep/refresh";
+import Connection from "@iconify-icons/ep/connection";
+import TopRight from "@iconify-icons/ep/top-right";
 // import AddFill from "@iconify-icons/ri/add-circle-line";
 import More from "@iconify-icons/ep/more-filled";
 
@@ -161,7 +163,7 @@ const {
                       link
                       :size="size"
                       type="primary"
-                      :icon="useRenderIcon(EditPen)"
+                      :icon="useRenderIcon(Connection)"
                       @click="onAttachArthas(row)"
                     >
                       连接arthas
@@ -174,7 +176,7 @@ const {
                       target="_blank"
                       link
                       type="primary"
-                      :icon="useRenderIcon(EditPen)"
+                      :icon="useRenderIcon(TopRight)"
                       @click="router.push({ name: row.arthasUI })"
                     >
                       前往控制台
