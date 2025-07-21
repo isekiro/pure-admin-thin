@@ -7,4 +7,4 @@ export const logUrlApi = (url: string) => `/api/log${url}`;
 export const podsUrlApi = (url: string) => `/api/k8s/pods${url}`;
 export const clusterUrlApi = (url: string) => `/api/k8s/cluster${url}`;
 export const dashboardUrlApi = (url: string) => `/api/cmdb/dashboard${url}`;
-export const vendorsdUrlApi = (url: string) => `/api/cmdb/vendors${url}`;
+export const vendorsUrlApi = (url: string) => `/api/cmdb/vendors${url}`;

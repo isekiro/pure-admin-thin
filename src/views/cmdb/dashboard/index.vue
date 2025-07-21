@@ -46,21 +46,14 @@ const {
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="主体：" prop="env">
-        <el-select
+      <el-form-item label="主体：" prop="vendor_name">
+        <el-input
           v-model="form.vendor_name"
+          placeholder="（可选）"
           clearable
-          placeholder="(可选)"
-          style="width: 150px"
-          @change="getClusterNameMethod"
-        >
-          <el-option
-            v-for="item in clusterEnvOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+          class="!w-[180px]"
+          @keyup.enter="onSearch"
+        />
       </el-form-item>
       <el-form-item label="实例名称：" prop="instance_name">
         <el-input

@@ -23,7 +23,7 @@ const {
   dialogVisible,
   editVendorsFormRef,
   editVendorsForm,
-  apiFormRules,
+  vendorFormRules,
   checkedVendorsIds,
   apiMethodOptions,
   onSearch,
@@ -162,7 +162,7 @@ const {
           ref="editVendorsFormRef"
           size="default"
           :model="editVendorsForm"
-          :rules="apiFormRules"
+          :rules="vendorFormRules"
           label-width="80px"
         >
           <el-row :gutter="35">
@@ -183,7 +183,7 @@ const {
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
               <el-form-item label="SK" prop="sk">
-                <el-input v-model="editVendorsForm.ak" type="password" />
+                <el-input v-model="editVendorsForm.sk" type="password" />
               </el-form-item>
             </el-col>
             <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">

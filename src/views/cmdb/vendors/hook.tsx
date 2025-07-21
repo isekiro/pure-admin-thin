@@ -8,8 +8,8 @@ import {
   type FormRules
 } from "element-plus";
 import {
-  getVendorsdList
-  // createVendors,
+  getVendorsList,
+  createVendor
   // updateVendors,
   // batchDeleteVendorss
 } from "@/api/cmdb/vendors";
@@ -110,47 +110,47 @@ export function useVendors() {
   const editVendorsFormRef = ref<InstanceType<typeof ElForm>>();
   const editVendorsForm = getEditVendorsForm();
 
-  const REGEXP_URL = /^(\/)[^\s]+/;
-  const apiFormRules = reactive<FormRules>({
-    method: [
+  // const REGEXP_URL = /^(\/)[^\s]+/;
+  const vendorFormRules = reactive<FormRules>({
+    vendor_name: [
       {
         required: true,
-        message: "请输入接口方法",
-        trigger: "blur"
-      },
-      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
-    ],
-    path: [
-      {
-        validator: (rule, value, callback) => {
-          if (value === "") {
-            callback(new Error("接口路径不能为空"));
-          }
-          if (!REGEXP_URL.test(value)) {
-            callback(new Error("请输入正确的接口路径，如/name"));
-          } else {
-            callback();
-          }
-        },
-        required: true,
-        trigger: "blur"
-      }
-    ],
-    desc: [
-      {
-        required: true,
-        message: "请输入接口描述",
+        message: "请输入主体名称",
         trigger: "blur"
       },
       { min: 2, max: 30, message: "字符长度必须 2 到 50", trigger: "blur" }
     ],
-    category: [
+    vendor_type: [
       {
         required: true,
-        message: "请输入接口分类",
+        message: "请输入厂商类型",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 50", trigger: "blur" }
+    ],
+    ak: [
+      {
+        required: true,
+        message: "请输入ak",
         trigger: "blur"
       },
       { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+    ],
+    sk: [
+      {
+        required: true,
+        message: "请输入sk",
+        trigger: "blur"
+      },
+      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+    ],
+    region: [
+      {
+        required: true,
+        message: "请输入地区",
+        trigger: "blur"
+      },
+      { min: 2, max: 100, message: "字符长度必须 2 到 100", trigger: "blur" }
     ]
   });
   const checkedVendorsIds = ref([]);
@@ -191,6 +191,11 @@ export function useVendors() {
     },
     {
       label: "备注",
+      prop: "remark",
+      minWidth: 70
+    },
+    {
+      label: "创建者",
       prop: "creator",
       minWidth: 70
     },
@@ -228,27 +233,27 @@ export function useVendors() {
     if (!formEl) return;
     await formEl.validate(async (valid, fields) => {
       if (valid) {
-        // createVendors(editVendorsForm)
-        //   .then(res => {
-        //     if (res.success) {
-        //       message(res.message, {
-        //         type: "success"
-        //       });
-        //       onSearch();
-        //     } else {
-        //       message(res.message, {
-        //         type: "error"
-        //       });
-        //     }
-        //   })
-        //   .catch(res => {
-        //     message(res.response.data.message, {
-        //       type: "warning"
-        //     });
-        //   })
-        //   .finally(() => {
-        //     dialogVisible.value = false;
-        //   });
+        createVendor(editVendorsForm)
+          .then(res => {
+            if (res.success) {
+              message(res.message, {
+                type: "success"
+              });
+              onSearch();
+            } else {
+              message(res.message, {
+                type: "error"
+              });
+            }
+          })
+          .catch(res => {
+            message(res.response.data.message, {
+              type: "warning"
+            });
+          })
+          .finally(() => {
+            dialogVisible.value = false;
+          });
       } else {
         console.log("error submit!", fields);
       }
@@ -264,7 +269,7 @@ export function useVendors() {
     dialogVisible.value = true;
   }
 
-  // 更新api
+  // 更新vendor
   async function handleUpdate(formEl: FormInstance | undefined) {
     if (!formEl) return;
     await formEl.validate(async (valid, fields) => {
@@ -366,7 +371,7 @@ export function useVendors() {
   async function onSearch() {
     loading.value = true;
     const formData = Object.assign({}, form, pagination);
-    await getVendorsdList(formData)
+    await getVendorsList(formData)
       .then(res => {
         if (res.success) {
           dataList.value = res.data.list;
@@ -412,7 +417,7 @@ export function useVendors() {
     dialogVisible,
     editVendorsFormRef,
     editVendorsForm,
-    apiFormRules,
+    vendorFormRules,
     checkedVendorsIds,
     apiMethodOptions,
     onSearch,
