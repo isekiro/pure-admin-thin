@@ -46,45 +46,9 @@ const {
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
     >
-      <el-form-item label="主体：" prop="vendor_name">
+      <el-form-item label="智能搜索：" prop="content">
         <el-input
-          v-model="form.vendor_name"
-          placeholder="（可选）"
-          clearable
-          class="!w-[180px]"
-          @keyup.enter="onSearch"
-        />
-      </el-form-item>
-      <el-form-item label="实例名称：" prop="instance_name">
-        <el-input
-          v-model="form.instance_name"
-          placeholder="（可选）"
-          clearable
-          class="!w-[180px]"
-          @keyup.enter="onSearch"
-        />
-      </el-form-item>
-      <el-form-item label="实例ID：" prop="instance_id">
-        <el-input
-          v-model="form.instance_id"
-          placeholder="（可选）"
-          clearable
-          class="!w-[180px]"
-          @keyup.enter="onSearch"
-        />
-      </el-form-item>
-      <el-form-item label="内网地址：" prop="inner_ips">
-        <el-input
-          v-model="form.inner_ips"
-          placeholder="（可选）"
-          clearable
-          class="!w-[180px]"
-          @keyup.enter="onSearch"
-        />
-      </el-form-item>
-      <el-form-item label="公网地址：" prop="public_ips">
-        <el-input
-          v-model="form.public_ips"
+          v-model="form.content"
           placeholder="（可选）"
           clearable
           class="!w-[180px]"

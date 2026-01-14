@@ -14,11 +14,7 @@ import type { PaginationProps } from "@pureadmin/table";
 export function usePods() {
   // 表单数据类型
   interface IForm {
-    vendor_name: "";
-    instance_id: "";
-    instance_name: "";
-    inner_ips: "";
-    public_ips: "";
+    content: "";
   }
 
   const router = useRouter();
@@ -38,11 +34,7 @@ export function usePods() {
 
   // 表单数据初始化
   const form = reactive({
-    vendor_name: "",
-    instance_id: "",
-    instance_name: "",
-    inner_ips: "",
-    public_ips: ""
+    content: ""
   });
 
   const formRef = ref<InstanceType<typeof ElTree>>();
@@ -51,11 +43,7 @@ export function usePods() {
   const loading = ref(false);
 
   const initFormData: IForm = {
-    vendor_name: "",
-    instance_id: "",
-    instance_name: "",
-    inner_ips: "",
-    public_ips: ""
+    content: ""
   };
 
   const buttonClass = computed(() => {
