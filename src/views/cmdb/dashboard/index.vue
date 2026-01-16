@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { usePods } from "./hook";
+import { usedashboard } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
@@ -13,7 +13,7 @@ import TopRight from "@iconify-icons/ep/top-right";
 import More from "@iconify-icons/ep/more-filled";
 
 defineOptions({
-  name: "Pods"
+  name: "dashboard"
 });
 
 const {
@@ -23,19 +23,14 @@ const {
   columns,
   dataList,
   pagination,
-  checkedPodsIds,
-  clusterEnvOptions,
-  clusterNameOptions,
-  clusterNamespaceOptions,
+  checkeddashboardIds,
   buttonClass,
   router,
   onSearch,
   resetForm,
-  getClusterNameMethod,
-  // getClusterNamespaceMethod,
   handleSizeChange,
   handleCurrentChange
-} = usePods();
+} = usedashboard();
 </script>
 
 <template>
@@ -45,6 +40,7 @@ const {
       :inline="true"
       :model="form"
       class="bg-bg_color w-[99/100] pl-8 pt-4"
+      @submit.prevent
     >
       <el-form-item label="智能搜索：" prop="content">
         <el-input
@@ -68,7 +64,7 @@ const {
           重置
         </el-button>
         <el-button
-          :disabled="checkedPodsIds.length == 0"
+          :disabled="checkeddashboardIds.length == 0"
           type="danger"
           :icon="useRenderIcon(Delete)"
         >
@@ -97,7 +93,7 @@ const {
           @page-size-change="handleSizeChange"
           @page-current-change="handleCurrentChange"
         >
-          <template #operation="{ row }">
+          <template #operation="">
             <el-dropdown>
               <el-button
                 class="ml-3 mt-[2px]"
@@ -116,7 +112,6 @@ const {
                       link
                       type="primary"
                       :icon="useRenderIcon(TopRight)"
-                      @click="router.push({ name: row.arthasUI })"
                     >
                       资产详情
                     </el-button>
