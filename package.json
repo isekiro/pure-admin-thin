@@ -48,6 +48,7 @@
     "url": "https://github.com/xiaoxian521"
   },
   "dependencies": {
+    "@iconify/json": "^2.2.436",
     "@pureadmin/descriptions": "^1.2.1",
     "@pureadmin/table": "^3.2.0",
     "@pureadmin/utils": "^2.4.8",
@@ -59,8 +60,8 @@
     "echarts": "^5.5.1",
     "element-plus": "2.8.0",
     "js-cookie": "^3.0.5",
-    "localforage": "^1.10.0",
     "jsencrypt": "^3.3.2",
+    "localforage": "^1.10.0",
     "md-editor-v3": "2.7.2",
     "mitt": "^3.0.1",
     "nprogress": "^0.2.0",
