@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useColumns } from "./columns";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { dataList } from "../../data";
 
-const { loading, columns, dataList, pagination, Empty, onCurrentChange } =
-  useColumns();
+const { loading, columns, pagination, Empty, onCurrentChange } = useColumns();
 </script>
 
 <template>
@@ -13,12 +13,7 @@ const { loading, columns, dataList, pagination, Empty, onCurrentChange } =
     showOverflowTooltip
     :loading="loading"
     :loading-config="{ background: 'transparent' }"
-    :data="
-      dataList.slice(
-        (pagination.currentPage - 1) * pagination.pageSize,
-        pagination.currentPage * pagination.pageSize
-      )
-    "
+    :data="dataList"
     :columns="columns"
     :pagination="pagination"
     @page-current-change="onCurrentChange"

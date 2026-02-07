@@ -1,9 +1,6 @@
-import { tableData } from "../../data";
 import { delay } from "@pureadmin/utils";
 import { ref, onMounted, reactive } from "vue";
 import type { PaginationProps } from "@pureadmin/table";
-import ThumbUp from "@iconify-icons/ri/thumb-up-line";
-import Hearts from "@iconify-icons/ri/hearts-line";
 import Empty from "./empty.svg?component";
 
 export function useColumns() {
@@ -13,12 +10,12 @@ export function useColumns() {
     {
       sortable: true,
       label: "序号",
-      prop: "id"
+      prop: "ID"
     },
     {
       sortable: true,
-      label: "需求人数",
-      prop: "requiredNumber",
+      label: "账号主体",
+      prop: "vendor_name",
       filterMultiple: false,
       filterClassName: "pure-table-filter",
       filters: [
@@ -33,35 +30,19 @@ export function useColumns() {
     },
     {
       sortable: true,
-      label: "提问数量",
-      prop: "questionNumber"
+      label: "当前余额",
+      prop: "account_balance"
     },
     {
       sortable: true,
-      label: "解决数量",
-      prop: "resolveNumber"
+      label: "上月后付",
+      prop: "account_pay_as_go_bill"
     },
     {
       sortable: true,
-      label: "用户满意度",
+      label: "上月分摊",
       minWidth: 100,
-      prop: "satisfaction",
-      cellRenderer: ({ row }) => (
-        <div class="flex justify-center w-full">
-          <span class="flex items-center w-[60px]">
-            <span class="ml-auto mr-2">{row.satisfaction}%</span>
-            <iconifyIconOffline
-              icon={row.satisfaction > 98 ? Hearts : ThumbUp}
-              color="#e85f33"
-            />
-          </span>
-        </div>
-      )
-    },
-    {
-      sortable: true,
-      label: "统计日期",
-      prop: "date"
+      prop: "gaap_cost"
     },
     {
       label: "操作",
@@ -88,7 +69,6 @@ export function useColumns() {
   }
 
   onMounted(() => {
-    dataList.value = tableData;
     pagination.total = dataList.value.length;
     loading.value = false;
   });
@@ -97,7 +77,6 @@ export function useColumns() {
     Empty,
     loading,
     columns,
-    dataList,
     pagination,
     onCurrentChange
   };
