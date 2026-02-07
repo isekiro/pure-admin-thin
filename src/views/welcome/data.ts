@@ -46,7 +46,7 @@ const pagination = reactive<PaginationProps>({
 });
 
 /** 数据统计 */
-await getBusinessList(pagination)
+getBusinessList(pagination)
   .then(res => {
     if (res.success) {
       dataList.value = res.data.list;
