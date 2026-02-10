@@ -23,7 +23,7 @@ defineOptions({
         </el-card>
       </re-col>
     </el-row>
-    <el-row>
+    <el-row v-if="barChartData.series[0]">
       <re-col v-motion class="mb-[18px]">
         <el-card>
           <div>
