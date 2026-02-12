@@ -15,18 +15,9 @@ import {
 } from "@/api/cmdb/vendors";
 import type { PaginationProps } from "@pureadmin/table";
 import { reactive, ref, onMounted } from "vue";
+import { encryptorFunc } from "@/utils/encrypt";
 
 export function useVendors() {
-  // 表单数据类型
-  // interface IForm {
-  //   ID: number;
-  //   method: string;
-  //   path: string;
-  //   category: string;
-  //   desc: string;
-  //   creator: string;
-  // }
-
   // 表单数据类型
   interface IVendorsForm {
     ID: number;
@@ -134,7 +125,7 @@ export function useVendors() {
         message: "请输入ak",
         trigger: "blur"
       },
-      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+      { min: 2, max: 30, message: "字符长度必须 2 到 64", trigger: "blur" }
     ],
     sk: [
       {
@@ -142,7 +133,7 @@ export function useVendors() {
         message: "请输入sk",
         trigger: "blur"
       },
-      { min: 2, max: 30, message: "字符长度必须 2 到 30", trigger: "blur" }
+      { min: 2, max: 30, message: "字符长度必须 2 到 64", trigger: "blur" }
     ],
     region: [
       {
@@ -233,6 +224,25 @@ export function useVendors() {
     if (!formEl) return;
     await formEl.validate(async (valid, fields) => {
       if (valid) {
+        // ak 非对称加密
+        const ak = encryptorFunc(editVendorsForm.ak);
+        var akString: string;
+        if (ak !== false) {
+          akString = ak; // 此时 ak 被推断为 string
+        } else {
+          akString = ""; // 或提供默认值
+        }
+        editVendorsForm.ak = akString;
+        // sk 非对称加密
+        const sk = encryptorFunc(editVendorsForm.sk);
+        var skString: string;
+        if (sk !== false) {
+          skString = sk; // 此时 sk 被推断为 string
+        } else {
+          skString = ""; // 或提供默认值
+        }
+        editVendorsForm.sk = skString;
+
         createVendor(editVendorsForm)
           .then(res => {
             if (res.success) {
