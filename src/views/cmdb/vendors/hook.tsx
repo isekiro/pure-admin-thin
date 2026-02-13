@@ -125,7 +125,7 @@ export function useVendors() {
         message: "请输入ak",
         trigger: "blur"
       },
-      { min: 2, max: 30, message: "字符长度必须 2 到 64", trigger: "blur" }
+      { min: 2, max: 256, message: "字符长度必须 2 到 256", trigger: "blur" }
     ],
     sk: [
       {
@@ -133,7 +133,7 @@ export function useVendors() {
         message: "请输入sk",
         trigger: "blur"
       },
-      { min: 2, max: 30, message: "字符长度必须 2 到 64", trigger: "blur" }
+      { min: 2, max: 256, message: "字符长度必须 2 到 256", trigger: "blur" }
     ],
     region: [
       {
