@@ -3,8 +3,8 @@ import { useRamUsers } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import Search from "@iconify-icons/ep/search";
-import Refresh from "@iconify-icons/ep/refresh";
+import Search from "~icons/ep/search";
+import Refresh from "~icons/ep/refresh";
 
 defineOptions({
   name: "RamUsers"

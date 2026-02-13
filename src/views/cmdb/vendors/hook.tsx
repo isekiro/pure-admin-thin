@@ -226,7 +226,7 @@ export function useVendors() {
       if (valid) {
         // ak 非对称加密
         const ak = encryptorFunc(editVendorsForm.ak);
-        var akString: string;
+        let akString: string;
         if (ak !== false) {
           akString = ak; // 此时 ak 被推断为 string
         } else {
@@ -235,7 +235,7 @@ export function useVendors() {
         editVendorsForm.ak = akString;
         // sk 非对称加密
         const sk = encryptorFunc(editVendorsForm.sk);
-        var skString: string;
+        let skString: string;
         if (sk !== false) {
           skString = sk; // 此时 sk 被推断为 string
         } else {

@@ -52,7 +52,7 @@ getBusinessList(pagination)
       dataList.value = res.data.list;
       pagination.total = res.data.total;
       dataList.value.forEach((item, index) => {
-        var baritem: IbarItem = {
+        const baritem: IbarItem = {
           name: item.vendor_name,
           type: "bar",
           emphasis: {

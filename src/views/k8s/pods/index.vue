@@ -3,14 +3,14 @@ import { usePods } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import Delete from "@iconify-icons/ep/delete";
-import EditPen from "@iconify-icons/ep/edit-pen";
-import Search from "@iconify-icons/ep/search";
-import Refresh from "@iconify-icons/ep/refresh";
-import Connection from "@iconify-icons/ep/connection";
-import TopRight from "@iconify-icons/ep/top-right";
-// import AddFill from "@iconify-icons/ri/add-circle-line";
-import More from "@iconify-icons/ep/more-filled";
+import Delete from "~icons/ep/delete";
+import EditPen from "~icons/ep/edit-pen";
+import Search from "~icons/ep/search";
+import Refresh from "~icons/ep/refresh";
+import Connection from "~icons/ep/connection";
+import TopRight from "~icons/ep/top-right";
+// import AddFill from "~icons/ri/add-circle-line";
+import More from "~icons/ep/more-filled";
 
 defineOptions({
   name: "Pods"

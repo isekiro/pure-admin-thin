@@ -16,8 +16,7 @@ import {
 import { useMultiTagsStoreHook } from "./multiTags";
 import { type DataInfo, setToken, removeToken, userKey } from "@/utils/auth";
 
-export const useUserStore = defineStore({
-  id: "pure-user",
+export const useUserStore = defineStore("pure-user", {
   state: (): userType => ({
     // 头像
     avatar: storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "",
@@ -47,7 +46,7 @@ export const useUserStore = defineStore({
       this.username = username;
     },
     /** 存储用户id */
-    SET_USERID(userId: number) {
+    SET_USERID(userId: string) {
       this.userId = userId;
     },
     /** 存储昵称 */

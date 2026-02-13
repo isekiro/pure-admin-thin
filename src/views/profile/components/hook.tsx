@@ -1,10 +1,10 @@
-import AlarmClock from "@iconify-icons/ep/alarm-clock";
-import Male from "@iconify-icons/ep/male";
-import Tickets from "@iconify-icons/ep/tickets";
-import Warning from "@iconify-icons/ep/warning";
-import Iphone from "@iconify-icons/ep/iphone";
-import Notebook from "@iconify-icons/ep/notebook";
-import User from "@iconify-icons/ri/user-3-fill";
+import AlarmClock from "~icons/ep/alarm-clock";
+import Male from "~icons/ep/male";
+import Tickets from "~icons/ep/tickets";
+import Warning from "~icons/ep/warning";
+import Iphone from "~icons/ep/iphone";
+import Notebook from "~icons/ep/notebook";
+import User from "~icons/ri/user-3-fill";
 import { computed, reactive, ref } from "vue";
 import { message } from "@/utils/message";
 import { getUserInfo, updatePasswd } from "@/api/system/user";

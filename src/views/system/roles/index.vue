@@ -4,14 +4,14 @@ import { useRole } from "./hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-// import Database from "@iconify-icons/ri/database-2-line";
-// import More from "@iconify-icons/ep/more-filled";
-import Delete from "@iconify-icons/ep/delete";
-import EditPen from "@iconify-icons/ep/edit-pen";
-import Search from "@iconify-icons/ep/search";
-import Refresh from "@iconify-icons/ep/refresh";
-import Menu from "@iconify-icons/ep/menu";
-import AddFill from "@iconify-icons/ri/add-circle-line";
+// import Database from "~icons/ri/database-2-line";
+// import More from "~icons/ep/more-filled";
+import Delete from "~icons/ep/delete";
+import EditPen from "~icons/ep/edit-pen";
+import Search from "~icons/ep/search";
+import Refresh from "~icons/ep/refresh";
+import Menu from "~icons/ep/menu";
+import AddFill from "~icons/ri/add-circle-line";
 
 defineOptions({
   name: "Roles"
