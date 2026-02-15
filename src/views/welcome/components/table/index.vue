@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useColumns } from "./columns";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { dataList } from "../../data";
+// import { dataList } from "../../data";
 
-const { loading, columns, pagination, Empty, onCurrentChange } = useColumns();
+const { dataList, loading, columns, pagination, Empty, onCurrentChange } =
+  useColumns();
 </script>
 
 <template>

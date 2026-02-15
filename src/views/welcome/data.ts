@@ -80,4 +80,4 @@ getBusinessList(pagination)
     });
   });
 
-export { dataList, barChartData };
+export { barChartData };

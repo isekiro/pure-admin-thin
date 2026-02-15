@@ -1,7 +1,8 @@
-import { delay } from "@pureadmin/utils";
+import { message } from "@/utils/message";
 import { ref, onMounted, reactive } from "vue";
 import type { PaginationProps } from "@pureadmin/table";
 import Empty from "./empty.svg?component";
+import { getBusinessList } from "@/api/cmdb/business";
 
 export function useColumns() {
   const dataList = ref([]);
@@ -15,18 +16,7 @@ export function useColumns() {
     {
       sortable: true,
       label: "账号主体",
-      prop: "vendor_name",
-      filterMultiple: false,
-      filterClassName: "pure-table-filter",
-      filters: [
-        { text: "≥16000", value: "more" },
-        { text: "<16000", value: "less" }
-      ],
-      filterMethod: (value, { requiredNumber }) => {
-        return value === "more"
-          ? requiredNumber >= 16000
-          : requiredNumber < 16000;
-      }
+      prop: "vendor_name"
     },
     {
       sortable: true,
@@ -61,21 +51,60 @@ export function useColumns() {
   });
 
   function onCurrentChange(page: number) {
-    console.log("onCurrentChange", page);
     loading.value = true;
-    delay(300).then(() => {
-      loading.value = false;
-    });
+    pagination.currentPage = page;
+    getBusinessList(pagination)
+      .then(res => {
+        if (res.success) {
+          dataList.value = res.data.list;
+          pagination.total = res.data.total;
+        } else {
+          message(res.data.cause, {
+            type: "error"
+          });
+        }
+      })
+      .catch(err => {
+        message(err, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
+
+  function onSearch() {
+    loading.value = true;
+    getBusinessList(pagination)
+      .then(res => {
+        if (res.success) {
+          dataList.value = res.data.list;
+          pagination.total = res.data.total;
+        } else {
+          message(res.data.cause, {
+            type: "error"
+          });
+        }
+      })
+      .catch(err => {
+        message(err, {
+          type: "warning"
+        });
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
   onMounted(() => {
-    pagination.total = dataList.value.length;
-    loading.value = false;
+    onSearch();
   });
 
   return {
     Empty,
     loading,
+    dataList,
     columns,
     pagination,
     onCurrentChange
