@@ -113,6 +113,24 @@ export function useRamUsers() {
       minWidth: 15
     },
     {
+      label: "权限详情",
+      prop: "Permissions",
+      align: "center",
+      cellRenderer: ({ row }) => {
+        const value = row.Permissions || "";
+        return (
+          <div
+            style={{
+              whiteSpace: "pre-line", // 关键！保留 \n 换行
+              textAlign: "center"
+            }}
+          >
+            {value || "-"}
+          </div>
+        );
+      }
+    },
+    {
       label: "ak详情",
       prop: "AccessKeys",
       align: "center",
