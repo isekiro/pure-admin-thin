@@ -20,4 +20,26 @@ type ResultTree = {
   };
 };
 
-export type { Result, ResultTree };
+type CmsItems = {
+  startTimeStamp: string;
+  instance_name: string;
+  instance_id: string;
+  region: string;
+  level: number;
+  vendor_name: string;
+  resource_type: string;
+  value: string;
+  alert_rule_description: string;
+  product_name: string;
+  metrics: string;
+};
+
+type CmsResultMap = {
+  success?: boolean;
+  data?: {
+    list: Map<string, CmsItems[]>;
+    cause?: string;
+  };
+};
+
+export type { Result, ResultTree, CmsItems, CmsResultMap };

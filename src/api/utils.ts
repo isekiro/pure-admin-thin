@@ -10,3 +10,4 @@ export const dashboardUrlApi = (url: string) => `/api/cmdb/dashboard${url}`;
 export const vendorsUrlApi = (url: string) => `/api/cmdb/vendors${url}`;
 export const ramusersUrlApi = (url: string) => `/api/cmdb/ram${url}`;
 export const businessUrlApi = (url: string) => `/api/cmdb/business${url}`;
+export const cmsUrlApi = (url: string) => `/api/cmdb/cms${url}`;
