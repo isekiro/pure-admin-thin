@@ -29,24 +29,24 @@ interface IalertLineItem {
 }
 
 const alertLine: Map<string, FunctionalComponent<SVGAttributes>> = new Map([
-  ["error", ErrorLine],
-  ["total", CheckLine],
+  ["total", ErrorLine],
+  ["info", CheckLine],
   ["warn", Question],
-  ["info", Smile]
+  ["critical", Smile]
 ]);
 
 const alertcolor: Map<string, string> = new Map([
-  ["error", "#e85f33"],
-  ["total", "#26ce83"],
+  ["total", "#e85f33"],
+  ["info", "#26ce83"],
   ["warn", "#41b6ff"],
-  ["info", "7846e5"]
+  ["critical", "7846e5"]
 ]);
 
 const alertbgcolor: Map<string, string> = new Map([
-  ["error", "#effaff"],
-  ["total", "#fff5f4"],
+  ["total", "#effaff"],
+  ["info", "#fff5f4"],
   ["warn", "#eff8f4"],
-  ["info", "#f6f4fe"]
+  ["critical", "#f6f4fe"]
 ]);
 
 const defautTotal: IalertLineItem = {
@@ -80,9 +80,9 @@ const defautWarn: IalertLineItem = {
 };
 
 const defautError: IalertLineItem = {
-  icon: alertLine.get("error"),
-  bgColor: alertbgcolor.get("error"),
-  color: alertcolor.get("error"),
+  icon: alertLine.get("critical"),
+  bgColor: alertbgcolor.get("critical"),
+  color: alertcolor.get("critical"),
   duration: 1500,
   name: "critical",
   value: 0,
