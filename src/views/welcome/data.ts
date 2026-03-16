@@ -182,20 +182,26 @@ getBusinessList(pagination)
 
 getCmsOverviewList()
   .then(res => {
-    const sourceData =
-      res.success && res.data.list.length > 0
-        ? res.data.list
-        : defaultAlertData.value;
+    if (res.success) {
+      const sourceData =
+        res.success && res.data.list.length > 0
+          ? res.data.list
+          : defaultAlertData.value;
 
-    alertItems.value = sourceData.map(item => ({
-      name: item.name,
-      value: item.value,
-      icon: alertLine.get(item.name),
-      bgColor: alertbgcolor.get(item.name),
-      color: alertcolor.get(item.name),
-      duration: 1500,
-      button: item.name === "total" && item.value > 0
-    }));
+      alertItems.value = sourceData.map(item => ({
+        name: item.name,
+        value: item.value,
+        icon: alertLine.get(item.name),
+        bgColor: alertbgcolor.get(item.name),
+        color: alertcolor.get(item.name),
+        duration: 1500,
+        button: item.name === "total" && item.value > 0
+      }));
+    } else {
+      message(res.message, {
+        type: "error"
+      });
+    }
   })
   .catch(err => {
     message(err, {
