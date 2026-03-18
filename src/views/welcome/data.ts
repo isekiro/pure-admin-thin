@@ -29,70 +29,28 @@ interface IalertLineItem {
 }
 
 const alertLine: Map<string, FunctionalComponent<SVGAttributes>> = new Map([
-  ["total", ErrorLine],
+  ["current", ErrorLine],
   ["info", CheckLine],
   ["warn", Question],
   ["critical", Smile]
 ]);
 
 const alertcolor: Map<string, string> = new Map([
-  ["total", "#e85f33"],
+  ["current", "#e85f33"],
   ["info", "#26ce83"],
   ["warn", "#41b6ff"],
   ["critical", "7846e5"]
 ]);
 
 const alertbgcolor: Map<string, string> = new Map([
-  ["total", "#effaff"],
+  ["current", "#effaff"],
   ["info", "#fff5f4"],
   ["warn", "#eff8f4"],
   ["critical", "#f6f4fe"]
 ]);
 
-const defautTotal: IalertLineItem = {
-  icon: alertLine.get("total"),
-  bgColor: alertbgcolor.get("total"),
-  color: alertcolor.get("total"),
-  duration: 1500,
-  name: "total",
-  value: 0,
-  button: false
-};
-
-const defautInfo: IalertLineItem = {
-  icon: alertLine.get("info"),
-  bgColor: alertbgcolor.get("info"),
-  color: alertcolor.get("info"),
-  duration: 1500,
-  name: "info",
-  value: 0,
-  button: false
-};
-
-const defautWarn: IalertLineItem = {
-  icon: alertLine.get("warn"),
-  bgColor: alertbgcolor.get("warn"),
-  color: alertcolor.get("warn"),
-  duration: 1500,
-  name: "warn",
-  value: 0,
-  button: false
-};
-
-const defautError: IalertLineItem = {
-  icon: alertLine.get("critical"),
-  bgColor: alertbgcolor.get("critical"),
-  color: alertcolor.get("critical"),
-  duration: 1500,
-  name: "critical",
-  value: 0,
-  button: false
-};
-
 const businessDataList = ref([]);
-const defaultAlertData = ref<IalertLineItem[]>([]);
 const alertItems = ref<IalertLineItem[]>([]);
-defaultAlertData.value.push(defautTotal, defautInfo, defautWarn, defautError);
 
 const businessBarChartData: EChartsOption = reactive({
   tooltip: {
@@ -183,10 +141,7 @@ getBusinessList(pagination)
 getCmsOverviewList()
   .then(res => {
     if (res.success) {
-      const sourceData =
-        res.success && res.data.list.length > 0
-          ? res.data.list
-          : defaultAlertData.value;
+      const sourceData = res.data.list;
 
       alertItems.value = sourceData.map(item => ({
         name: item.name,
