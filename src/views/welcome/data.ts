@@ -150,7 +150,7 @@ getCmsOverviewList()
         bgColor: alertbgcolor.get(item.name),
         color: alertcolor.get(item.name),
         duration: 1500,
-        button: item.name === "total" && item.value > 0
+        button: item.name === "current" && item.value > 0
       }));
     } else {
       message(res.message, {
